@@ -13,4 +13,3 @@ void ControlCenter::setMap(MapToScan map) {
     this->map = map;
 }
 
-

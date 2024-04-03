@@ -1,5 +1,6 @@
 #include "Algorithm.hpp"
 #include "MapToScan.hpp"
+#include <hiredis/hiredis.h>
 
 #ifndef CONTROLCENTER_HPP
 #define CONTROLCENTER_HPP
@@ -12,7 +13,7 @@ class ControlCenter {
         void setMap(MapToScan map);
 
     private:
-        int id_;
+        const int id_;
         MapToScan map;
         Algorithm* algorithm;
 };
