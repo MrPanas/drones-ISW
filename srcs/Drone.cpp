@@ -15,6 +15,8 @@ int Drone::getId() const {
 std::vector<std::tuple<Direction, int>> Drone::requestPath() {
     // Chiedi al ControlCenter il percorso da seguire
     // return controlCenter->computePath();
+    
+    return std::vector<std::tuple<Direction, int>>(); 
 }
 
 // Metodo per seguire un percorso
