@@ -1,4 +1,3 @@
-con2redis.h
 #ifndef con2redis_h
 
 #define con2redis_h

@@ -1,5 +1,5 @@
 #include "Algorithm.hpp"
-#include "Direction.hpp" // Assumendo che Direction.hpp definisca l'enum Direction
+#include <iostream>
 
 class MyAlgorithm : public Algorithm {
 public:
@@ -7,6 +7,7 @@ public:
     std::vector<std::tuple<Direction, int>> computePath(int droneId) override {
         // Implementazione della logica per calcolare il percorso
         // In questo esempio, restituiamo solo una lista vuota di tuple
+        std::cout << "Drone " << droneId << " is using MyAlgorithm" << std::endl;
         return std::vector<std::tuple<Direction, int>>();
     }
 };

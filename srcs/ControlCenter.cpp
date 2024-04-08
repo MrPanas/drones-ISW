@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ControlCenter::ControlCenter(int id) : id_(id), map(MapToScan()), algorithm(nullptr) { }
+// ControlCenter::ControlCenter(int id) : id_(id), map(MapToScan()), algorithm(nullptr) { }
 
 void ControlCenter::setAlgorithm(Algorithm* alg) {
     algorithm = alg;
