@@ -8,10 +8,12 @@
 class Drone {
 public:
     // Costruttore
-    Drone(int id, ControlCenter* cc);
+    Drone(int id, int cc_id);
 
     // Metodo per ottenere l'ID del drone
     int getId() const;
+
+    int getControlCenterId() const;
 
     std::vector<std::tuple<Direction, int>> requestPath();
 
@@ -19,7 +21,9 @@ public:
 
 private:
     int id_;
-    ControlCenter* controlCenter;
+    int cc_id_;
+    RedisClient redisClient;
+    std::string channelName_;
 };
 
 #endif
