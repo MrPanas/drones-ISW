@@ -1,5 +1,6 @@
 #include "RedisClient.hpp"
 #include <stdexcept>
+#include <iostream>
 
 
 RedisClient::RedisClient(const std::string& hostname, int port) {
@@ -11,7 +12,8 @@ RedisClient::RedisClient(const std::string& hostname, int port) {
 
 RedisClient::~RedisClient() {
     if (context_ != NULL) {
-        redisFree(context_);
+        std::cout << "Chiusura della connessione a Redis!!" << std::endl;
+        // redisFree(context_);
     }
 }
 
