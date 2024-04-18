@@ -3,14 +3,11 @@
 #include <iostream>
 
 // Costruttore
-Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id), redisClient("localhost", 6379){
-    channelName_ = "cc_" + std::to_string(cc_id);
-    std::cout << "Drone " << id_ << " connesso al canale " << channelName_ << std::endl;
-    if (redisClient.sendCommand("PUBLISH " + channelName_ + " Richiesta_del_drone")) {
-        std::cout << "Comando inviato con successo a Redis." << std::endl;
-    } else {
-        std::cerr << "Errore nell'invio del comando a Redis." << std::endl;
-    }
+Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id), redisClient_("localhost", 6379){
+    std::string command = "XADD control_centers * message drone_" + std::to_string(id_) + "_connected";
+    redisClient_.sendCommand(command);
+    std::cout << "Drone " << id_ << " connesso al ControlCenter " << cc_id_ << std::endl;
+    RedisClient redisClient = RedisClient("localhost", 6379);
  }
 
 
@@ -27,6 +24,7 @@ int Drone::getControlCenterId() const {
 std::vector<std::tuple<Direction, int>> Drone::requestPath() {
     // Chiedi al ControlCenter il percorso da seguire
     // return controlCenter->computePath();
+    redisClient_.sendCommand("PUBLISH control_center path_request_from_drone_" + std::to_string(id_));
     
     return std::vector<std::tuple<Direction, int>>(); 
 }

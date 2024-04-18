@@ -22,7 +22,7 @@ public:
 private:
     int id_;
     int cc_id_;
-    RedisClient redisClient;
+    RedisClient redisClient_;
     std::string channelName_;
 };
 

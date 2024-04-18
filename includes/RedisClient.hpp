@@ -11,6 +11,7 @@ public:
 
     bool sendCommand(const std::string& command);
     std::string getReply();
+    bool hasReply();
 
 private:
     redisContext* context_;

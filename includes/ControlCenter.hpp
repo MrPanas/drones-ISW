@@ -11,6 +11,11 @@ class ControlCenter {
 
         void setAlgorithm(Algorithm* alg);
 
+        void handleDroneRequests();
+        void sendPath(int droneId, std::string& path);
+        void powerOn();
+        void powerOff();
+
     private:
         const int id_;
         Algorithm* algorithm;

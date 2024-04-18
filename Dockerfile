@@ -25,4 +25,3 @@ EXPOSE 6379 5432
 
 # Avvia i servizi di Redis e PostgreSQL
 CMD service redis-server start && service postgresql start && bash
-dev
