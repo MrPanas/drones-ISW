@@ -21,6 +21,7 @@ class ControlCenter {
         Algorithm* algorithm;
         RedisClient redisClient_;
         std::string channelName;
+        redisContext *ctx_;
 };
 
 #endif

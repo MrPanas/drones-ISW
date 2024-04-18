@@ -4,11 +4,31 @@
 
 // Costruttore
 Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id), redisClient_("localhost", 6379){
-    std::string command = "XADD control_centers * message drone_" + std::to_string(id_) + "_connected";
-    redisClient_.sendCommand(command);
-    std::cout << "Drone " << id_ << " connesso al ControlCenter " << cc_id_ << std::endl;
-    RedisClient redisClient = RedisClient("localhost", 6379);
- }
+    redisContext *c = redisConnect("127.0.0.1", 6379);
+    if (c == NULL || c->err) {
+        if (c) {
+            printf("Errore: %s\n", c->errstr);
+            redisFree(c);
+        } else {
+            printf("Errore: impossibile allocare redis context\n");
+        }
+        exit(1);
+    }
+    std::cout << "connessione a redis riuscita" << std::endl;
+
+    // send XADD command
+    redisReply *reply = (redisReply *)redisCommand(c, "XADD %s * %s %s", "control_centers", "field", "value");
+    if (reply == NULL) {
+        std::cout << "Errore nell'invio del comando XADD" << std::endl;
+    } else {
+        std::cout << "Comando XADD inviato" << std::endl;
+        freeReplyObject(reply);
+    }
+
+
+
+}
+
 
 
 // Metodo per ottenere l'ID del drone

@@ -1,10 +1,10 @@
 #include "ControlCenter.hpp"
 #include <iostream>
 #include <thread>
+#include "redis_fnc.hpp"
 
-using namespace std;
 
-ControlCenter::ControlCenter(int id) : id_(id), redisClient_("localhost", 6379) {
+ControlCenter::ControlCenter(int id) : id_(id), ctx_(redisConnect("127.0.0.1", 6379)) {
     // redisClient_.sendCommand("SUBSCRIBE control_center");
     // redisClient_.sendCommand("XGROUP CREATE control_centers mygroup $ MKSTREAM")
 }
@@ -14,15 +14,31 @@ void ControlCenter::handleDroneRequests() {
     // Avviare un nuovo thread per gestire la ricezione dei messaggi
     std::thread receiverThread([this]() {
         while (true) {
-            if (this->redisClient_.hasReply()) {
+            if (true) {
                 std::cout << "Ricevuto messaggio" << std::endl;
-                std::string command = "XREAD STREAMS control_centers 0";
+                std::string command = "XRANGE control_centers - +";
 
-                redisClient_.sendCommand(command);
-                // Dentro la lambda function
-                redisClient_.getReply();
+                // Invia il comando al server Redis
+                redisReply *reply = (redisReply *)redisCommand(this->ctx_, command.c_str());
+                // print reply type
+                // get last element
+                redisReply *lastElement = reply->element[reply->elements - 1];
+                std::cout << "Reply type: " << reply->type << std::endl;                
+                std::cout << "Comando inviato: " << reply << std::endl;
+                if (reply == NULL) {
+                    std::cout << "Errore nell'invio del comando XREAD" << std::endl;
+                    return;
+                }
+                
 
+                json jsonObject = redisReplyToJSON(lastElement);
+
+
+                std::cout << "JSON: " << jsonObject << std::endl;
+
+                
             }
+            break;
         }
     });
     // Attendere la terminazione del thread ricevitore prima di uscire dal metodo

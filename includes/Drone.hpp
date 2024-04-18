@@ -15,6 +15,9 @@ public:
 
     int getControlCenterId() const;
 
+    void createGroup(const char *stream, const char *consumer);
+
+
     std::vector<std::tuple<Direction, int>> requestPath();
 
     void followPath();
@@ -24,6 +27,7 @@ private:
     int cc_id_;
     RedisClient redisClient_;
     std::string channelName_;
+    redisContext *context_;
 };
 
 #endif
