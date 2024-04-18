@@ -3,6 +3,7 @@
 
 #include <hiredis/hiredis.h>
 #include <string>
+#include <vector>
 
 class RedisClient {
 public:
@@ -10,7 +11,8 @@ public:
     ~RedisClient();
 
     bool sendCommand(const std::string& command);
-    std::string getReply();
+    void getReply();
+    void print_reply(redisReply *reply);
     bool hasReply();
 
 private:

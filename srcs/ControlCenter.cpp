@@ -6,6 +6,7 @@ using namespace std;
 
 ControlCenter::ControlCenter(int id) : id_(id), redisClient_("localhost", 6379) {
     // redisClient_.sendCommand("SUBSCRIBE control_center");
+    // redisClient_.sendCommand("XGROUP CREATE control_centers mygroup $ MKSTREAM")
 }
 
 // Metodo per gestire la ricezione delle richieste dal drone sul canale control_center
@@ -14,29 +15,13 @@ void ControlCenter::handleDroneRequests() {
     std::thread receiverThread([this]() {
         while (true) {
             if (this->redisClient_.hasReply()) {
+                std::cout << "Ricevuto messaggio" << std::endl;
                 std::string command = "XREAD STREAMS control_centers 0";
-                redisClient_.sendCommand(command);
-                std::string message = redisClient_.getReply();
-                // std::string message = redisClient_.getReply();
-                std::cout << "Messaggio ricevuto: " << message << std::endl;
 
-                // Elaborare il messaggio ricevuto
-                // Ad esempio, se il messaggio contiene una richiesta di percorso dal drone
-                // il Control Center può elaborare la richiesta e inviare una risposta al drone
-                if (message.find("drone_1_connected") != std::string::npos) {
-                    std::cout << "Bella per il drone 1" << std::endl;
-                    // Elaborare la richiesta e inviare una risposta al drone
-                    // Ad esempio:
-                    // std::vector<std::tuple<Direction, int>> path = computePath();
-                    // sendPathToDrone(path);
-                }
-                if (message.find("path_request_from_drone_1") != std::string::npos) {
-                    std::cout << "Richiesta di percorso ricevuta dal drone 1" << std::endl;
-                    // Elaborare la richiesta e inviare una risposta al drone
-                    // Ad esempio:
-                    // std::vector<std::tuple<Direction, int>> path = computePath();
-                    // sendPathToDrone(path);
-                }
+                redisClient_.sendCommand(command);
+                // Dentro la lambda function
+                redisClient_.getReply();
+
             }
         }
     });

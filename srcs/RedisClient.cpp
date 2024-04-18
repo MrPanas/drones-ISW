@@ -23,40 +23,40 @@ bool RedisClient::sendCommand(const std::string& command) {
     return reply_ != NULL;
 }
 
-std::string RedisClient::getReply() {
-    std::cout << "Ricezione della risposta..." << reply_ << std::endl;
-    // Verifica se il reply_ è valido
-    if (reply_ == NULL || reply_->type != REDIS_REPLY_ARRAY) {
-        throw std::runtime_error("Errore nella ricezione della risposta XREAD");
-    }
-
-    std::string result;
-
-    // Itera attraverso gli elementi dell'array di risposta
-    for (size_t i = 0; i < reply_->elements; i++) {
-        redisReply* messageArray = reply_->element[i];
-        // Verifica se l'elemento è un array valido
-        if (messageArray == NULL || messageArray->type != REDIS_REPLY_ARRAY) {
-            continue; // Ignora gli elementi non validi
-        }
-
-        // Itera attraverso gli elementi dell'array di messaggi
-        for (size_t j = 0; j < messageArray->elements; j++) {
-            redisReply* messageElement = messageArray->element[j];
-            // Verifica se l'elemento è una stringa
-            if (messageElement != NULL && messageElement->type == REDIS_REPLY_STRING) {
-                result += messageElement->str;
-                result += " "; // Aggiungi uno spazio tra i campi del messaggio
-            }
-        }
-    }
-
-    // Libera la memoria allocata per la risposta
+void RedisClient::getReply() {
+    print_reply(reply_);
     freeReplyObject(reply_);
     reply_ = nullptr;
-
-    return result;
 }
+
+void RedisClient::print_reply(redisReply *reply) {
+    if (reply == NULL) {
+        printf("Risposta nullo\n");
+        return;
+    }
+
+    if (reply->type == REDIS_REPLY_ARRAY) {
+        printf("L'array ha %zu elementi:\n", reply->elements);
+        for (size_t i = 0; i < reply->elements; ++i) {
+            // printf("Elemento %zu:\n", i);
+            print_reply(reply->element[i]);
+        }
+    } else if (reply->type == REDIS_REPLY_STRING) {
+        printf("Stringa: %s\n", reply->str);
+    } else if (reply->type == REDIS_REPLY_INTEGER) {
+        printf("Inter: %lld\n", reply->integer);
+    } else if (reply->type == REDIS_REPLY_ERROR) {
+        printf("Errore: %s\n", reply->str);
+    } else {
+        printf("Tipo di risposta non gestito\n");
+    }
+}
+
+
+
+
+
+
 
 
 
