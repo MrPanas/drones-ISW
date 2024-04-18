@@ -31,5 +31,42 @@ json redisReplyToJSON(redisReply *reply) {
             }
         }
     }
+
+
     return jsonObject;
+}
+
+void deleteMessage(const std::string& stream, const std::string& messageId, redisContext *ctx) {
+    // Costruire il comando XDEL
+    std::string deleteCommand = "XDEL " + stream + " " + messageId;
+
+    // Eseguire il comando XDEL
+    redisReply *deleteReply = (redisReply *)redisCommand(ctx, deleteCommand.c_str());
+    if (deleteReply == NULL) {
+        std::cerr << "Errore nell'invio del comando XDEL" << std::endl;
+    } else {
+        std::cout << "Messaggio eliminato con successo" << std::endl;
+        freeReplyObject(deleteReply);
+    }
+}
+
+void createGroup(redisContext *ctx, const std::string& stream, const std::string& group) {
+    // Costruisci il comando XGROUP CREATE
+    std::string command = "XGROUP CREATE " + stream + " " + group + " $ MKSTREAM";
+
+    // Esegui il comando XGROUP CREATE
+    redisReply *reply = (redisReply *)redisCommand(ctx, command.c_str());
+    if (reply == nullptr) {
+        std::cerr << "Errore nell'esecuzione del comando XGROUP CREATE" << std::endl;
+        return;
+    }
+
+    // Verifica se il comando è stato eseguito con successo
+    if (reply->type == REDIS_REPLY_STATUS && strncmp(reply->str, "OK", 2) == 0) {
+        std::cout << "Gruppo " << group << " creato con successo per lo stream " << stream << std::endl;
+    } else {
+        std::cerr << "Errore durante la creazione del gruppo" << std::endl;
+    }
+
+    freeReplyObject(reply);
 }

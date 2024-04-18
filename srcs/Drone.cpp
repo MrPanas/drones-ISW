@@ -1,14 +1,15 @@
 #include "Drone.hpp"
 #include <string>
 #include <iostream>
+#include "redis_fnc.hpp"
 
 // Costruttore
-Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id), redisClient_("localhost", 6379){
-    redisContext *c = redisConnect("127.0.0.1", 6379);
-    if (c == NULL || c->err) {
-        if (c) {
-            printf("Errore: %s\n", c->errstr);
-            redisFree(c);
+Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id){
+    redisContext *ctx_ = redisConnect("127.0.0.1", 6379);
+    if (ctx_ == NULL || ctx_->err) {
+        if (ctx_) {
+            printf("Errore: %s\n", ctx_->errstr);
+            redisFree(ctx_);
         } else {
             printf("Errore: impossibile allocare redis context\n");
         }
@@ -16,8 +17,12 @@ Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id), redisClient_("localhos
     }
     std::cout << "connessione a redis riuscita" << std::endl;
 
+    // Creare un gruppo con l'id del drone
+    createGroup(ctx_, "drone_" + std::to_string(id_), "mygroup");
+
+
     // send XADD command
-    redisReply *reply = (redisReply *)redisCommand(c, "XADD %s * %s %s", "control_centers", "field", "value");
+    redisReply *reply = (redisReply *)redisCommand(ctx_, "XADD %s * %s %s %s %s", "control_centers", "field1", "value1", "field2", "value2");
     if (reply == NULL) {
         std::cout << "Errore nell'invio del comando XADD" << std::endl;
     } else {
@@ -44,7 +49,7 @@ int Drone::getControlCenterId() const {
 std::vector<std::tuple<Direction, int>> Drone::requestPath() {
     // Chiedi al ControlCenter il percorso da seguire
     // return controlCenter->computePath();
-    redisClient_.sendCommand("PUBLISH control_center path_request_from_drone_" + std::to_string(id_));
+    redisReply *reply = (redisReply *)redisCommand(ctx_, "XADD %s * %s %s", "control_centers", "request_path", "drone_" + std::to_string(id_));
     
     return std::vector<std::tuple<Direction, int>>(); 
 }

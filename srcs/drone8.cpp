@@ -10,6 +10,7 @@ int main() {
     
     ControlCenter controlCenter(1);
     Drone drone(1, 1);
+    
 
     controlCenter.powerOn();
 
