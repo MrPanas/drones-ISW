@@ -14,6 +14,7 @@ public:
     int getId() const;
 
     int getControlCenterId() const;
+    void handleCcRequests();
 
 
     std::vector<std::tuple<Direction, int>> requestPath();

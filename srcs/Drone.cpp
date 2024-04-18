@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "redis_fnc.hpp"
+#include <thread>
 
 // Costruttore
 Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id){
@@ -22,6 +23,7 @@ Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id){
 
 
     // send XADD command
+    // DEBUG____
     redisReply *reply = (redisReply *)redisCommand(ctx_, "XADD %s * %s %s %s %s", "control_centers", "field1", "value1", "field2", "value2");
     if (reply == NULL) {
         std::cout << "Errore nell'invio del comando XADD" << std::endl;
@@ -29,11 +31,52 @@ Drone::Drone(int id, int cc_id) : id_(id), cc_id_(cc_id){
         std::cout << "Comando XADD inviato" << std::endl;
         freeReplyObject(reply);
     }
-
-
-
+    // _______
 }
 
+void Drone::handleCcRequests() {
+    // Avviare un nuovo thread per gestire la ricezione dei messaggi
+    std::thread receiverThread([this]() {
+        while (true) {
+            std::string command = "XRANGE drone_" + std::to_string(id_) + " - +";
+
+            // Invia il comando al server Redis
+            redisReply *reply = (redisReply *)redisCommand(this->ctx_, command.c_str());
+            if (reply == NULL) {
+                std::cerr << "Errore nell'invio del comando XRANGE" << std::endl;
+                return;
+            }
+
+            if (reply->type == REDIS_REPLY_ARRAY && reply->elements > 0) {
+                std::cout << "Ricevuto messaggio" << std::endl;
+                // print reply type
+                // get last element
+                redisReply *message = reply->element[0];
+                if (reply == NULL) {
+                    std::cout << "Errore nell'invio del comando XREAD" << std::endl;
+                    return;
+                }
+                
+
+                json jsonObject = redisReplyToJSON(message);
+
+                std::string id = jsonObject["id"];
+
+                std::cout << "JSON: " << jsonObject << std::endl;
+                std::cout << "value1: " << jsonObject["data"]["field1"] << std::endl;
+
+                // TODO stesso discorso del control center
+                if (jsonObject["data"].contains("path")) {
+                    // Calcola il percorso da inviare al drone
+                    std::string path = jsonObject["data"]["path"];
+                    // std::string path = algorithm->computePath();
+                    std::cout << "Percorso ricevuto: " << path << std::endl;
+                }
+            }
+        }
+    });
+    receiverThread.join();
+}
 
 
 // Metodo per ottenere l'ID del drone
@@ -47,10 +90,16 @@ int Drone::getControlCenterId() const {
 
 // Metodo per richiedere un percorso al ControlCenter
 std::vector<std::tuple<Direction, int>> Drone::requestPath() {
+    std::cout << "Richiesta percorso al ControlCenter" << std::endl;
     // Chiedi al ControlCenter il percorso da seguire
     // return controlCenter->computePath();
     redisReply *reply = (redisReply *)redisCommand(ctx_, "XADD %s * %s %s", "control_centers", "request_path", "drone_" + std::to_string(id_));
-    
+    if (reply == NULL) {
+        std::cout << "Errore nell'invio del comando XADD" << std::endl;
+    } else {
+        std::cout << "Comando XADD inviato" << std::endl;
+        freeReplyObject(reply);
+    }
     return std::vector<std::tuple<Direction, int>>(); 
 }
 

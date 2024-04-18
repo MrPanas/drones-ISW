@@ -13,6 +13,9 @@ int main() {
     
 
     controlCenter.powerOn();
+    // drone.powerOn();
+
+    drone.requestPath(); // TODO: fare in modo che sia l'algoritmo a decidere ogni quanto chiamare questa funzione (modularità)
 
     return 0;
 }
