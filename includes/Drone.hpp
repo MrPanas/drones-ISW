@@ -15,6 +15,7 @@ public:
 
     int getControlCenterId() const;
     void handleCcRequests();
+    void powerOn();
 
 
     std::vector<std::tuple<Direction, int>> requestPath();
