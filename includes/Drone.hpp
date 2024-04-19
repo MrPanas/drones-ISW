@@ -31,3 +31,5 @@ private:
 };
 
 #endif
+
+// TODO: vedere se dovremmo creare la classe Swarm che contiene tutti i droni in uso

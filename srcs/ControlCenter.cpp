@@ -67,8 +67,6 @@ void ControlCenter::handleDroneRequests() {
     }
 } 
 
-
-
 void ControlCenter::sendPath(int droneId, std::string& path) {
     // Invia un messaggio al drone sul canale specifico
     std::string channel = "drone_" + std::to_string(droneId);

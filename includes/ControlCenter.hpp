@@ -24,5 +24,29 @@ class ControlCenter {
         redisContext *ctx_;
 };
 
+class Field { //TODO: Creare un altro file con Field e Point ??
+    public:
+        Field(int width, int height);
+        int getWidth() const;
+        int getHeight() const;
+        void setWidth(int width);
+        void setHeight(int height);
+
+        const Point& getPoint(int x, int y) const;
+        void setTimerToMax(int x, int y); // TODO
+};
+
+class Point {
+    public:
+        Point(int x, int y);
+        int getX() const;
+        int getY() const;
+        int timer; // TODO non sarà int ma un tipo di dato che rappresenta il tempo
+
+    private:
+        int x_;
+        int y_;
+};
+
 #endif
 
