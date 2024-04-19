@@ -19,10 +19,8 @@ int ReadStreamName(redisReply *r, char *streamname,  long unsigned int k)
 
 // reads k-th stream name
 int ReadStreamNumMsg(redisReply *r, long unsigned int streamnum)
-{
-  
+{ 
   return(r->element[streamnum]->element[1]->elements);
-
 }  
 
 // k-th stream, i-th msg id

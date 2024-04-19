@@ -33,6 +33,7 @@ int main() {
     }
 
     ccThread.join();
+    droneThread.join();
 
     return 0;
 }
