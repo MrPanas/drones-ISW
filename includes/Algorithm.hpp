@@ -4,12 +4,11 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
-class Algorithm {
-    public:
-        virtual Path computePath(int droneId); //TODO: in input dovrebbe prendere tutte le info del drone oppure tutte le info della mappa?
-
-        // Distruttore virtuale
-        virtual ~Algorithm() {}
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
 };
 
 class Path {
@@ -22,11 +21,12 @@ class Path {
         std::vector<std::tuple<Direction, int>> path_;
 };
 
-enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
+class Algorithm {
+    public:
+        virtual Path computePath(int droneId); //TODO: in input dovrebbe prendere tutte le info del drone (x, y, battery) e Field
+
+        // Distruttore virtuale
+        virtual ~Algorithm() {}
 };
 
 #endif

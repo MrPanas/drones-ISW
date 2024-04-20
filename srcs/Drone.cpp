@@ -54,7 +54,6 @@ void Drone::handleCcRequests() {
                 return;
             }
             
-
             json jsonObject = redisReplyToJSON(message);
 
             std::string id = jsonObject["id"];
@@ -117,6 +116,8 @@ void Drone::followPath() {
     for (const auto& step : path) {
         Direction direction = std::get<0>(step);
         int distance = std::get<1>(step);
+
+        
 
         // Esegui l'azione necessaria per muoversi nella direzione specificata
         // ad esempio, volare o spostarsi a terra

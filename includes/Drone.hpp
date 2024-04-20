@@ -25,7 +25,6 @@ public:
 private:
     int id_;
     int cc_id_;
-    RedisClient redisClient_;
     std::string channelName_;
     redisContext *ctx_;
 };
