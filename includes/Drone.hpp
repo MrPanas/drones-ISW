@@ -29,6 +29,18 @@ private:
     redisContext *ctx_;
 };
 
-#endif
+enum DroneStatus {
+    WORKING,
+    CHARGING,
+    WAITING,
+};
 
-// TODO: vedere se dovremmo creare la classe Swarm che contiene tutti i droni in uso
+struct DroneData {
+    int id;
+    int x;
+    int y;
+    int battery;
+    DroneStatus status;
+};
+
+#endif

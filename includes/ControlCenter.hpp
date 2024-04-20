@@ -12,7 +12,7 @@ class ControlCenter {
 
         void handleDroneRequests();
         void sendPath(int droneId, std::string& path);
-        void powerOn();
+        void powerOn(); // TODO: vedere se ha senso fare powerOn e powerOff
         void powerOff();
 
     private:

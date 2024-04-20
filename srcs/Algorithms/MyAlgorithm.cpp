@@ -4,7 +4,7 @@
 class MyAlgorithm : public Algorithm {
 public:
     // Implementazione del metodo computePath
-    std::vector<std::tuple<Direction, int>> computePath(int droneId) override {
+    std::vector<int, Path> computePath(Field field, std::vector<<DroneData> drones) override {
         // Implementazione della logica per calcolare il percorso
         // In questo esempio, restituiamo solo una lista vuota di tuple
         std::cout << "Drone " << droneId << " is using MyAlgorithm" << std::endl;

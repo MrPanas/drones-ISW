@@ -1,5 +1,7 @@
 #include <vector>
 #include <tuple>
+#include "Field.hpp"
+#include "Drone.hpp"
 
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
@@ -23,7 +25,10 @@ class Path {
 
 class Algorithm {
     public:
-        virtual Path computePath(int droneId); //TODO: in input dovrebbe prendere tutte le info del drone (x, y, battery) e Field
+        //                int: drone_id
+        virtual std::vector<int, Path> computePath(Field field, std::vector<<DroneData> drones); 
+
+        // TODO: ci dovrà essere una funzione che decide ogni quanto tempo chiamare computePath
 
         // Distruttore virtuale
         virtual ~Algorithm() {}
