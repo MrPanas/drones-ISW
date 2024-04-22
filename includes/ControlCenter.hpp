@@ -5,6 +5,7 @@
 #include "Algorithm.hpp"
 #include <hiredis/hiredis.h>
 
+class Algorithm;
 
 class ControlCenter {
     public:

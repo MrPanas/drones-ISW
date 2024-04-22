@@ -31,9 +31,7 @@ const Point& Field::getPoint(int x, int y) const {
     return points_[x][y];
 }
 
-std::pair<int, int> Field::getCCPosition() const {
-    return std::make_pair(width_ / 2, height_ / 2);
-}
+ 
 
 void Field::resetPointTimer(int x, int y) {
     points_[x][y].resetTimer();
