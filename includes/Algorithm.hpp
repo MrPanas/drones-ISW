@@ -1,10 +1,10 @@
-#include <vector>
-#include <tuple>
-#include "Field.hpp"
-#include "Drone.hpp"
-
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
+
+#include <vector>
+#include <tuple>
+#include "Drone.hpp"
+#include "Field.hpp"
 
 enum Direction {
     UP,
@@ -25,11 +25,13 @@ class Path {
     private:
         std::vector<std::tuple<Direction, int>> path_;
 };
+struct DroneData;
 
 class Algorithm {
     public:
+        DroneData droneData();
         //                          int: drone_id
-        virtual std::vector<std::tuple<int, Path>> computePath(Field field, std::vector<<DroneData> drones); 
+        virtual std::vector<std::tuple<int, Path>> computePath(Field field, std::vector<DroneData> drones); 
 
         // TODO: ci dovrà essere una funzione che decide ogni quanto tempo chiamare computePath
 

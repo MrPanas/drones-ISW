@@ -1,8 +1,10 @@
 #ifndef CONTROLCENTER_HPP
 #define CONTROLCENTER_HPP
 
+#include "Drone.hpp"
 #include "Algorithm.hpp"
 #include <hiredis/hiredis.h>
+
 
 class ControlCenter {
     public:

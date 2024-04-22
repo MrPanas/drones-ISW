@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <hiredis/hiredis.h>
+// #include "Field.hpp"
 #include "Drone.hpp"
+// #include "Algorithm.hpp"
 #include "ControlCenter.hpp"
 #include <thread>
 
@@ -25,7 +27,7 @@ int main() {
 
     std::cout << "Thread superato" << std::endl;
 
-    drone.requestPath(); // TODO: fare in modo che sia l'algoritmo a decidere ogni quanto chiamare questa funzione (modularità)
+    // drone.requestPath(); // TODO: fare in modo che sia l'algoritmo a decidere ogni quanto chiamare questa funzione (modularità)
 
     for (int i = 0; i < 100; i++) {
         std::cout << "Main thread" << std::endl;

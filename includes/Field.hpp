@@ -33,6 +33,7 @@ class Field {
         int getHeight() const;
         void setWidth(int width);
         void setHeight(int height);
+        std::pair<int, int> getCCPosition() const;
 
         const Point& getPoint(int x, int y) const;
         void resetPointTimer(int x, int y);

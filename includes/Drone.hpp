@@ -6,27 +6,24 @@
 #include "ControlCenter.hpp"
 
 class Drone {
-public:
-    // Costruttore
-    Drone(int id, int cc_id);
+    public:
+        // Costruttore
+        Drone(int id, int cc_id);
 
-    // Metodo per ottenere l'ID del drone
-    int getId() const;
+        // Metodo per ottenere l'ID del drone
+        int getId() const;
 
-    int getControlCenterId() const;
-    void handleCcRequests();
-    void powerOn();
+        int getControlCenterId() const;
+        void handleCcRequests();
+        void powerOn();
 
+        void followPath();
 
-    std::vector<std::tuple<Direction, int>> requestPath();
-
-    void followPath();
-
-private:
-    int id_;
-    int cc_id_;
-    std::string channelName_;
-    redisContext *ctx_;
+    private:
+        int id_;
+        int cc_id_;
+        std::string channelName_;
+        redisContext *ctx_;
 };
 
 enum DroneStatus {

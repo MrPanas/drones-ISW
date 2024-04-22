@@ -91,26 +91,27 @@ int Drone::getControlCenterId() const {
 }
 
 // Metodo per richiedere un percorso al ControlCenter
-std::vector<std::tuple<Direction, int>> Drone::requestPath() {
-    std::cout << "Richiesta percorso al ControlCenter" << std::endl;
-    // Chiedi al ControlCenter il percorso da seguire
-    // return controlCenter->computePath();
-    std::string command = "XADD control_centers * request_path drone_" + std::to_string(id_);
-    redisReply *reply = (redisReply *)redisCommand(ctx_, command.c_str());
-    std::cout << "Richiesta inviata" << std::endl;
-    if (reply == NULL) {
-        std::cout << "Errore nell'invio del comando XADD" << std::endl;
-    } else {
-        std::cout << "Comando XADD inviato" << std::endl;
-        freeReplyObject(reply);
-    }
-    return std::vector<std::tuple<Direction, int>>(); 
-}
+// std::vector<std::tuple<Direction, int>> Drone::requestPath() {
+//     std::cout << "Richiesta percorso al ControlCenter" << std::endl;
+//     // Chiedi al ControlCenter il percorso da seguire
+//     // return controlCenter->computePath();
+//     std::string command = "XADD control_centers * request_path drone_" + std::to_string(id_);
+//     redisReply *reply = (redisReply *)redisCommand(ctx_, command.c_str());
+//     std::cout << "Richiesta inviata" << std::endl;
+//     if (reply == NULL) {
+//         std::cout << "Errore nell'invio del comando XADD" << std::endl;
+//     } else {
+//         std::cout << "Comando XADD inviato" << std::endl;
+//         freeReplyObject(reply);
+//     }
+//     return std::vector<std::tuple<Direction, int>>(); 
+// }
 
 // Metodo per seguire un percorso
 void Drone::followPath() {
     // Richiedi un percorso al ControlCenter
-    std::vector<std::tuple<Direction, int>> path = requestPath();
+    // std::vector<std::tuple<Direction, int>> path = requestPath();
+    std::vector<std::tuple<Direction, int>> path = {std::make_tuple(Direction::UP, 10), std::make_tuple(Direction::UP, 20), std::make_tuple(Direction::DOWN, 5)};
 
     // Segui il percorso
     for (const auto& step : path) {

@@ -24,9 +24,9 @@ void Path::addDirection(Direction dir, int steps) {
 class VivianosAlg : public Algorithm {
     public:
     // Implementazione del metodo computePath
-    std::vector<int, Path> computePath(Field field, std::vector<<DroneData> drones) override {
+    std::vector<std::tuple<int, Path>> computePath(Field field, std::vector<<DroneData> drones) override {
         // TODO fare in modo che si salva il path una volta calcolato in modo che non deve più essere calcolato
-        std::vector<int, Path> result;
+        std::vector<std::tuple<int, Path>> result;
         Field wrk_field = createWorkingField(field); 
 
         Coordinates init_pos = Coordinates(0,0) // init_pos = (0,0)
