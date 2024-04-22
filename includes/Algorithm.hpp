@@ -16,8 +16,11 @@ enum Direction {
 class Path {
     public:
         Path(std::vector<std::tuple<Direction, int>> path);
+        Path();
 
         std::vector<std::tuple<Direction, int>> getPath() const;
+
+        void addDirection(Direction dir, int steps);
 
     private:
         std::vector<std::tuple<Direction, int>> path_;
@@ -25,8 +28,8 @@ class Path {
 
 class Algorithm {
     public:
-        //                int: drone_id
-        virtual std::vector<int, Path> computePath(Field field, std::vector<<DroneData> drones); 
+        //                          int: drone_id
+        virtual std::vector<std::tuple<int, Path>> computePath(Field field, std::vector<<DroneData> drones); 
 
         // TODO: ci dovrà essere una funzione che decide ogni quanto tempo chiamare computePath
 
