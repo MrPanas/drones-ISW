@@ -33,22 +33,26 @@ PASSWORD		= "test"
 INCLUDE			= includes/
 SRC_DIR			= srcs
 OBJ_DIR			= objs
+CON2DB_OBJ_DIR		= con2db
 
 SRC_SUB_DIRS	= $(shell find $(SRC_DIR) -type d)
 OBJ_SUB_DIRS	= $(SRC_SUB_DIRS:$(SRC_DIR)%=$(OBJ_DIR)%)
 
 SRCS			= $(foreach DIR, $(SRC_SUB_DIRS), $(wildcard $(DIR)/*.cpp))
 OBJS			= $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-
+CON2DB_OBJS		=$(wildcard $(CON2DB_OBJ_DIR)/*.o)
 
 
 #####   BASE RULES   #####
 
 all: $(NAME)
 
-$(NAME): $(OBJ_SUB_DIRS) $(OBJS)
-	@ $(CC) $(CFLAGS) $(OBJS) -o $@ $(PGFLAGS)
+$(NAME): $(OBJ_SUB_DIRS) $(OBJS) con2db
+	@ $(CC) $(CFLAGS) $(OBJS) $(CON2DB_OBJS) -o $@ $(PGFLAGS)
 	@ echo "$(GREEN)[+] $(NAME) compiled$(END)"
+
+con2db:
+	$(MAKE) -C $(CON2DB_OBJ_DIR)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
 	@ $(CC) $(CFLAGS) -I $(INCLUDE) -c $< -o $@ $(PGFLAGS)
