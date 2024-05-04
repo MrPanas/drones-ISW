@@ -10,6 +10,7 @@
 #include <hiredis.h>
 #include "../scanning_strategy/ScanningStrategy.h"
 #include "../area/Area.hpp"
+#include "../redis/redis.h"
 
 
 // Forward declaration
@@ -39,8 +40,8 @@ struct DroneData {
 class Drone {
 public:
     // Constructor
-    Drone(int id);
-    Drone(int id, int cc_id);
+    Drone(unsigned int id);
+    Drone(unsigned int id, unsigned int cc_id);
 
     int getId();
 
@@ -56,8 +57,8 @@ public:
     ~Drone();
 
 private:
-    int id_; // ID del drone
-    int cc_id_;
+    unsigned int id_; // ID del drone
+    unsigned int cc_id_{};
     redisContext *ctx_;
 
     void listenCC();

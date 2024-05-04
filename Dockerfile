@@ -18,8 +18,6 @@ ENV REDIS_HOST=localhost
 ENV REDIS_PORT=6379
 
 
-
-
 WORKDIR /
 #FROM debian:bookworm
 
