@@ -5,6 +5,7 @@
 #include <iostream>
 #include "ControlCenter.hpp"
 
+
 /*
  * Control Center must:
  *
@@ -22,6 +23,10 @@
 
 
 ControlCenter::ControlCenter(unsigned int id) : id_(id) {
+    // Connect to redis
+//    ctx_ = redisConnect(REDIS_HOST,REDIS_PORT);
+
+
 
 }
 

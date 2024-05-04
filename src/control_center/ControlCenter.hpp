@@ -15,10 +15,10 @@
 #include "../area/Area.hpp"
 #include "../drone/Drone.h"
 #include "../con2db/pgsql.h"
+#include "../redis/redis.h"
 
 
-#define REDIS_SERVER "localhost"
-#define REDIS_PORT 6379
+
 
 enum class ControlCenterState {
     STARTING,
