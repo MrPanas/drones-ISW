@@ -16,6 +16,10 @@
 #include "../drone/Drone.h"
 #include "../con2db/pgsql.h"
 
+
+#define REDIS_SERVER "localhost"
+#define REDIS_PORT 6379
+
 enum class ControlCenterState {
     STARTING,
     SENDING_PATHS,
@@ -29,10 +33,10 @@ using namespace std;
 
 class ControlCenter {
 public:
-    ControlCenter(int id);
+    explicit ControlCenter(unsigned int id);
 
 
-    ControlCenter(int id, ScanningStrategy *strategy, Area area);
+    ControlCenter(unsigned int id, ScanningStrategy *strategy, Area area);
 
     void setStrategy(ScanningStrategy *strategy);
 
@@ -53,12 +57,12 @@ private:
 
     void insertLog();
 
-    const int id_;
-    ScanningStrategy* strategy_;
-    Area area_;
-    redisContext *ctx_;
+    const unsigned int id_;
+    ScanningStrategy* strategy_{};
+    Area area_ = Area(0, 0);
+    redisContext *ctx_{};
     vector<DroneData> drones;
-    PGconn *conn_;
+    PGconn *conn_{};
 };
 
 //privte:

@@ -17,6 +17,8 @@
 #define DBPORT "5432"
 
 
+
+
 // Establish connection to redis server
 using namespace std;
 
@@ -30,6 +32,9 @@ int main() {
 
     StreamRedis streamRedis{};
 
+
+
+    cout << "VAR1: " << Var << endl;
 
     GG gg;
 

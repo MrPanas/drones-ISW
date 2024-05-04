@@ -5,19 +5,20 @@ RUN apk add --update gcc g++ clang gdb cmake make ninja autoconf automake dos2un
     && rm -rf /tmp/* /var/cache/apk/*
 
 # Clona la libreria redis-plus-plus
-RUN git clone --recursive https://github.com/sewenew/redis-plus-plus.git /redis-plus-plus
 
-# Compila la libreria redis-plus-plus
-WORKDIR /redis-plus-plus
+# DB
+ENV DB_HOST=localhost
+ENV DB_PORT=5432
+ENV DB_NAME=postgres
+ENV DB_USER=postgres
+ENV DB_PASS=postgres
 
-RUN mkdir build && \
-        cd build && \
-        # Configura il progetto con cmake
-        cmake .. && \
-        # Compila il codice
-        make && \
-        # Installa redis-plus-plus
-        make install
+# Redis
+ENV REDIS_HOST=localhost
+ENV REDIS_PORT=6379
+
+
+
 
 WORKDIR /
 #FROM debian:bookworm

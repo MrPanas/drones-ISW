@@ -10,6 +10,9 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 
+#define REDIS_HOST getenv("REDIS_HOST")
+#define REDIS_PORT getenv("REDIS_PORT")
+
 
 using namespace std;
 using json = nlohmann::json;
