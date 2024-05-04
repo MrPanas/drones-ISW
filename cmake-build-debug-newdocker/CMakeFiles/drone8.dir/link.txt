@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/drone8.dir/main.cpp.o CMakeFiles/drone8.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/drone8.dir/src/drone/Drone.cpp.o CMakeFiles/drone8.dir/src/scanning_strategy/SimpleStrategy.cpp.o CMakeFiles/drone8.dir/src/area/Area.cpp.o CMakeFiles/drone8.dir/src/redis/StreamRedis.cpp.o -o drone8  -lhiredis -lpq 

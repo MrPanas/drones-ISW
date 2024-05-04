@@ -1,5 +1,0 @@
-/tmp/drone8/cmake-build-debug-newdocker/CMakeFiles/cc.dir
-/tmp/drone8/cmake-build-debug-newdocker/CMakeFiles/drone.dir
-/tmp/drone8/cmake-build-debug-newdocker/CMakeFiles/test.dir
-/tmp/drone8/cmake-build-debug-newdocker/CMakeFiles/edit_cache.dir
-/tmp/drone8/cmake-build-debug-newdocker/CMakeFiles/rebuild_cache.dir

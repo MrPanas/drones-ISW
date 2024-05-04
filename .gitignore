@@ -1,6 +1,2 @@
-cmake-build-debug
-cmake-build-debug-newdocker
-
-.idea
-
-.
+/cmake-build-debug-newdocker/
+/cmake-build-debug/
