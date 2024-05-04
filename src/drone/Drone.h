@@ -21,7 +21,7 @@ class Path;
 enum class DroneState {
     WORKING,
     CHARGING,
-    WAITING,
+    READY,
 };
 
 struct DroneData {
@@ -64,7 +64,7 @@ private:
 
     void listenCC();
 
-    void followPath(string path);
+    void followPath(const string& path);
 
     void sendDataToCC();
 };
