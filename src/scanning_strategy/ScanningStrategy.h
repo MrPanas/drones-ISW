@@ -39,6 +39,7 @@ inline string toString(Direction direction) {
             return "UNKNOWN";
     }
 }
+struct DroneData;
 /**
  * Path class
  */

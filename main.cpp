@@ -1,6 +1,6 @@
 #include <iostream>
 #include "src/control_center/ControlCenter.hpp"
-#include "src/scanning_strategy/SimpleStrategy.h"
+
 #include "src/area/Area.hpp"
 #include "src/redis/StreamRedis.h"
 #include <hiredis/hiredis.h>
@@ -103,7 +103,7 @@ int main() {
 
 
     // Create SimpleStrategy object
-    SimpleStrategy simpleStrategy{};
+
 
     // Create ControlCenter object
 //    ControlCenter cc{1, &simpleStrategy};
@@ -115,8 +115,7 @@ int main() {
 
 
     // Create ControlCenter object
-    ControlCenter cc{};
-    cc.startOperations();
+
 
 
 //    std::this_thread::sleep_for(std::chrono::seconds(1));

@@ -9,6 +9,12 @@
 #include <string>
 #include <hiredis.h>
 #include "../scanning_strategy/ScanningStrategy.h"
+#include "../area/Area.hpp"
+
+
+// Forward declaration
+class Path;
+
 
 // Possible states of the drone
 enum class DroneState {
@@ -24,6 +30,9 @@ struct DroneData {
     int battery;
     DroneState state;
 };
+
+
+
 /**
  * Drone class
  */
