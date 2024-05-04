@@ -182,7 +182,7 @@ Response readMessageGroup(redisContext *context, const string &group, const stri
         freeReplyObject(reply);
         return make_tuple("",map<string,string>());
     }
-    // Get the messagge
+    // Get the message
     //                                 arr        stream       arr
     string messageId =          reply->element[0]->element[1]->element[0]->element[0]->str;
 

@@ -43,11 +43,11 @@ public:
     Drone(unsigned int id);
     Drone(unsigned int id, unsigned int cc_id);
 
-    int getId();
+    unsigned int getId() const;
 
     void setCCId(int cc_id);
 
-    int getCCId() const;
+    unsigned int getCCId() const;
 
 
     void start();
@@ -60,10 +60,11 @@ private:
     unsigned int id_; // ID del drone
     unsigned int cc_id_{};
     redisContext *ctx_;
+    DroneState state_;
 
     void listenCC();
 
-    void followPath(Path path);
+    void followPath(string path);
 
     void sendDataToCC();
 };
