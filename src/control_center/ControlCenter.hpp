@@ -15,7 +15,6 @@
 #include "../area/Area.hpp"
 #include "../drone/Drone.h"
 #include "../con2db/pgsql.h"
-#include "../redis/redis.h"
 
 
 
@@ -29,6 +28,8 @@ enum class ControlCenterState {
 
 
 using namespace std;
+
+
 
 
 class ControlCenter {
@@ -51,9 +52,11 @@ private:
 
     void listenDrones();
 
+    void updateMap(DroneData droneData);
+
     void sendPathsToDrones();
 
-    void sendPath(int droneId, Path path);
+    void sendPath(unsigned int droneId, const Path& path);
 
     void insertLog();
 
@@ -61,8 +64,13 @@ private:
     ScanningStrategy* strategy_{};
     Area area_ = Area(0, 0);
     redisContext *ctx_{};
-    vector<DroneData> drones;
+    vector<DroneData> workingDrones_;
+    vector<DroneData> chargingDrones_;
+    vector<DroneData> readyDrones_;
+
     PGconn *conn_{};
+
+    void handleSchedule(DroneSchedule schedule);
 };
 
 //privte:

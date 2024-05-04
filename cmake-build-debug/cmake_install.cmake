@@ -1,4 +1,4 @@
-# Install script for directory: /Users/gianlucaviviano/CLionProjects/drones-ISWProject
+# Install script for directory: /Users/mrpana/CLionProjects/drones8
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/gianlucaviviano/CLionProjects/drones-ISWProject/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/mrpana/CLionProjects/drones8/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

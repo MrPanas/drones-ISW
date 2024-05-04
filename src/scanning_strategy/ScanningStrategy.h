@@ -17,7 +17,7 @@ enum Direction {
     NORTH,
     SOUTH,
     WEST,
-    EST
+    EAST
 };
 
 /**
@@ -32,14 +32,21 @@ inline string toString(Direction direction) {
         case SOUTH:
             return "S";
         case WEST:
+<<<<<<< HEAD
             return "W";
         case EST:
             return "E";
+=======
+            return "WEST";
+        case EAST:
+            return "EAST";
+>>>>>>> e09dea4 (test3)
         default:
             return "UNKNOWN";
     }
 }
 struct DroneData;
+
 /**
  * Path class
  */
@@ -57,13 +64,17 @@ private:
     DirectionList path_;
 };
 
+
+
+using DroneSchedule = tuple<int, Path, chrono::milliseconds>;
+
 /**
  * Interface for the scanning strategy
  */
 class ScanningStrategy {
 public:
     virtual ~ScanningStrategy() = default; // Distruttore virtuale per la classe astratta
-    virtual vector<tuple<int, Path, chrono::milliseconds>> computePath(Area area, vector<DroneData> drones);
+    virtual vector<DroneSchedule> createSchedules(Area area);
 };
 
 
