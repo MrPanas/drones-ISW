@@ -1,46 +1,33 @@
-
 services:
-  postgres:
-    container_name: postgres_container_drones
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      PGDATA: /data/postgres
-    volumes:
-      - ./data/postgresData:/data/postgres # to choose your personal directory, change only the left path.
-      - ./data/db-scripts:/data/db-scripts
-    ports:
-      - "${POSTGRES_EXPOSED_PORT}:5432" # to choose your personal port, change only the left port.
-    networks:
-      - postgres
-    restart: unless-stopped
-
-  pgadmin:
-    container_name: pgadmin_container_drones
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-    volumes:
-      - ./data/pgadminData:/var/lib/pgadmin # to choose your personal directory, change only the left path.
-    ports:
-      - "${PGADMIN_EXPOSED_PORT}:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-
+#  dev:
+#    container_name: dev
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    command: tail -f /dev/null # Keep the container running
+#  app:
+#    container_name: app
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8000:8000"
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - redis
+#      - postgres
   redis:
-    image: redis:latest
-    container_name: redis_container_drones
+    container_name: redis
+    image: redis:alpine
     ports:
       - "6379:6379"
-
-networks:
   postgres:
-    driver: bridge
-
-volumes:
-  postgres:
-  pgadmin:
-
+    container_name: postgres
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres

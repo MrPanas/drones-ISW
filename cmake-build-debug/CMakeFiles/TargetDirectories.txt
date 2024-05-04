@@ -1,0 +1,5 @@
+/Users/mrpana/CLionProjects/drone8/cmake-build-debug/CMakeFiles/cc.dir
+/Users/mrpana/CLionProjects/drone8/cmake-build-debug/CMakeFiles/drone.dir
+/Users/mrpana/CLionProjects/drone8/cmake-build-debug/CMakeFiles/test.dir
+/Users/mrpana/CLionProjects/drone8/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/mrpana/CLionProjects/drone8/cmake-build-debug/CMakeFiles/rebuild_cache.dir

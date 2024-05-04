@@ -1,27 +1,38 @@
-# Usa Debian come base image
-FROM debian:bookworm
+FROM alpine:latest
 
-# Aggiorna il repository e installa le dipendenze
-RUN apt-get update && \
-    apt-get install -y \
-        redis-server \
-        postgresql \
-        postgresql-contrib \
-        cmake \
-        build-essential \
-        libhiredis-dev \
-        libpq-dev \
-        git \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Installa le dipendenze
+RUN apk add --update gcc g++ clang gdb cmake make ninja autoconf automake dos2unix tar rsync hiredis hiredis-dev libpq-dev nlohmann-json valgrind git redis\
+    && rm -rf /tmp/* /var/cache/apk/*
 
+# Clona la libreria redis-plus-plus
+RUN git clone --recursive https://github.com/sewenew/redis-plus-plus.git /redis-plus-plus
 
-# Copia il file di configurazione Redis Streams
-# COPY redis.conf /etc/redis/redis.conf
+# Compila la libreria redis-plus-plus
+WORKDIR /redis-plus-plus
 
-# Esponi le porte di Redis e PostgreSQL
-EXPOSE 6379 5432
+RUN mkdir build && \
+        cd build && \
+        # Configura il progetto con cmake
+        cmake .. && \
+        # Compila il codice
+        make && \
+        # Installa redis-plus-plus
+        make install
 
-# Avvia i servizi di Redis e PostgreSQL
-CMD service redis-server start && service postgresql start && bash
+WORKDIR /
+#FROM debian:bookworm
+
+## Aggiorna il repository e installa le dipendenze
+#RUN apt-get update && \
+#    apt-get install -y \
+#        redis-server \
+#        postgresql \
+#        postgresql-contrib \
+#        cmake \
+#        build-essential \
+#        libhiredis-dev \
+#        libpq-dev \
+#        git \
+#        && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*

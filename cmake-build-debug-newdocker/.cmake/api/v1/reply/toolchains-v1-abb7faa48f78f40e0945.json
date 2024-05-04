@@ -1,0 +1,108 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/usr/include/fortify",
+						"/usr/include",
+						"/usr/lib/gcc/aarch64-alpine-linux-musl/13.2.1/include"
+					],
+					"linkDirectories" : 
+					[
+						"/usr/lib/gcc/aarch64-alpine-linux-musl/13.2.1",
+						"/usr/aarch64-alpine-linux-musl/lib",
+						"/usr/lib",
+						"/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"ssp_nonshared",
+						"gcc",
+						"gcc_s",
+						"c",
+						"gcc",
+						"gcc_s"
+					]
+				},
+				"path" : "/usr/bin/cc",
+				"version" : "13.2.1"
+			},
+			"language" : "C",
+			"sourceFileExtensions" : 
+			[
+				"c",
+				"m"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/usr/include/c++/13.2.1",
+						"/usr/include/c++/13.2.1/aarch64-alpine-linux-musl",
+						"/usr/include/c++/13.2.1/backward",
+						"/usr/include/fortify",
+						"/usr/include",
+						"/usr/lib/gcc/aarch64-alpine-linux-musl/13.2.1/include"
+					],
+					"linkDirectories" : 
+					[
+						"/usr/lib/gcc/aarch64-alpine-linux-musl/13.2.1",
+						"/usr/aarch64-alpine-linux-musl/lib",
+						"/usr/lib",
+						"/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"stdc++",
+						"m",
+						"ssp_nonshared",
+						"gcc_s",
+						"gcc",
+						"c",
+						"gcc_s",
+						"gcc"
+					]
+				},
+				"path" : "/usr/bin/c++",
+				"version" : "13.2.1"
+			},
+			"language" : "CXX",
+			"sourceFileExtensions" : 
+			[
+				"C",
+				"M",
+				"c++",
+				"cc",
+				"cpp",
+				"cxx",
+				"mm",
+				"mpp",
+				"CPP",
+				"ixx",
+				"cppm",
+				"ccm",
+				"cxxm",
+				"c++m"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}
