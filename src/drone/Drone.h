@@ -25,7 +25,7 @@ enum class DroneState {
 };
 
 struct DroneData {
-    int id;
+    unsigned int id;
     int x;
     int y;
     int battery;
@@ -60,7 +60,7 @@ private:
     unsigned int id_; // ID del drone
     unsigned int cc_id_{};
     redisContext *ctx_;
-    DroneState state_;
+    DroneData current_data_;
 
     void listenCC();
 

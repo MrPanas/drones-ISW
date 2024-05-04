@@ -226,7 +226,7 @@ Response readMessageGroup(redisContext *context, const string &group, const stri
 
 
 /**
- * Get the group info from a streamu
+ * Get the group info from a stream
  * @param context redis context
  * @param stream stream name
  * @param nameGroup group name

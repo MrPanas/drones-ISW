@@ -28,13 +28,13 @@ enum Direction {
 inline string toString(Direction direction) {
     switch (direction) {
         case NORTH:
-            return "NORTH";
+            return "N";
         case SOUTH:
-            return "SOUTH";
+            return "S";
         case WEST:
-            return "WEST";
+            return "W";
         case EST:
-            return "EAST";
+            return "E";
         default:
             return "UNKNOWN";
     }
