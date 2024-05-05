@@ -11,6 +11,7 @@
 #include "../scanning_strategy/ScanningStrategy.h"
 #include "../area/Area.hpp"
 #include "../redis/redis.h"
+#include <future>
 
 
 // Forward declaration

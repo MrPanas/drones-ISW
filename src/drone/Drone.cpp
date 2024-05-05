@@ -63,40 +63,65 @@ void Drone::listenCC() {
 
         cout << "Message received: " << message["path"] << endl;
 
-        followPath(message["path"]); // TODO: chiamare questo metodo e poi non aspettare la risposta
+        // followPath(message["path"]); // TODO: chiamare questo metodo in un altro thread
+        async(launch::async, &Drone::followPath, this, message["path"]);
+
     }
 }
 
-void Drone::followPath(const string& path) {
+void Drone::followPath(const std::string &path) {
     if (current_data_.state != DroneState::READY) {
         cout << "Drone " << id_ << " executing a job" << endl;
         return;
     }
 
-    cout << "Drone " << id_ << " is following the path" << endl;
+    cout << "Drone::followPath: Drone " << id_ << " is following the path" << endl;
 
-    for (char c : path) {
-        switch (c) {
-            case 'N':
-                current_data_.y--;
-                break;
-            case 'S':
-                current_data_.y++;
-                break;
-            case 'E':
-                current_data_.x--;
-                break;
-            case 'W':
-                current_data_.x++;
-                break;
-            default:
-                std::cerr << "Carattere non valido nel percorso: " << c << std::endl;
+    size_t i = 0;
+    while (i < path.length()) {
+        char dir = path[i++];
+        string stepsStr;
+        while (i < path.length() && isdigit(path[i])) {
+            stepsStr += path[i++];
+        } // format is <dir><steps>_<dir><steps>... this reads the direction and the steps
+
+        i++;
+        int steps = stoi(stepsStr);
+
+        for (int j = 0; j < steps; j++) {
+            switch (dir) {
+                case 'N':
+                    current_data_.y--;
+                    break;
+                case 'S':
+                    current_data_.y++;
+                    break;
+                case 'E':
+                    current_data_.x--;
+                    break;
+                case 'W':
+                    current_data_.x++;
+                    break;
+                default:
+                    cerr << "Drone::followPath: Invalid direction" << endl;
+            }
+            // TODO: sendDataToCC();
+            // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
+            this_thread::sleep_for(chrono::milliseconds(120));
         }
-        // TODO: inviare i dati al CC
-        // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12)
-        this_thread::sleep_for(chrono::milliseconds(120));
     }
-
+    current_data_.state = DroneState::CHARGING;
+    sendDataToCC();
     cout << "current drone position: " << current_data_.x << " " << current_data_.y << endl;
+}
 
+void Drone::sendDataToCC() {
+    Message message;
+    message["id"] = to_string(id_);
+    message["x"] = to_string(current_data_.x);
+    message["y"] = to_string(current_data_.y);
+    message["battery"] = to_string(current_data_.battery);
+    message["state"] = to_string(static_cast<int>(current_data_.state));
+
+    sendMessage(ctx_, "cc_" + to_string(cc_id_), message);
 }

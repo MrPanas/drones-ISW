@@ -80,6 +80,8 @@ add_executable(cc src/control_center/main.cpp
         src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
+        src/scanning_strategy/Path.h
+        src/scanning_strategy/Path.cpp
 )
 
 
@@ -109,6 +111,8 @@ add_executable(drone src/drone/main.cpp
         src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
+        src/scanning_strategy/Path.h
+        src/scanning_strategy/Path.cpp
 )
 
 target_include_directories(drone PRIVATE "/usr/include/hiredis")
@@ -135,6 +139,8 @@ add_executable(test main.cpp
         src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
+        src/scanning_strategy/Path.h
+        src/scanning_strategy/Path.cpp
 )
 # Includi la directory degli header di Hiredis
 target_include_directories(test PRIVATE "/usr/include/hiredis")

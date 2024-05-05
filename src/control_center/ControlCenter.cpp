@@ -116,25 +116,24 @@ void ControlCenter::start() {
 void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
     const string stream = "stream_drone_" + to_string(droneId);
 
-    string pathStr;
-    for (const auto& [dir, rep]: path.getPath()) {
-        pathStr += to_string(dir) + to_string(rep) + "_";
-    }
+    string pathStr = path.toString();
 
     Message message;
     message["path"] = pathStr;
     sendMessage(ctx_, stream, message);
-
 }
 
 void ControlCenter::sendPathsToDrones() {
+    // Open thread for each schedule
+//    vector<DroneSchedule> schedules = strategy_->createSchedules(area_); // TODO: uncomment
+
+    // DEBUG TODO: Remove after try
     Path p = Path();
     p.addDirection(Direction::NORTH, 3);
     p.addDirection(Direction::EAST, 2);
-    // Open thread for each schedule
-//    vector<DroneSchedule> schedules = strategy_->createSchedules(area_);
     vector<DroneSchedule> schedules = vector<DroneSchedule>();
     schedules.emplace_back(1, p, chrono::milliseconds(5000));
+    // _________
 
 
     vector<thread> threads;
@@ -146,11 +145,8 @@ void ControlCenter::sendPathsToDrones() {
     for (thread &t : threads) {
         t.join();
     }
-
-
-
-
 }
+
 
 void ControlCenter::handleSchedule(DroneSchedule schedule) {
     int pathId = get<0>(schedule);
