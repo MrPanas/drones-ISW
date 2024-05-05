@@ -39,6 +39,7 @@ public:
 
     void setStrategy(ScanningStrategy *strategy);
 
+
     void initDrones();
 
     void start();

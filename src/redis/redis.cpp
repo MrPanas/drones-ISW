@@ -84,7 +84,6 @@ long destroyGroup(redisContext *context, const string &stream, const string &gro
  * @return message id
  */
 string sendMessage(redisContext *context, const string &stream, Message &message) {
-
     // Create XADD command
     string xadd = "XADD " + stream + " * ";
 
@@ -92,7 +91,6 @@ string sendMessage(redisContext *context, const string &stream, Message &message
     for (const auto &item : message) {
         xadd += item.first + " " + item.second + " ";
     }
-    // cout << "XADD: " << xadd << endl;
 
     // Send the message
     auto *reply = (redisReply *) redisCommand(context, xadd.c_str());
