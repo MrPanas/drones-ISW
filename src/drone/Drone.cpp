@@ -5,7 +5,7 @@
 
 Drone::Drone(unsigned int id) : id_(id){
     current_data_ = {id_, 0, 0, 100, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
-    cout << "Drone " << id_ << " created" << endl;
+    // cout << "Drone " << id_ << " created" << endl;
     ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
     if (ctx_ == NULL || ctx_->err) {
         if (ctx_) {
@@ -16,9 +16,7 @@ Drone::Drone(unsigned int id) : id_(id){
         }
     }
 
-
     createGroup(ctx_, "stream_drone_" + to_string(id_), "Drone_" + to_string(id_) , true);
-
 
 }
 
@@ -55,9 +53,13 @@ void Drone::start() {
 }
 
 void Drone::listenCC() {
-    cout << "Drone::listenCC: Drone " << id_ << " is listening to Control Center " << cc_id_ << endl;
+    string group = "Drone_" + to_string(id_);
+    string consumer = "drone_" + to_string(id_);
+    string stream = "stream_drone_" + to_string(id_);
+
+    // cout << "Drone::listenCC: Drone " << id_ << " is listening to Control Center " << cc_id_ << endl;
     while (true) {
-        Response res = readMessageGroup(ctx_, "Drone_" + to_string(id_), "drone_" + to_string(id_), "stream_drone_" + to_string(id_), 0);
+        Response res = readMessageGroup(ctx_, group, consumer, stream, 0);
         string message_id = get<0>(res);
         if (message_id.empty()) {
             cout << "Error reading message" << endl;
@@ -66,9 +68,8 @@ void Drone::listenCC() {
 
         map<string, string> message = get<1>(res);
 
-        cout << "Message received: " << message["path"] << endl;
+        cout << "Drone::listenCC: Drone " << id_ << " received a path " << message["path"] << endl;
 
-        // followPath(message["path"]); // TODO: chiamare questo metodo in un altro thread
         future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
 
     }
@@ -76,11 +77,11 @@ void Drone::listenCC() {
 
 void Drone::followPath(const std::string &path) {
     if (current_data_.state != DroneState::READY) {
-        cout << "Drone " << id_ << " executing a job" << endl;
+        cout << "Drone " << id_ << " executing a job or is charging" << endl;
         return;
     }
 
-    cout << "Drone::followPath: Drone " << id_ << " is following the path" << endl;
+    // cout << "Drone::followPath: Drone " << id_ << " is following the path" << endl;
 
     size_t i = 0;
     while (i < path.length()) {
@@ -110,17 +111,19 @@ void Drone::followPath(const std::string &path) {
                 default:
                     cerr << "Drone::followPath: Invalid direction" << endl;
             }
-            // TODO: sendDataToCC();
+            // sendDataToCC(); TODO: uncomment
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
             this_thread::sleep_for(chrono::milliseconds(120));
         }
     }
-    current_data_.state = DroneState::CHARGING;
+    current_data_.state = DroneState::CHARGING; // TODO: chiamare una funzione in nuovo thread che simula la ricarica e aggiorna dopo [2-3] ore lo stato a READY
     sendDataToCC();
-    cout << "current drone position: " << current_data_.x << " " << current_data_.y << endl;
+    cout << "drone " << id_ << "current position: " << current_data_.x << " " << current_data_.y << endl;
 }
 
 void Drone::sendDataToCC() {
+    string stream = "cc_" + to_string(cc_id_);
+
     Message message;
     message["id"] = to_string(id_);
     message["x"] = to_string(current_data_.x);
@@ -128,5 +131,5 @@ void Drone::sendDataToCC() {
     message["battery"] = to_string(current_data_.battery);
     message["state"] = to_string(current_data_.state);
 
-    sendMessage(ctx_, "cc_" + to_string(cc_id_), message);
+    sendMessage(ctx_, stream, message);
 }

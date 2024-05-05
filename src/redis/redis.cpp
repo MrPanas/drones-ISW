@@ -92,7 +92,7 @@ string sendMessage(redisContext *context, const string &stream, Message &message
     for (const auto &item : message) {
         xadd += item.first + " " + item.second + " ";
     }
-    cout << "XADD: " << xadd << endl;
+    // cout << "XADD: " << xadd << endl;
 
     // Send the message
     auto *reply = (redisReply *) redisCommand(context, xadd.c_str());

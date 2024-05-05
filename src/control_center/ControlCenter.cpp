@@ -41,7 +41,8 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
 
 }
 
-ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones,
+ControlCenter::ControlCenter(unsigned int id,
+                             unsigned int num_drones,
                              ScanningStrategy *strategy,
                              Area area) : ControlCenter(id, num_drones){
     strategy_ = strategy;
@@ -87,9 +88,10 @@ void ControlCenter::listenDrones() {
 }
 
 void ControlCenter::start() {
+    cout << "ControlCenter::start: Starting Control Center" << endl;
     // TODO: aggiungere una funzione dove vengono aggiunti tutti i droni
     initDrones();
-    cout << "ControlCenter::start: Starting Control Center" << endl;
+
     cout << "ControlCenter::start: Starting listenDrones thread" << endl;
 
     // Start the listenDrones thread
@@ -108,6 +110,8 @@ void ControlCenter::initDrones() {
     const string group = "CC_" + to_string(id_);
     const string consumer = "CC_" + to_string(id_);
 
+    cout << "ControlCenter::initDrones: Waiting for " << num_drones_ << " drones" << endl;
+
     for (int i = 0; i < num_drones_; ++i) {
         Response response = readMessageGroup(ctx_, group, consumer, stream, 0); // TODO: forse -1 (non bloccante)??? PTK
         string messageId = get<0>(response);
@@ -124,17 +128,23 @@ void ControlCenter::initDrones() {
         droneData.state = to_state(message["state"]);
 
         readyDrones_.push_back(droneData);
+
+        cout << "ControlCenter::initDrones: Drone " << droneData.id << " is ready" << endl;
     }
+    cout << "ControlCenter::initDrones: There are drones ready" << endl;
 }
 
 void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
+    cout << "ControlCenter::sendPath: entered" << endl;
     const string stream = "stream_drone_" + to_string(droneId);
 
     string pathStr = path.toString();
 
     Message message;
     message["path"] = pathStr;
-    sendMessage(ctx_, stream, message);
+    cout << "ControlCenter::sendPath: Sending path " << pathStr << " to drone " << droneId << endl;
+    sendMessage(ctx_, stream, message); // TODO: si blocca qua PTK
+    cout << "ControlCenter::sendPath: Path sent to drone " << droneId << endl;
 }
 
 void ControlCenter::sendPathsToDrones() {
@@ -150,8 +160,8 @@ void ControlCenter::sendPathsToDrones() {
     p2.addDirection(Direction::SOUTH, 3);
     p2.addDirection(Direction::WEST, 2);
     vector<DroneSchedule> schedules = vector<DroneSchedule>();
-    schedules.emplace_back(1, p1, chrono::milliseconds(5000));
-    schedules.emplace_back(2, p2, chrono::milliseconds(5000));
+    schedules.emplace_back(1, p1, chrono::milliseconds(10000));
+    schedules.emplace_back(2, p2, chrono::milliseconds(10000));
     // _________
 
 
@@ -173,17 +183,26 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     chrono::milliseconds nextSend = get<2>(schedule);
 
     while (true) { // TODO: vedere perché non rimanda il messaggio
+        cout << "ControlCenter::handleSchedule: Sending path " << pathId << " to drones" << endl;
         // Get a drone from readyDrones_
         DroneData droneData = readyDrones_.back();
+
+        cout << "ControlCenter::handleSchedule: Drone " << droneData.id << " is READY" << endl;
         // Remove the drone from readyDrones_
         readyDrones_.pop_back();
 
         unsigned int droneId = droneData.id;
 
+        cout << "ControlCenter::handleSchedule: before send path " << endl;
+
         sendPath(droneId, path);
+
+        cout << "ControlCenter::handleSchedule: after send path " << endl;
 
         // Add drone to workingDrones_
         workingDrones_.push_back(droneData);
+
+        cout << "ControlCenter::handleSchedule: Drone " << droneData.id << " is WORKING" << endl;
 
         // Wait for the next send
         this_thread::sleep_for(nextSend);

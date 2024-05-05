@@ -49,7 +49,7 @@ inline DroneState to_state(const string& state) {
 
 struct DroneData {
     unsigned int id;
-    int x;
+    int x; // TODO: rendere x e y float
     int y;
     int battery;
     DroneState state;
@@ -83,7 +83,7 @@ private:
     unsigned int id_; // ID del drone
     unsigned int cc_id_{};
     redisContext *ctx_;
-    DroneData current_data_;
+    DroneData current_data_{};
 
     void listenCC();
 
