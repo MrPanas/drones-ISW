@@ -1,7 +1,3 @@
-//
-// Created by Patryk Mulica    on 30/04/24.
-//
-
 #include <iostream>
 #include <utility>
 #include "ControlCenter.hpp"
@@ -19,12 +15,11 @@
  * CC Must listen response from the drones
  * CC Must send the path to the drones
  *
- * How can do both?
- *
  */
 
 
-ControlCenter::ControlCenter(unsigned int id) : id_(id) {
+ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones) {
+    cout << "ControlCenter::ControlCenter: Creating Control Center " << id_ << endl;
     // Connect to redis
     ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
     if (ctx_ == NULL || ctx_->err) {
@@ -46,9 +41,9 @@ ControlCenter::ControlCenter(unsigned int id) : id_(id) {
 
 }
 
-ControlCenter::ControlCenter(unsigned int id,
+ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones,
                              ScanningStrategy *strategy,
-                             Area area) : ControlCenter(id){
+                             Area area) : ControlCenter(id, num_drones){
     strategy_ = strategy;
     area_ = std::move(area);
 
@@ -74,12 +69,8 @@ void ControlCenter::listenDrones() {
     const string group = "CC_" + to_string(id_);
     const string consumer = "CC_" + to_string(id_);
 
-
-
     while (true) {
-
         Response response = readMessageGroup(ctx_, group, consumer, stream, 0);
-
 
         string messageId = get<0>(response);
         cout << messageId << endl;
@@ -91,17 +82,16 @@ void ControlCenter::listenDrones() {
         Message message = get<1>(response);
         // TODO: Process the message
 
-
     }
 
 }
 
 void ControlCenter::start() {
-
-
-
+    // TODO: aggiungere una funzione dove vengono aggiunti tutti i droni
+    initDrones();
     cout << "ControlCenter::start: Starting Control Center" << endl;
     cout << "ControlCenter::start: Starting listenDrones thread" << endl;
+
     // Start the listenDrones thread
     thread listen(&ControlCenter::listenDrones, this);
 
@@ -111,6 +101,30 @@ void ControlCenter::start() {
 
     listen.join();
     send.join();
+}
+
+void ControlCenter::initDrones() {
+    const string stream = "cc_" + to_string(id_);
+    const string group = "CC_" + to_string(id_);
+    const string consumer = "CC_" + to_string(id_);
+
+    for (int i = 0; i < num_drones_; ++i) {
+        Response response = readMessageGroup(ctx_, group, consumer, stream, 0); // TODO: forse -1 (non bloccante)??? PTK
+        string messageId = get<0>(response);
+        if (messageId.empty()) {
+            cerr << "ControlCenter::initDrones: Fatal Error: Empty message" << endl;
+            break;
+        }
+        Message message = get<1>(response);
+        DroneData droneData = DroneData();
+        droneData.id = stoi(message["id"]);
+        droneData.x = stoi(message["x"]);
+        droneData.y = stoi(message["y"]);
+        droneData.battery = stoi(message["battery"]);
+        droneData.state = to_state(message["state"]);
+
+        readyDrones_.push_back(droneData);
+    }
 }
 
 void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
@@ -128,11 +142,16 @@ void ControlCenter::sendPathsToDrones() {
 //    vector<DroneSchedule> schedules = strategy_->createSchedules(area_); // TODO: uncomment
 
     // DEBUG TODO: Remove after try
-    Path p = Path();
-    p.addDirection(Direction::NORTH, 3);
-    p.addDirection(Direction::EAST, 2);
+    Path p1 = Path();
+    p1.addDirection(Direction::NORTH, 3);
+    p1.addDirection(Direction::EAST, 2);
+    cout << "ControlCenter::sendPathsToDrones: path1: " << p1.toString() << endl;
+    Path p2 = Path();
+    p2.addDirection(Direction::SOUTH, 3);
+    p2.addDirection(Direction::WEST, 2);
     vector<DroneSchedule> schedules = vector<DroneSchedule>();
-    schedules.emplace_back(1, p, chrono::milliseconds(5000));
+    schedules.emplace_back(1, p1, chrono::milliseconds(5000));
+    schedules.emplace_back(2, p2, chrono::milliseconds(5000));
     // _________
 
 
@@ -153,7 +172,7 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     Path path = get<1>(schedule);
     chrono::milliseconds nextSend = get<2>(schedule);
 
-    while (true) {
+    while (true) { // TODO: vedere perché non rimanda il messaggio
         // Get a drone from readyDrones_
         DroneData droneData = readyDrones_.back();
         // Remove the drone from readyDrones_
@@ -169,5 +188,4 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
         // Wait for the next send
         this_thread::sleep_for(nextSend);
     }
-
 }

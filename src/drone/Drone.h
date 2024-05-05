@@ -25,6 +25,28 @@ enum class DroneState {
     READY,
 };
 
+inline string to_string(DroneState state) {
+    switch (state) {
+        case DroneState::WORKING:
+            return "WORKING";
+        case DroneState::CHARGING:
+            return "CHARGING";
+        case DroneState::READY:
+            return "READY";
+    }
+}
+
+inline DroneState to_state(const string& state) {
+    if (state == "WORKING") {
+        return DroneState::WORKING;
+    } else if (state == "CHARGING") {
+        return DroneState::CHARGING;
+    } else if (state == "READY") {
+        return DroneState::READY;
+    }
+    return DroneState::READY;
+}
+
 struct DroneData {
     unsigned int id;
     int x;

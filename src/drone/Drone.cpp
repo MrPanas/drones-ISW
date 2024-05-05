@@ -6,7 +6,7 @@
 Drone::Drone(unsigned int id) : id_(id){
     current_data_ = {id_, 0, 0, 100, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
     cout << "Drone " << id_ << " created" << endl;
-    ctx_ = redisConnect("127.0.0.1", 6379);
+    ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
     if (ctx_ == NULL || ctx_->err) {
         if (ctx_) {
             cout << "Drone::Drone: Error: " << ctx_->errstr << endl;
@@ -46,7 +46,12 @@ unsigned int Drone::getCCId() const {
 }
 
 void Drone::start() {
-    listenCC();
+    sendDataToCC();
+
+    thread listen(&Drone::listenCC, this);
+
+    // Attendere il completamento del thread
+    listen.join();
 }
 
 void Drone::listenCC() {
@@ -64,7 +69,7 @@ void Drone::listenCC() {
         cout << "Message received: " << message["path"] << endl;
 
         // followPath(message["path"]); // TODO: chiamare questo metodo in un altro thread
-        async(launch::async, &Drone::followPath, this, message["path"]);
+        future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
 
     }
 }
@@ -121,7 +126,7 @@ void Drone::sendDataToCC() {
     message["x"] = to_string(current_data_.x);
     message["y"] = to_string(current_data_.y);
     message["battery"] = to_string(current_data_.battery);
-    message["state"] = to_string(static_cast<int>(current_data_.state));
+    message["state"] = to_string(current_data_.state);
 
     sendMessage(ctx_, "cc_" + to_string(cc_id_), message);
 }
