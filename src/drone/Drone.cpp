@@ -70,7 +70,7 @@ void Drone::listenCC() {
 
         cout << "Drone::listenCC: Drone " << id_ << " received a path " << message["path"] << endl;
 
-        future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
+        // future<void> future = async(launch::async, &Drone::followPath, this, message["path"]); // TODO: uncomment
 
     }
 }
@@ -118,7 +118,7 @@ void Drone::followPath(const std::string &path) {
     }
     current_data_.state = DroneState::CHARGING; // TODO: chiamare una funzione in nuovo thread che simula la ricarica e aggiorna dopo [2-3] ore lo stato a READY
     sendDataToCC();
-    cout << "drone " << id_ << "current position: " << current_data_.x << " " << current_data_.y << endl;
+    // cout << "drone " << id_ << "current position: " << current_data_.x << " " << current_data_.y << endl;
 }
 
 void Drone::sendDataToCC() {

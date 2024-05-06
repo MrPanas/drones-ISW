@@ -131,7 +131,8 @@ void ControlCenter::initDrones() {
 
         // cout << "ControlCenter::initDrones: Drone " << droneData.id << " is ready" << endl;
     }
-    // cout << "ControlCenter::initDrones: There are drones ready" << endl;
+    cout << "ControlCenter::initDrones: There are " << readyDrones_.size() << " drones ready" << endl;
+
 }
 
 void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
@@ -142,7 +143,12 @@ void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
     Message message;
     message["path"] = pathStr;
     cout << "ControlCenter::sendPath: Sending path " << pathStr << " to drone " << droneId << endl;
-    sendMessage(ctx_, stream, message); // TODO: si blocca qua PTK
+
+    // sleep 5 seconds to simulate the time to send the path
+    this_thread::sleep_for(chrono::seconds(2));
+
+    sendMessage(ctx_, stream, message); // BUG: non procede oltre qua
+    cout << "ControlCenter::sendPath: Path sent" << endl;
 }
 
 void ControlCenter::sendPathsToDrones() {
@@ -158,8 +164,8 @@ void ControlCenter::sendPathsToDrones() {
     p2.addDirection(Direction::SOUTH, 3);
     p2.addDirection(Direction::WEST, 2);
     vector<DroneSchedule> schedules = vector<DroneSchedule>();
-    schedules.emplace_back(1, p1, chrono::milliseconds(20000));
-    schedules.emplace_back(2, p2, chrono::milliseconds(20000));
+    schedules.emplace_back(1, p1, chrono::milliseconds(10000));
+    // schedules.emplace_back(2, p2, chrono::milliseconds(10000));
     // _________
 
 
@@ -181,6 +187,7 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     chrono::milliseconds nextSend = get<2>(schedule);
 
     while (true) { // TODO: vedere perché non rimanda il messaggio
+        cout << "\n\nControlCenter::handleSchedule: joined while loop" << endl;
         //cout << "ControlCenter::handleSchedule: Sending path " << pathId << " to drones" << endl;
         // Get a drone from readyDrones_
         DroneData droneData = readyDrones_.back();
@@ -191,16 +198,14 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
 
         unsigned int droneId = droneData.id;
 
-        // cout << "ControlCenter::handleSchedule: before send path " << endl;
-
-        sendPath(droneId, path);
-
-        // cout << "ControlCenter::handleSchedule: after send path " << endl;
+        sendPath(droneId, path); // BUG: non procede oltre qua
 
         // Add drone to workingDrones_
         workingDrones_.push_back(droneData);
 
         // cout << "ControlCenter::handleSchedule: Drone " << droneData.id << " is WORKING" << endl;
+
+        cout << "ControlCenter::handleSchedule: Sleeping for " << nextSend.count() << " milliseconds" << endl;
 
         // Wait for the next send
         this_thread::sleep_for(nextSend);
