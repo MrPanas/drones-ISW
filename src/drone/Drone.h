@@ -12,6 +12,7 @@
 #include "../area/Area.hpp"
 #include "../redis/redis.h"
 #include <future>
+#include <random>
 
 
 // Forward declaration
@@ -56,7 +57,6 @@ struct DroneData {
 };
 
 
-
 /**
  * Drone class
  */
@@ -72,6 +72,7 @@ public:
 
     unsigned int getCCId() const;
 
+    void chargeDrone();
 
     void start();
 

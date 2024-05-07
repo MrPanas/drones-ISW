@@ -16,35 +16,40 @@
 
 using namespace std;
 using json = nlohmann::json;
-using  Response =  tuple<string,map<string,string>>;
-using Message = map<string,string>;
 
-struct GroupInfo {
-    string name;
-    long consumers{};
-    long pending{};
-    string lastDeliveredId;
-    long entriesRead{};
-    long lag{};
-};
+namespace Redis {
 
-string createGroup(redisContext *context, const string &stream, const string &group, bool mkstream);
+    using Response =  tuple<string,map<string,string>>;
+    using Message = map<string,string>;
 
-long destroyGroup(redisContext *context, const string &stream, const string &group);
+    struct GroupInfo {
+        string name;
+        long consumers{};
+        long pending{};
+        string lastDeliveredId;
+        long entriesRead{};
+        long lag{};
+    };
 
-long deleteStream(redisContext *context, const string &stream);
+    string createGroup(redisContext *context, const string &stream, const string &group, bool mkstream);
 
-string sendMessage(redisContext *context, const string &stream, Message &message);
+    long destroyGroup(redisContext *context, const string &stream, const string &group);
 
-string sendJsonMessage(redisContext *context, const string &stream, const json &jsonObject);
+    long deleteStream(redisContext *context, const string &stream);
 
-long deleteStream(redisContext *context, const string &stream);
+    string sendMessage(redisContext *context, const string &stream, Message &message);
+
+    string sendJsonMessage(redisContext *context, const string &stream, const json &jsonObject);
+
+    long deleteStream(redisContext *context, const string &stream);
 
 
-Response readMessageGroup(redisContext *context, const string &group, const string &consumer, const string &stream, int block);
+    Response readMessageGroup(redisContext *context, const string &group, const string &consumer, const string &stream,
+                              int block);
 
-long ackMessage(redisContext *context, const string &stream, const string &group, const string &messageId);
+    long ackMessage(redisContext *context, const string &stream, const string &group, const string &messageId);
 
-GroupInfo getInfoGroup(redisContext *context, const string &stream, const string &groupName);
+    GroupInfo getInfoGroup(redisContext *context, const string &stream, const string &groupName);
+}
 
 #endif //DRONE8_REDIS_H
