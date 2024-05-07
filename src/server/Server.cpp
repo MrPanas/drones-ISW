@@ -1,4 +1,6 @@
 #include "Server.hpp"
+#include <iostream>
+#include <ostream>
 
 Server::Server(std::string host, std::string port, std::string password)
     : host(host), port(port), password(password) {
@@ -36,21 +38,29 @@ void Server::startServer() {
   struct sockaddr_in client_addr;
   socklen_t client_len = sizeof(client_addr);
   int new_socket;
-  char buffer[1024] = {0};
+
+  new_socket = accept(socket_fd, (struct sockaddr *)&client_addr, &client_len);
+  if (new_socket < 0)
+    throw std::runtime_error("Failed to accept connection");
 
   while (isRunning) {
-    std::cout << "Waiting for connections..." << std::endl;
-    new_socket =
-        accept(socket_fd, (struct sockaddr *)&client_addr, &client_len);
-    if (new_socket < 0)
-      throw std::runtime_error("Failed to accept connection");
+    char buffer[1024] = {0};
 
-    read(new_socket, buffer, 1024);
-    std::cout << "Received message: " << buffer << std::endl;
+    int bytesReceived = read(new_socket, buffer, 1024);
 
-    // Example response to client
-    std::string response = "Hello from server";
-    send(new_socket, response.c_str(), response.length(), 0);
-    close(new_socket);
+    if (bytesReceived > 0) {
+      std::cout << buffer << std::endl;
+      std::string response = "Hello from server";
+
+      send(new_socket, response.c_str(), response.length(), 0);
+    } else {
+      std::cout << "client disconnected" << std::endl;
+      break;
+    }
   }
+}
+
+void Server::stopServer() {
+  std::cout << "Stoptting Server" << std::endl;
+  this->isRunning = false;
 }

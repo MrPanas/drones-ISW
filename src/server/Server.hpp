@@ -19,6 +19,7 @@ public:
   Server(std::string host, std::string port, std::string password);
   ~Server();
   void startServer();
+  void stopServer();
 
 private:
   int createSocket();
