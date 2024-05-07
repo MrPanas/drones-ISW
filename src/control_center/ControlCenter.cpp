@@ -17,15 +17,33 @@
  *
  */
 
+// TODO: ricarica del drone (lato drone) [FATTO]
+// TODO: gestire che il cc toglie il drone da charging a ready e da working a charging [FATTO]
+// TODO: il cc deve aggiornare la mappa appena gli arriva il messaggio del drone
+// TODO: gestire chiusura di tutti i while true
+// TODO: creare collegamento con il db
+
+// TODO: forse è più efficiente avere una lista unica perché sarà una lista statica, non dovrà ricercare per poi cancellare nessun elemento e ci risparmiamo anche lo switch [I]
+
 
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones) {
     cout << "ControlCenter::ControlCenter: Creating Control Center " << id_ << endl;
     // Connect to redis
-    ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
-    if (ctx_ == NULL || ctx_->err) {
-        if (ctx_) {
-            std::cout << "Error: " << ctx_->errstr << std::endl;
-            redisFree(ctx_);
+    sender_ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
+    if (sender_ctx_ == NULL || sender_ctx_->err) {
+        if (sender_ctx_) {
+            std::cout << "Error: " << sender_ctx_->errstr << std::endl;
+            redisFree(sender_ctx_);
+        } else {
+            std::cout << "Can't allocate redis context" << std::endl;
+        }
+    }
+
+    listener_ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
+    if (listener_ctx_ == NULL || listener_ctx_->err) {
+        if (listener_ctx_) {
+            std::cout << "Error: " << listener_ctx_->errstr << std::endl;
+            redisFree(listener_ctx_);
         } else {
             std::cout << "Can't allocate redis context" << std::endl;
         }
@@ -35,7 +53,7 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
     string stream = "cc_" + to_string(id_);
     string group = "CC_" + to_string(id_);
 
-    createGroup(ctx_,stream, group, true);
+    Redis::createGroup(sender_ctx_, stream, group, true);
 
     cout << "ControlCenter::ControlCenter: Successfully connected to redis server" << endl;
 
@@ -56,10 +74,11 @@ void ControlCenter::setStrategy(ScanningStrategy *strategy) {
 
 ControlCenter::~ControlCenter() {
     // Destory Group
-    destroyGroup(ctx_, "cc_" + to_string(id_), "CC_" + to_string(id_));
+    Redis::destroyGroup(sender_ctx_, "cc_" + to_string(id_), "CC_" + to_string(id_));
 
     // Free the redis context
-    redisFree(ctx_);
+    redisFree(sender_ctx_);
+    redisFree(listener_ctx_);
 
     cout << "ControlCenter::~ControlCenter: Successfully disconnected from redis server" << endl;
 
@@ -71,7 +90,7 @@ void ControlCenter::listenDrones() {
     const string consumer = "CC_" + to_string(id_);
 
     while (true) {
-        Response response = readMessageGroup(ctx_, group, consumer, stream, 0);
+        Redis::Response response = Redis::readMessageGroup(listener_ctx_, group, consumer, stream, 0);
 
         string messageId = get<0>(response);
         cout << messageId << endl;
@@ -80,8 +99,49 @@ void ControlCenter::listenDrones() {
             continue;
         }
 
-        Message message = get<1>(response);
-        // TODO: Process the message
+        Redis::Message message = get<1>(response);
+        DroneData droneData = DroneData();
+        droneData.id = stoi(message["id"]);
+        droneData.x = stoi(message["x"]);
+        droneData.y = stoi(message["y"]);
+        droneData.battery = stoi(message["battery"]);
+        droneData.state = to_state(message["state"]);
+
+        // [I] TODO: con una lista unica ci risparmiamo tutto questo switch e di conseguenza il for e il delete (entrambi sono O(n) -> O(n^2))
+        switch (droneData.state) {
+            case DroneState::READY:
+                // delete drone from chargingDrones
+                for (int i = 0; i < chargingDrones_.size(); i++) {
+                    if (chargingDrones_[i].id == droneData.id) {
+                        chargingDrones_.erase(chargingDrones_.begin() + i);
+                        break;
+                    }
+                }
+                readyDrones_.push_back(droneData);
+                break;
+            case DroneState::WORKING:
+                // call in another thread the function that updates the map
+                // updateMap(droneData);
+                {
+                    thread updateMapThread(&ControlCenter::updateMap, this, droneData);
+                    updateMapThread.detach(); // Detach the thread to allow it to run independently
+                }
+                break;
+            case DroneState::CHARGING:
+                // delete drone from workingDrones
+                for (int i = 0; i < workingDrones_.size(); i++) {
+                    if (workingDrones_[i].id == droneData.id) {
+                        workingDrones_.erase(workingDrones_.begin() + i);
+                        break;
+                    }
+                }
+                chargingDrones_.push_back(droneData);
+                break;
+            default:
+                cerr << "ControlCenter::listenDrones: Error: Invalid state" << endl;
+                break;
+        }
+
 
     }
 
@@ -113,13 +173,13 @@ void ControlCenter::initDrones() {
     // cout << "ControlCenter::initDrones: Waiting for " << num_drones_ << " drones" << endl;
 
     for (int i = 0; i < num_drones_; ++i) {
-        Response response = readMessageGroup(ctx_, group, consumer, stream, 0);
+        Redis::Response response = Redis::readMessageGroup(sender_ctx_, group, consumer, stream, 0);
         string messageId = get<0>(response);
         if (messageId.empty()) {
             cerr << "ControlCenter::initDrones: Fatal Error: Empty message" << endl;
             break;
         }
-        Message message = get<1>(response);
+        Redis::Message message = get<1>(response);
         DroneData droneData = DroneData();
         droneData.id = stoi(message["id"]);
         droneData.x = stoi(message["x"]);
@@ -131,7 +191,8 @@ void ControlCenter::initDrones() {
 
         // cout << "ControlCenter::initDrones: Drone " << droneData.id << " is ready" << endl;
     }
-    // cout << "ControlCenter::initDrones: There are drones ready" << endl;
+    cout << "ControlCenter::initDrones: There are " << readyDrones_.size() << " drones ready" << endl;
+
 }
 
 void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
@@ -139,10 +200,12 @@ void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
 
     string pathStr = path.toString();
 
-    Message message;
+    Redis::Message message;
     message["path"] = pathStr;
     cout << "ControlCenter::sendPath: Sending path " << pathStr << " to drone " << droneId << endl;
-    sendMessage(ctx_, stream, message); // TODO: si blocca qua PTK
+
+    Redis::sendMessage(sender_ctx_, stream, message);
+    cout << "ControlCenter::sendPath: Path sent" << endl;
 }
 
 void ControlCenter::sendPathsToDrones() {
@@ -158,13 +221,13 @@ void ControlCenter::sendPathsToDrones() {
     p2.addDirection(Direction::SOUTH, 3);
     p2.addDirection(Direction::WEST, 2);
     vector<DroneSchedule> schedules = vector<DroneSchedule>();
-    schedules.emplace_back(1, p1, chrono::milliseconds(20000));
-    schedules.emplace_back(2, p2, chrono::milliseconds(20000));
+    schedules.emplace_back(1, p1, chrono::milliseconds(10000));
+    schedules.emplace_back(2, p2, chrono::milliseconds(10000));
     // _________
-
 
     vector<thread> threads;
     threads.reserve(schedules.size());
+    int i = 0;
     for (const DroneSchedule& schedule : schedules) {
         threads.emplace_back(&ControlCenter::handleSchedule, this, schedule);
     }
@@ -180,10 +243,13 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     Path path = get<1>(schedule);
     chrono::milliseconds nextSend = get<2>(schedule);
 
-    while (true) { // TODO: vedere perché non rimanda il messaggio
+    while (true) {
+        cout << "\n\nControlCenter::handleSchedule: joined while loop" << endl;
         //cout << "ControlCenter::handleSchedule: Sending path " << pathId << " to drones" << endl;
         // Get a drone from readyDrones_
-        DroneData droneData = readyDrones_.back();
+        DroneData droneData = readyDrones_.back(); // TODO mettere un if size == 0
+
+        cout << "ControlCenter::handleSchedule: ready drones: " << readyDrones_.size() << endl;
 
         // cout << "ControlCenter::handleSchedule: Drone " << droneData.id << " is READY" << endl;
         // Remove the drone from readyDrones_
@@ -191,18 +257,20 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
 
         unsigned int droneId = droneData.id;
 
-        // cout << "ControlCenter::handleSchedule: before send path " << endl;
-
-        sendPath(droneId, path);
-
-        // cout << "ControlCenter::handleSchedule: after send path " << endl;
+        sendPath(droneId, path); // BUG: non procede oltre qua
 
         // Add drone to workingDrones_
         workingDrones_.push_back(droneData);
 
         // cout << "ControlCenter::handleSchedule: Drone " << droneData.id << " is WORKING" << endl;
 
+        cout << "ControlCenter::handleSchedule: Sleeping for " << nextSend.count() << " milliseconds" << endl;
+
         // Wait for the next send
         this_thread::sleep_for(nextSend);
     }
+}
+
+void ControlCenter::updateMap(DroneData droneData) {
+    // TODO: far diventare x,y dei float prima di implementare
 }

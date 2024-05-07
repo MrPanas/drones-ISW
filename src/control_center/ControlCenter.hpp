@@ -64,7 +64,8 @@ private:
     const unsigned int id_;
     ScanningStrategy* strategy_{};
     Area area_ = Area(0, 0);
-    redisContext *ctx_{};
+    redisContext *sender_ctx_{};
+    redisContext *listener_ctx_{};
 
     unsigned int num_drones_;
     vector<DroneData> workingDrones_;
