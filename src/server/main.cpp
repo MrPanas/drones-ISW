@@ -1,12 +1,11 @@
-#include "Server.hpp"
+#import "Server.cpp"
 
 int main() {
-  Server myServer("localhost", "3000", "password123");
   try {
-    myServer.startServer();
-  } catch (const std::exception &e) {
-    std::cerr << "Error occurred: " << e.what() << std::endl;
+    Server srv = Server("localhost", "3000", "password");
+  } catch (std::exception const &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    return 1;
   }
-
   return 0;
 }
