@@ -121,6 +121,16 @@ target_include_directories(drone PRIVATE "/usr/include/nlohmann")
 
 target_link_libraries(drone hiredis pq)
 
+add_executable(server src/server/main.cpp
+        src/server/Server.cpp
+        src/server/Server.hpp
+)
+# Includi la directory degli header di PostgreSQL
+target_include_directories(server PRIVATE "/usr/include/postgresql")
+# Includi la directory degli header di nlohmann/json
+target_include_directories(server PRIVATE "/usr/include/nlohmann")
+
+target_include_directories(server PRIVATE "/usr/local/include/sw")
 
 # Testing
 add_executable(test main.cpp
