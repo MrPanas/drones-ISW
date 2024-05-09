@@ -92,12 +92,8 @@ string Redis::sendMessage(redisContext *context, const string &stream, Message &
         xadd += item.first + " " + item.second + " ";
     }
 
-    cout << "XADD1: " << xadd << endl;
-
     // Send the message
     auto *reply = (redisReply *) redisCommand(context, xadd.c_str());
-
-    cout << "XADD2: " << xadd << endl; // BUG qua non ci va (a volte si a volte no)
 
     if (reply == nullptr) {
         cerr << "sendMessage: Error: " << context->errstr << endl;

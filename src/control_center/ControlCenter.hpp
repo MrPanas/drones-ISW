@@ -15,7 +15,7 @@
 #include "../area/Area.hpp"
 #include "../drone/Drone.h"
 #include "../con2db/pgsql.h"
-
+#include <cmath>
 
 
 
@@ -53,7 +53,7 @@ private:
 
     void listenDrones();
 
-    void updateMap(DroneData droneData);
+    void updateArea(DroneData droneData);
 
     void sendPathsToDrones();
 

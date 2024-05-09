@@ -5,6 +5,7 @@
 #include "ControlCenter.hpp"
 #include "../drone/Drone.h"
 
+
 #include <iostream>
 
 using namespace std;
@@ -12,7 +13,8 @@ using namespace std;
 int main(int argc, char *argv[]) {
 
     cout << "Hello, World!" << endl;
-    ControlCenter controlCenter = ControlCenter(1, 4);
+
+    ControlCenter controlCenter = ControlCenter(1, 1);
     Drone drone1 = Drone(1, 1);
     Drone drone2 = Drone(2, 1);
     Drone drone3 = Drone(3, 1);

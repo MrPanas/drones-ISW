@@ -23,17 +23,13 @@ enum PointState {
  */
 class Point {
 public:
-    Point(int x, int y);
-    int getX() const;
-    int getY() const;
+    Point();
     long long getElapsedTime() const; // const perchè non modifica lo stato dell'oggetto
     void resetTimer();
     PointState getState() const;
 
 
 private:
-    int x_;
-    int y_;
     chrono::steady_clock::time_point start_time_;
     PointState state_;
 };
@@ -50,6 +46,8 @@ public:
     void setWidth(int width);
     void setHeight(int height);
     pair<int, int> getCCPosition() const; // TODO:implement
+
+    string toString() const;
 
     const Point& getPoint(int x, int y) const;
     void resetPointTimer(int x, int y);

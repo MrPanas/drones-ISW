@@ -4,20 +4,14 @@
 
 #include "Area.hpp"
 
+using namespace std;
+
 
 
 // ######## Point Class Methods #############
 
-Point::Point(int x, int y) : x_(x), y_(y), state_(PointState::UNCHECKED) {
+Point::Point() : state_(PointState::UNCHECKED) {
     start_time_ = chrono::steady_clock::now();
-}
-
-int Point::getX() const {
-    return x_;
-}
-
-int Point::getY() const {
-    return y_;
 }
 
 // Metodo per ottenere il tempo trascorso in millisecondi
@@ -43,12 +37,13 @@ void Point::resetTimer() {
 // ############ AREA ############
 
 Area::Area(int width, int height) : width_(width), height_(height) {
+    grid_.resize(width_);
     // width and height in meters
-
-    // Inizializza la matrice di punti
     for (int i = 0; i < width_; i++) {
+        grid_[i].resize(height_);
         for (int j = 0; j < height_; j++) {
-            grid_[i][j] = Point(i, j);
+            // Init the grid
+            grid_[i][j] = Point();
         }
     }
 }
@@ -75,6 +70,23 @@ const Point& Area::getPoint(int x, int y) const {
 
 void Area::resetPointTimer(int x, int y) {
     grid_[x][y].resetTimer();
+}
+
+string Area::toString() const {
+    string result;
+    for (int i = 0; i < width_; i++) {
+        for (int j = 0; j < height_; j++) {
+            if (grid_[i][j].getState() == PointState::CHECKED) {
+                result += "X";
+            } else {
+                result += "O";
+            }
+        }
+        result += "\n";
+    }
+    cout << "Area::toString len result: " << result.length() << endl;
+    result += "\n\n\n\n\n\n";
+    return result;
 }
 
 

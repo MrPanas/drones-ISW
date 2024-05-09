@@ -50,8 +50,8 @@ inline DroneState to_state(const string& state) {
 
 struct DroneData {
     unsigned int id;
-    int x; // TODO: rendere x e y float
-    int y;
+    float x;
+    float y;
     int battery;
     DroneState state;
 };
@@ -90,7 +90,7 @@ private:
 
     void followPath(const string& path);
 
-    void sendDataToCC();
+    void sendDataToCC(bool changedState);
 };
 
 

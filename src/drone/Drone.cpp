@@ -4,7 +4,7 @@
 #include "Drone.h"
 
 Drone::Drone(unsigned int id) : id_(id){
-    current_data_ = {id_, 0, 0, 100, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
+    current_data_ = {id_, 10, 10, 100, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
     // cout << "Drone " << id_ << " created" << endl;
     ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
     if (ctx_ == NULL || ctx_->err) {
@@ -48,7 +48,7 @@ unsigned int Drone::getCCId() const {
 }
 
 void Drone::start() {
-    sendDataToCC();
+    sendDataToCC(false);
 
     thread listen(&Drone::listenCC, this);
 
@@ -72,8 +72,6 @@ void Drone::listenCC() {
 
         map<string, string> message = get<1>(res);
 
-        cout << "Drone::listenCC: Drone " << id_ << " received a path " << message["path"] << endl;
-
         future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
 
     }
@@ -89,6 +87,7 @@ void Drone::followPath(const string &path) {
         cout << "Drone " << id_ << " executing a job or is charging" << endl;
         return;
     }
+    current_data_.state = DroneState::WORKING;
 
     size_t i = 0;
     while (i < path.length()) {
@@ -118,19 +117,19 @@ void Drone::followPath(const string &path) {
                 default:
                     cerr << "Drone::followPath: Invalid direction" << endl;
             }
-            sendDataToCC();
+            sendDataToCC(false);
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
             this_thread::sleep_for(chrono::milliseconds(120));
         }
     }
     current_data_.state = DroneState::CHARGING;
-    sendDataToCC();
+    sendDataToCC(true);
     chargeDrone(); // TODO: va bene così ho deve essere aperto in un nuovo thread
 
     // cout << "drone " << id_ << "current position: " << current_data_.x << " " << current_data_.y << endl;
 }
 
-void Drone::sendDataToCC() {
+void Drone::sendDataToCC(bool changedState) {
     string stream = "cc_" + to_string(cc_id_);
 
     Redis::Message message;
@@ -139,8 +138,11 @@ void Drone::sendDataToCC() {
     message["y"] = to_string(current_data_.y);
     message["battery"] = to_string(current_data_.battery);
     message["state"] = to_string(current_data_.state);
+    message["changedState"] = to_string(changedState);
 
     Redis::sendMessage(ctx_, stream, message);
+
+    cout << "Drone " << id_ << " sent data to Control Center " << cc_id_ << endl;
 }
 
 void Drone::chargeDrone() {
@@ -157,5 +159,5 @@ void Drone::chargeDrone() {
     current_data_.battery = 100;
     current_data_.state = DroneState::READY;
 
-    sendDataToCC();
+    sendDataToCC(true);
 }

@@ -2,6 +2,7 @@
 #include <utility>
 #include "ControlCenter.hpp"
 #include "../redis/redis.h"
+#include <fstream>
 
 
 /*
@@ -19,15 +20,12 @@
 
 // TODO: ricarica del drone (lato drone) [FATTO]
 // TODO: gestire che il cc toglie il drone da charging a ready e da working a charging [FATTO]
-// TODO: il cc deve aggiornare la mappa appena gli arriva il messaggio del drone
+// TODO: il cc deve aggiornare la mappa appena gli arriva il messaggio del drone [FATTO]
 // TODO: gestire chiusura di tutti i while true
 // TODO: creare collegamento con il db
 
-// TODO: forse è più efficiente avere una lista unica perché sarà una lista statica, non dovrà ricercare per poi cancellare nessun elemento e ci risparmiamo anche lo switch [I]
-
-
-ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones) {
-    cout << "ControlCenter::ControlCenter: Creating Control Center " << id_ << endl;
+ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones){
+    area_ = Area(50, 50); // TODO: cancellare
     // Connect to redis
     sender_ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
     if (sender_ctx_ == NULL || sender_ctx_->err) {
@@ -102,18 +100,26 @@ void ControlCenter::listenDrones() {
         Redis::Message message = get<1>(response);
         DroneData droneData = DroneData();
         droneData.id = stoi(message["id"]);
-        droneData.x = stoi(message["x"]);
-        droneData.y = stoi(message["y"]);
+        // convert string to float
+        droneData.x = stof(message["x"]);
+        droneData.y = stof(message["y"]);
         droneData.battery = stoi(message["battery"]);
         droneData.state = to_state(message["state"]);
+        bool changedState = message["changedState"] == "true";
 
-        // [I] TODO: con una lista unica ci risparmiamo tutto questo switch e di conseguenza il for e il delete (entrambi sono O(n) -> O(n^2))
+        cout <<"ControlCenter::listenDrones: Drone state: " << to_string(droneData.state) << endl;
         switch (droneData.state) {
             case DroneState::READY:
+                if (!changedState) {
+                    break;
+                }
                 // delete drone from chargingDrones
                 for (int i = 0; i < chargingDrones_.size(); i++) {
                     if (chargingDrones_[i].id == droneData.id) {
-                        chargingDrones_.erase(chargingDrones_.begin() + i);
+                        // Swap the element with the last one
+                        swap(chargingDrones_[i], chargingDrones_.back());
+                        // Erase the last element (which is now the one to be removed)
+                        chargingDrones_.pop_back();
                         break;
                     }
                 }
@@ -121,17 +127,23 @@ void ControlCenter::listenDrones() {
                 break;
             case DroneState::WORKING:
                 // call in another thread the function that updates the map
-                // updateMap(droneData);
                 {
-                    thread updateMapThread(&ControlCenter::updateMap, this, droneData);
-                    updateMapThread.detach(); // Detach the thread to allow it to run independently
+                    cout << "ControlCenter::listenDrones: Drone " << droneData.id << " is working" << endl;
+                    thread updateAreaThread(&ControlCenter::updateArea, this, droneData);
+                    updateAreaThread.detach(); // Detach the thread to allow it to run independently
                 }
                 break;
             case DroneState::CHARGING:
+                if (!changedState) {
+                    break;
+                }
                 // delete drone from workingDrones
                 for (int i = 0; i < workingDrones_.size(); i++) {
                     if (workingDrones_[i].id == droneData.id) {
-                        workingDrones_.erase(workingDrones_.begin() + i);
+                        // Swap the element with the last one
+                        swap(workingDrones_[i], workingDrones_.back());
+                        // Erase the last element (which is now the one to be removed)
+                        workingDrones_.pop_back();
                         break;
                     }
                 }
@@ -141,16 +153,39 @@ void ControlCenter::listenDrones() {
                 cerr << "ControlCenter::listenDrones: Error: Invalid state" << endl;
                 break;
         }
-
-
     }
+}
 
+void ControlCenter::updateArea(DroneData droneData) {
+    float x = droneData.x;
+    float y = droneData.y;
+     //TODO: rendere in futuro la distanza parametrica ???
+    // check every point of the field that has less than 10 meters of distance from the drone
+
+    // TODO mettere tutto questo in Area ?
+    int start_x = std::max(static_cast<int>(x) - 10, 0);
+    int start_y = std::max(static_cast<int>(y) - 10, 0);
+    int end_x = std::min(static_cast<int>(std::ceil(x)) + 10, area_.getWidth());
+    int end_y = std::min(static_cast<int>(std::ceil(y)) + 10, area_.getHeight());
+
+    for (int i = start_x; i < end_x; i++) {
+        for (int j = start_y; j < end_y; j++) {
+            // calcola la distanza manhattan
+            int distance = static_cast<int>(abs(x - i) + abs(y - j));
+            if (distance <= 10) {
+                area_.resetPointTimer(i, j);
+            }
+        }
+    }
+    cout << "ControlCenter::updateArea: Area updated" << endl;
+    // cout << area_.toString() << endl;
 }
 
 void ControlCenter::start() {
     cout << "ControlCenter::start: Starting Control Center" << endl;
-    // TODO: aggiungere una funzione dove vengono aggiunti tutti i droni
     initDrones();
+
+    insertLog();
 
     // cout << "ControlCenter::start: Starting listenDrones thread" << endl;
 
@@ -182,8 +217,8 @@ void ControlCenter::initDrones() {
         Redis::Message message = get<1>(response);
         DroneData droneData = DroneData();
         droneData.id = stoi(message["id"]);
-        droneData.x = stoi(message["x"]);
-        droneData.y = stoi(message["y"]);
+        droneData.x = stof(message["x"]);
+        droneData.y = stof(message["y"]);
         droneData.battery = stoi(message["battery"]);
         droneData.state = to_state(message["state"]);
 
@@ -191,8 +226,6 @@ void ControlCenter::initDrones() {
 
         // cout << "ControlCenter::initDrones: Drone " << droneData.id << " is ready" << endl;
     }
-    cout << "ControlCenter::initDrones: There are " << readyDrones_.size() << " drones ready" << endl;
-
 }
 
 void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
@@ -247,11 +280,10 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
         cout << "\n\nControlCenter::handleSchedule: joined while loop" << endl;
         //cout << "ControlCenter::handleSchedule: Sending path " << pathId << " to drones" << endl;
         // Get a drone from readyDrones_
-        DroneData droneData = readyDrones_.back(); // TODO mettere un if size == 0
+        DroneData droneData = readyDrones_.back(); // TODO mettere un if size == 0 per gestire errori
 
         cout << "ControlCenter::handleSchedule: ready drones: " << readyDrones_.size() << endl;
 
-        // cout << "ControlCenter::handleSchedule: Drone " << droneData.id << " is READY" << endl;
         // Remove the drone from readyDrones_
         readyDrones_.pop_back();
 
@@ -262,8 +294,6 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
         // Add drone to workingDrones_
         workingDrones_.push_back(droneData);
 
-        // cout << "ControlCenter::handleSchedule: Drone " << droneData.id << " is WORKING" << endl;
-
         cout << "ControlCenter::handleSchedule: Sleeping for " << nextSend.count() << " milliseconds" << endl;
 
         // Wait for the next send
@@ -271,6 +301,18 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     }
 }
 
-void ControlCenter::updateMap(DroneData droneData) {
-    // TODO: far diventare x,y dei float prima di implementare
+void ControlCenter::insertLog() {
+    // Connect to the database
+    Con2DB conn = Con2DB("localhost", "5432", "postgres", "postgres", "postgres");
+
+    // Insert the log
+    conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center started')");
+
+    while (true) {
+        // Insert the log
+        conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center running')");
+
+        // Sleep for 10 seconds
+        this_thread::sleep_for(chrono::seconds());
+    }
 }
