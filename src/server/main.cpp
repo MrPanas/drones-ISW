@@ -1,11 +1,16 @@
-#import "Server.cpp"
+#include "Server.hpp"
 
 int main() {
   try {
-    Server srv = Server("localhost", "3000", "password");
-  } catch (std::exception const &e) {
-    std::cerr << "Error: " << e.what() << std::endl;
-    return 1;
+    std::string host = "127.0.0.1";
+    std::string port = "3000";
+    std::string password = "secure"; // Example, not used directly here.
+
+    Server server(host, port, password); // This constructs and runs the server
+  } catch (const std::exception &e) {
+    std::cerr << "Fatal error: " << e.what() << std::endl;
+    return EXIT_FAILURE;
   }
-  return 0;
+
+  return EXIT_SUCCESS;
 }

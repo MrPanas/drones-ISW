@@ -24,6 +24,7 @@ void do_listen(net::io_context &ioc, tcp::endpoint endpoint);
 
 class Server {
 public:
+  // Il costruttore crea crea il server, crea un sockert sul host
   Server(std::string host, std::string port, std::string password);
 
 private:

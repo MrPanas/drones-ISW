@@ -1,55 +1,67 @@
-#include <boost/asio.hpp>
-#include <boost/beast.hpp>
-#include <memory>
+#include "Session.hpp"
 
-namespace beast = boost::beast; // from <boost/beast.hpp>
-namespace http = beast::http;   // from <boost/beast/http.hpp>
-namespace net = boost::asio;    // from <boost/asio.hpp>
-using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
+http_session::http_session(tcp::socket socket) : socket_(std::move(socket)) {}
 
-class http_session : public std::enable_shared_from_this<http_session> {
-public:
-  // Take ownership of the socket
-  explicit http_session(tcp::socket socket) : socket_(std::move(socket)) {}
+void http_session::run() { do_read(); }
 
-  // Start the asynchronous operation
-  void run() { do_read(); }
+void http_session::do_read() {
+  auto self = shared_from_this();
+  http::async_read(socket_, buffer_, request_,
+                   [self](beast::error_code ec, std::size_t bytes_transferred) {
+                     if (!ec) {
+                       self->process_request();
+                     } else {
+                       std::cerr << "Read error: " << ec.message() << std::endl;
+                     }
+                   });
+}
 
-private:
-  tcp::socket socket_;
-  beast::flat_buffer
-      buffer_; // This buffer is used for reading and must be persisted
+// Process the HTTP request
+void http_session::process_request() {
+  if (request_.method() == http::verb::post && request_.target() == "/report") {
+    handle_request_report();
+  } else {
+    send_not_found();
+  }
+}
 
-  void do_read() {
-    // Read a request
-    auto self = shared_from_this();
-    http::async_read(
-        socket_, buffer_, request_,
-        [self](beast::error_code ec, std::size_t bytes_transferred) {
-          if (!ec) {
-            self->do_write();
+// Handle specific request to generate a report
+void http_session::handle_request_report() {
+  response_.version(request_.version());
+  response_.keep_alive(request_.keep_alive());
+  response_.result(http::status::created);
+  response_.set(http::field::server, "Beast/Boost");
+  response_.set(http::field::content_type, "text/html");
+  response_.body() =
+      "<html><body><h1>Report generated successfully!</h1></body></html>";
+  response_.prepare_payload();
+  do_write();
+}
+
+// Send a 404 Not Found response
+void http_session::send_not_found() {
+  response_.version(request_.version());
+  response_.keep_alive(request_.keep_alive());
+  response_.result(http::status::not_found);
+  response_.set(http::field::server, "Beast/Boost");
+  response_.set(http::field::content_type, "text/html");
+  response_.body() = "<html><body><h1>Error 404: Not Found</h1></body></html>";
+  response_.prepare_payload();
+  do_write();
+}
+
+// Write the response back to the client
+void http_session::do_write() {
+  auto self = shared_from_this();
+  http::async_write(
+      socket_, response_, [self](beast::error_code ec, std::size_t) {
+        if (!ec) {
+          self->socket_.shutdown(tcp::socket::shutdown_send, ec);
+          if (ec) {
+            std::cerr << "Shutdown error: " << ec.message() << std::endl;
           }
-        });
-  }
-
-  http::request<http::string_body> request_;
-  http::response<http::string_body> response_;
-
-  void do_write() {
-    // Construct a response
-    response_.version(request_.version());
-    response_.keep_alive(request_.keep_alive());
-    response_.result(http::status::ok);
-    response_.set(http::field::server, "Beast/Boost");
-    response_.set(http::field::content_type, "text/html");
-    response_.body() = "<html><body><h1>Hello, world!</h1></body></html>";
-    response_.prepare_payload(); // Make sure the response is consistent
-
-    // Write the response
-    auto self = shared_from_this();
-    http::async_write(socket_, response_,
-                      [self](beast::error_code ec, std::size_t) {
-                        self->socket_.shutdown(tcp::socket::shutdown_send, ec);
-                      });
-  }
-};
+        } else {
+          std::cerr << "Write error: " << ec.message() << std::endl;
+        }
+      });
+}
