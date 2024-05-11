@@ -4,7 +4,7 @@
 #include "Drone.h"
 
 Drone::Drone(unsigned int id) : id_(id){
-    current_data_ = {id_, 10, 10, 100, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
+    current_data_ = {id_, 10, 10, 1, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
     // cout << "Drone " << id_ << " created" << endl;
     ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
     if (ctx_ == NULL || ctx_->err) {
@@ -156,7 +156,7 @@ void Drone::chargeDrone() {
 
     this_thread::sleep_for(chrono::milliseconds(charge_time));
 
-    current_data_.battery = 100;
+    current_data_.battery = 1;
     current_data_.state = DroneState::READY;
 
     sendDataToCC(true);

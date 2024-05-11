@@ -103,7 +103,7 @@ void ControlCenter::listenDrones() {
         // convert string to float
         droneData.x = stof(message["x"]);
         droneData.y = stof(message["y"]);
-        droneData.battery = stoi(message["battery"]);
+        droneData.battery = stof(message["battery"]);
         droneData.state = to_state(message["state"]);
         bool changedState = message["changedState"] == "true";
 
@@ -223,12 +223,14 @@ void ControlCenter::initDrones() {
         droneData.id = stoi(message["id"]);
         droneData.x = stof(message["x"]);
         droneData.y = stof(message["y"]);
-        droneData.battery = stoi(message["battery"]);
+        droneData.battery = stof(message["battery"]);
         droneData.state = to_state(message["state"]);
 
         readyDrones_.push_back(droneData);
 
-        std::string query = "INSERT INTO drone (drone_id, battery, status) VALUES (" + to_string(droneData.id) + ", " + to_string(droneData.battery) + ", '" + to_string(droneData.state) + "');";
+        cout << "ControlCenter::initDrones: BATTERIA: " << droneData.battery << endl;
+
+        std::string query = "INSERT INTO drone (drone_id, battery, status) VALUES (" + to_string(droneData.id) + ", " + to_string(1) + ", '" + to_string(droneData.state) + "');"; // TODO: to_string(droneData.battery)
 
         // Converti la stringa in char *
         char *queryPtr = const_cast<char *>(query.c_str());
@@ -315,14 +317,14 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
 
 void ControlCenter::insertCCLog() {
     // Connect to the database
-    Con2DB conn = Con2DB("localhost", "5432", "postgres", "postgres", "postgres");
+    //Con2DB conn = Con2DB("localhost", "5432", "postgres", "postgres", "postgres");
 
     // Insert the log
-    conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center started')");
+    //conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center started')");
 
     while (true) {
         // Insert the log
-        conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center running')");
+        //conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center running')");
 
         // Sleep for 10 seconds
         this_thread::sleep_for(chrono::seconds());

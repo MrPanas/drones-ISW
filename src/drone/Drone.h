@@ -52,7 +52,7 @@ struct DroneData {
     unsigned int id;
     float x;
     float y;
-    int battery;
+    float battery;
     DroneState state;
 };
 

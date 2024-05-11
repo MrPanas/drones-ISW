@@ -82,6 +82,8 @@ add_executable(cc src/control_center/main.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
         src/scanning_strategy/Path.cpp
+        src/scanning_strategy/BasicStrategy.cpp
+        src/scanning_strategy/BasicStrategy.h
 )
 
 

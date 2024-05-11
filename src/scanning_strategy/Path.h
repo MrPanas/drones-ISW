@@ -52,6 +52,8 @@ public:
 
     string toString() const;
 
+    void addPath(const Path& path);
+
 private:
     DirectionList path_;
 };
