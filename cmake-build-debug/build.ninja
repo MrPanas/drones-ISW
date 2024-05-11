@@ -91,13 +91,6 @@ build CMakeFiles/cc.dir/src/redis/redis.cpp.o: CXX_COMPILER__cc_unscanned_Debug 
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/redis
 
-build CMakeFiles/cc.dir/src/server/Server.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/server/Server.cpp || cmake_object_order_depends_target_cc
-  DEP_FILE = CMakeFiles/cc.dir/src/server/Server.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
-  OBJECT_DIR = CMakeFiles/cc.dir
-  OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/server
-
 build CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o.d
   FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
@@ -120,7 +113,7 @@ build CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__cc_unsca
 #############################################
 # Link the executable cc
 
-build cc: CXX_EXECUTABLE_LINKER__cc_Debug CMakeFiles/cc.dir/src/control_center/main.cpp.o CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/cc.dir/src/drone/Drone.cpp.o CMakeFiles/cc.dir/src/area/Area.cpp.o CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o CMakeFiles/cc.dir/src/redis/redis.cpp.o CMakeFiles/cc.dir/src/server/Server.cpp.o CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o || drone
+build cc: CXX_EXECUTABLE_LINKER__cc_Debug CMakeFiles/cc.dir/src/control_center/main.cpp.o CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/cc.dir/src/drone/Drone.cpp.o CMakeFiles/cc.dir/src/area/Area.cpp.o CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o CMakeFiles/cc.dir/src/redis/redis.cpp.o CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o || drone
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   LINK_LIBRARIES = -lhiredis  -lpq
   OBJECT_DIR = CMakeFiles/cc.dir
@@ -173,13 +166,6 @@ build CMakeFiles/drone.dir/src/redis/redis.cpp.o: CXX_COMPILER__drone_unscanned_
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/redis
 
-build CMakeFiles/drone.dir/src/server/Server.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/server/Server.cpp || cmake_object_order_depends_target_drone
-  DEP_FILE = CMakeFiles/drone.dir/src/server/Server.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
-  OBJECT_DIR = CMakeFiles/drone.dir
-  OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/server
-
 build CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o.d
   FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
@@ -202,7 +188,7 @@ build CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__drone
 #############################################
 # Link the executable drone
 
-build drone: CXX_EXECUTABLE_LINKER__drone_Debug CMakeFiles/drone.dir/src/drone/main.cpp.o CMakeFiles/drone.dir/src/drone/Drone.cpp.o CMakeFiles/drone.dir/src/area/Area.cpp.o CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o CMakeFiles/drone.dir/src/redis/redis.cpp.o CMakeFiles/drone.dir/src/server/Server.cpp.o CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o
+build drone: CXX_EXECUTABLE_LINKER__drone_Debug CMakeFiles/drone.dir/src/drone/main.cpp.o CMakeFiles/drone.dir/src/drone/Drone.cpp.o CMakeFiles/drone.dir/src/area/Area.cpp.o CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o CMakeFiles/drone.dir/src/redis/redis.cpp.o CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   LINK_LIBRARIES = -lhiredis  -lpq
   OBJECT_DIR = CMakeFiles/drone.dir
@@ -262,13 +248,6 @@ build CMakeFiles/test.dir/src/redis/redis.cpp.o: CXX_COMPILER__test_unscanned_De
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/redis
 
-build CMakeFiles/test.dir/src/server/Server.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/server/Server.cpp || cmake_object_order_depends_target_test
-  DEP_FILE = CMakeFiles/test.dir/src/server/Server.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
-  OBJECT_DIR = CMakeFiles/test.dir
-  OBJECT_FILE_DIR = CMakeFiles/test.dir/src/server
-
 build CMakeFiles/test.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/con2db/pgsql.cpp.o.d
   FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
@@ -291,7 +270,7 @@ build CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__test_u
 #############################################
 # Link the executable test
 
-build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/main.cpp.o CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/test.dir/src/drone/Drone.cpp.o CMakeFiles/test.dir/src/area/Area.cpp.o CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o CMakeFiles/test.dir/src/redis/redis.cpp.o CMakeFiles/test.dir/src/server/Server.cpp.o CMakeFiles/test.dir/src/con2db/pgsql.cpp.o CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o || cc
+build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/main.cpp.o CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/test.dir/src/drone/Drone.cpp.o CMakeFiles/test.dir/src/area/Area.cpp.o CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o CMakeFiles/test.dir/src/redis/redis.cpp.o CMakeFiles/test.dir/src/con2db/pgsql.cpp.o CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o || cc
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   LINK_LIBRARIES = -lhiredis  -lpq  -lredis++
   OBJECT_DIR = CMakeFiles/test.dir

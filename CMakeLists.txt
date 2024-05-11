@@ -76,8 +76,8 @@ add_executable(cc src/control_center/main.cpp
         src/redis/StreamRedis.h
         src/redis/redis.cpp
         src/redis/redis.h
-        src/server/Server.cpp
-        src/server/Server.hpp
+#        src/server/Server.cpp
+#        src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
@@ -107,8 +107,8 @@ add_executable(drone src/drone/main.cpp
         src/drone/main.cpp
         src/redis/redis.cpp
         src/redis/redis.h
-        src/server/Server.cpp
-        src/server/Server.hpp
+#        src/server/Server.cpp
+#        src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
@@ -121,16 +121,16 @@ target_include_directories(drone PRIVATE "/usr/include/nlohmann")
 
 target_link_libraries(drone hiredis pq)
 
-add_executable(server src/server/main.cpp
-        src/server/Server.cpp
-        src/server/Server.hpp
-)
+#add_executable(server src/server/main.cpp
+#        src/server/Server.cpp
+#        src/server/Server.hpp
+#)
 # Includi la directory degli header di PostgreSQL
-target_include_directories(server PRIVATE "/usr/include/postgresql")
+#target_include_directories(server PRIVATE "/usr/include/postgresql")
 # Includi la directory degli header di nlohmann/json
-target_include_directories(server PRIVATE "/usr/include/nlohmann")
+#target_include_directories(server PRIVATE "/usr/include/nlohmann")
 
-target_include_directories(server PRIVATE "/usr/local/include/sw")
+#target_include_directories(server PRIVATE "/usr/local/include/sw")
 
 # Testing
 add_executable(test main.cpp
@@ -145,8 +145,8 @@ add_executable(test main.cpp
         src/redis/StreamRedis.h
         src/redis/redis.cpp
         src/redis/redis.h
-        src/server/Server.cpp
-        src/server/Server.hpp
+        # src/server/Server.cpp
+        # src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h

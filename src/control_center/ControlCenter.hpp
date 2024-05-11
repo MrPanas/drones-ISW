@@ -59,7 +59,9 @@ private:
 
     void sendPath(unsigned int droneId, const Path& path);
 
-    void insertLog();
+    void insertCCLog();
+
+    void insertDroneLog(DroneData droneData);
 
     const unsigned int id_;
     ScanningStrategy* strategy_{};
@@ -67,12 +69,12 @@ private:
     redisContext *sender_ctx_{};
     redisContext *listener_ctx_{};
 
+    Con2DB conn_;
+
     unsigned int num_drones_;
     vector<DroneData> workingDrones_;
     vector<DroneData> chargingDrones_;
     vector<DroneData> readyDrones_;
-
-    PGconn *conn_{};
 
     void handleSchedule(DroneSchedule schedule);
 };

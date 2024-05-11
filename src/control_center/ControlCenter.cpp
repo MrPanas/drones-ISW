@@ -24,7 +24,7 @@
 // TODO: gestire chiusura di tutti i while true
 // TODO: creare collegamento con il db
 
-ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones){
+ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
     area_ = Area(50, 50); // TODO: cancellare
     // Connect to redis
     sender_ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
@@ -107,6 +107,10 @@ void ControlCenter::listenDrones() {
         droneData.state = to_state(message["state"]);
         bool changedState = message["changedState"] == "true";
 
+        if (changedState) {
+            insertDroneLog(droneData);
+        }
+
         cout <<"ControlCenter::listenDrones: Drone state: " << to_string(droneData.state) << endl;
         switch (droneData.state) {
             case DroneState::READY:
@@ -185,7 +189,7 @@ void ControlCenter::start() {
     cout << "ControlCenter::start: Starting Control Center" << endl;
     initDrones();
 
-    insertLog();
+    // insertLog();
 
     // cout << "ControlCenter::start: Starting listenDrones thread" << endl;
 
@@ -223,6 +227,14 @@ void ControlCenter::initDrones() {
         droneData.state = to_state(message["state"]);
 
         readyDrones_.push_back(droneData);
+
+        std::string query = "INSERT INTO drone (drone_id, battery, status) VALUES (" + to_string(droneData.id) + ", " + to_string(droneData.battery) + ", '" + to_string(droneData.state) + "');";
+
+        // Converti la stringa in char *
+        char *queryPtr = const_cast<char *>(query.c_str());
+
+        // Esegui la query
+        conn_.ExecSQLcmd(queryPtr);
 
         // cout << "ControlCenter::initDrones: Drone " << droneData.id << " is ready" << endl;
     }
@@ -301,7 +313,7 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     }
 }
 
-void ControlCenter::insertLog() {
+void ControlCenter::insertCCLog() {
     // Connect to the database
     Con2DB conn = Con2DB("localhost", "5432", "postgres", "postgres", "postgres");
 
@@ -315,4 +327,8 @@ void ControlCenter::insertLog() {
         // Sleep for 10 seconds
         this_thread::sleep_for(chrono::seconds());
     }
+}
+
+void ControlCenter::insertDroneLog(DroneData data) {
+    //conn_.ExecSQLcmd("INSERT INTO drone_log (id, message) VALUES (1, 'Drone " + to_string(data.id) + " started')");
 }
