@@ -164,7 +164,7 @@ target_include_directories(test PRIVATE "/usr/include/nlohmann")
 target_include_directories(test PRIVATE "/usr/local/include/sw")
 
 # Linka le librerie Hiredis e PostgreSQL
-target_link_libraries(test PRIVATE hiredis pq redis++)
+target_link_libraries(test PRIVATE hiredis pq)
 
 add_dependencies(cc drone)
 

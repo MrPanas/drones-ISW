@@ -1,209 +1,105 @@
 #include <iostream>
+#include <cstdlib> // For atoi()
+#include <getopt.h> // For getopt_long
 #include "src/control_center/ControlCenter.hpp"
-
-#include "src/area/Area.hpp"
-#include "src/redis/StreamRedis.h"
-#include <hiredis/hiredis.h>
-#include <libpq-fe.h>
-#include <nlohmann/json.hpp>
-#include "src/redis/redis.h"
+#include "src/scanning_strategy/BasicStrategy.h"
 
 
-// Some constants
-#define DBNAME "postgres"
-#define DBUSER "postgres"
-#define DBPASS "postgres"
-#define DBHOST "localhost"
-#define DBPORT "5432"
-
-
-
-
-// Establish connection to redis server
 using namespace std;
 
-using json = nlohmann::json;
+void printHelp(char* name) {
+    cout << "Usage: "<< name << endl;
+    cout << "Options:" << endl;
+    cout << "  --height <height>  Height of the area. Must be greater than 0." << endl;
+    cout << "  --width <width>    Width of the area. Must be greater than 0." << endl;
+}
 
-using GG = std::vector<std::map<std::string,std::vector<std::string>>>;
+/**
+ * This main takes the following arguments:
+ * --height: Height of the area
+ * --width: Width of the area
+ */
+int main(int argc, char* argv[]) {
+    // Default values
+    int height = 6000;
+    int width = 6000;
 
+    // Define long options
+    static struct option long_options[] = {
+            {"height", required_argument, nullptr, 'h'},
+            {"width", required_argument, nullptr, 'w'},
+            {nullptr, 0, nullptr, 0}
+    };
 
-int main() {
-    cout << "Hello, World!" << endl;
+    // Parse arguments
+    int option_index = 0;
+    int opt;
+    while ((opt = getopt_long(argc, argv, "h:w:", long_options, &option_index)) != -1) {
+        switch (opt) {
+            case 'h':
+                height = atoi(optarg);
+                if (height <= 0) {
+                    printHelp(argv[0]);
+                    return EXIT_FAILURE;
+                }
+                break;
+            case 'w':
+                width = atoi(optarg);
+                if (width <= 0) {
+                    printHelp(argv[0]);
+                    return EXIT_FAILURE;
+                }
+                break;
+            default:
+                printHelp(argv[0]);
+                return EXIT_FAILURE;
+        }
+    }
+    cout << "Height: " << height << " Width: " << width << endl;
 
-    StreamRedis streamRedis{};
+    // Initialize an Area object
+    Area area = Area(width, height);
 
+    // Initialize a BasicStrategy object
+    BasicStrategy strategy = BasicStrategy();
 
+    // number of drones needed
+    unsigned  int num_drones = 10;
 
-    cout << "VAR1: " << Var << endl;
+    // cc id
+    unsigned int cc_id = 1;
+    // Initialize a ControlCenter object
+    ControlCenter controlCenter = ControlCenter(cc_id, num_drones, &strategy, area);
 
-    GG gg;
+    // Initialize drones
+    vector<Drone> drones;
+    drones.reserve(num_drones);
+    for (unsigned int i = 0; i < num_drones; i++) {
 
-//
-    Message message;
-    message["ao"] = "eo";
-//
-//    // Send Message
-//    string send = sendMessage(streamRedis.context_, "stream1", message);
-//    cout << "Send Message: " << send << endl;
-
-    // Read message from the group
-
-    // Read message from the group
-
-    GroupInfo info = getInfoGroup(streamRedis.context_, "stream1", "group1");
-//    int temp = 0;
-//    using  Response =  tuple<string,map<string,string>>;
-//    while(temp <30000) {
-//        cout << temp << endl;
-//        temp++;
-//        Response response = readMessageGroup(streamRedis.context_, "group1", "consumer1", "stream1", 0);
-//        string msgId = get<0>(response);
-//        if (msgId.empty()) {
-////            cout << "No reply" << endl;
-//            continue;
-//        }
-//        cout << "msgId: " << msgId << endl;
-//        map<string, string> messageMap = get<1>(response);
-//        // print messageMap
-//        for (const auto &item : messageMap) {
-//            cout << item.first << " " << item.second << endl;
-//        }
-//
-//        // Acknowledge the message
-//        long result = ackMessage(streamRedis.context_, "stream1", "group1", msgId);
-//        cout << "Acknowledge: " << result << endl;
-//
-//        // Print the group info
-//        printInfoGroup(streamRedis.context_, "stream1");
-//    }
-
-
-
-
-
-//    string id = get<0>(response);
-//    cout << "Id: " << id << endl;
-//    map<string, string> messageMap = get<1>(response);
-//
-//    for (const auto &item : messageMap) {
-//        cout << item.first << " " << item.second << endl;
-//    }
-
-
-
-
-
-    return EXIT_SUCCESS;
-    // Call a cc with id 1
-    string ccId = "1";
-    string ccCommand = "./cc " + ccId;
-
-    int res = system(ccCommand.c_str());
-    if (res != 0) {
-        cout << "Error calling cc" << endl;
-        return EXIT_FAILURE;
+        drones.emplace_back(i, cc_id);
     }
 
-    return EXIT_SUCCESS;
+    // Start drones
+    cout << "Starting drones" << endl;
+    vector<thread> drone_threads;
+    drone_threads.reserve(drones.size());
+    for (Drone &drone : drones) {
+        drone_threads.emplace_back(&Drone::start, &drone);
+    }
 
 
-    // Create SimpleStrategy object
+    // Start control center
+    cout << "Starting control center" << endl;
+    thread cc_thread(&ControlCenter::start, &controlCenter);
 
 
-    // Create ControlCenter object
-//    ControlCenter cc{1, &simpleStrategy};
-//
-//    cc.startOperations();
-//
-//    std::this_thread::sleep_for(std::chrono::seconds(5));
-//    cc.stopOperations();
+    // Wait for all threads to finish
+    for (thread &drone_thread : drone_threads) {
+        drone_thread.join();
+    }
+    cc_thread.join();
 
-
-    // Create ControlCenter object
-
-
-
-//    std::this_thread::sleep_for(std::chrono::seconds(1));
-//    cc.stopOperations();
-
-//    cc.handleTimeout(std::chrono::seconds(5));
-//    cc.stopOperation();
-
-
-    // Create Drone object
-
-
-    // Add drone to control center
-
-
-    // Execute scan
-//    controlCenter.executeScan();
-
-    // Connect to postgresql server
-//    PGconn *conn = PQsetdbLogin(DBHOST, DBPORT, nullptr, nullptr, DBNAME, DBUSER, DBPASS);
-//
-//    if (PQstatus(conn) != CONNECTION_OK) {
-//        std::cerr << "Connection to database failed: " << PQerrorMessage(conn) << std::endl;
-//        return EXIT_FAILURE;
-//    }
-//    std::cout << "Successfully connected to database" << std::endl;
-//
-//    // Disconnect from postgresql server
-//    PQfinish(conn);
-
-
-
-    // Create RedisStream object
-//    StreamRedis streamRedis{};
-
-    // Print the stream
-//    std::cout << "Printing the first stream" << std::endl;
-//    streamRedis.printStream("stream1");
-
-//    std::cout << "Sending a message to the stream" << std::endl;
-
-//    streamRedis.sendMessage("stream1", message);
-
-    // print the stream
-//    std::cout << "Printing the second stream" << std::endl;
-//    streamRedis.printStream("stream1");
-    // Create Drone message
-//    DroneMessage droneMessage{};
-//    int res = streamRedis.getDroneMessage("stream1", "1", droneMessage);
-//    // print res
-//    std::cout << "Res: " << res << std::endl;
-//
-//    // print droneMessage
-//    std::cout << "DroneMessage: " << droneMessage.id << " " << droneMessage.status << " " << droneMessage.battery << std::endl;
-
-    // Create Json object
-//    json jsonValue;
-//    jsonValue["id"] = 1;
-//    jsonValue["status"] = "OK";
-//    jsonValue["battery"] = 100;
-//
-//    streamRedis.sendJsonMessage("stream1", jsonValue);
-//
-//    streamRedis.printStream("stream1");
-
-    // Create Json object with a vector
-//    json jsonObject;
-
-//    jsonValue["id"] = 1;
-//    jsonValue["path"] = {"(0,0)", "(0,1)", "(0,2)", "(0,3)", "(0,4)", "(0,5)", "(0,6)", "(0,7)", "(0,8)", "(0,9)"};
-
-//    streamRedis.sendJsonMessage("stream1", jsonValue);
-
-//    streamRedis.printStream("stream1");
-
-
-
-
-
-
-
-
-
+    cout << "All threads finished" << endl;
 
     return EXIT_SUCCESS;
 }
