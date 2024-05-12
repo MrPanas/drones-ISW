@@ -64,7 +64,7 @@ ControlCenter::ControlCenter(unsigned int id,
 
 }
 
-void ControlCenter::setStrategy(ScanningStrategy *strategy) {
+void ControlCenter::setStrategy(BasicStrategy *strategy) {
     strategy_ = strategy;
 }
 

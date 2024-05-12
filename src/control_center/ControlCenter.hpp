@@ -38,7 +38,7 @@ public:
     ControlCenter(unsigned int id, unsigned int num_drones);
     ControlCenter(unsigned int id, unsigned int num_drones, BasicStrategy *strategy, Area area); // TODO: basicStrategy cambiare con ScanningStrategy
 
-    void setStrategy(ScanningStrategy *strategy);
+    void setStrategy(BasicStrategy *strategy);
 
 
     void initDrones();
