@@ -8,18 +8,19 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
 
     Coordinate cc_pos = {area.getWidth() / 2, area.getHeight() / 2};
     Coordinate current_position = cc_pos;
-    // Coordinate end = {area.getWidth(), area.getHeight() - 10};
-    // Coordinate start = {0, 10}; // TODO: uncomment
-    Coordinate start = {0, 1};
-    Coordinate end = {area.getWidth(), area.getHeight() - 1};
+    Coordinate end = {area.getWidth(), area.getHeight() - 10};
+    Coordinate start = {0, 10}; // TODO: uncomment
+    // Coordinate start = {0, 1};
+    // Coordinate end = {area.getWidth(), area.getHeight() - 1};
 
     vector<DroneSchedule> schedules;
 
     Direction direction = Direction::EAST;
     int path_id = 0;
     while (current_position.x != end.x && current_position.y <= end.y) {
+        cout << "----------------path_id: " << path_id << "----------------" << endl;
         current_position = cc_pos;
-        int autonomy = 30;
+        int autonomy = 15000;
         Path path = Path();
 
         // cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
@@ -46,13 +47,10 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
 
         current_position = start;
 
-        cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
 
         // TODO mettere che se già non può tornare da errore
-        cout << "Start autonomy: " << autonomy << endl;
         // _______________________
         while(true) {
-
             Coordinate next_position = current_position;
             if (direction == Direction::EAST) {
                 // va a destra
@@ -66,6 +64,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                     current_position = get<0>(tup);
                     autonomy -= get<1>(tup);
                     path.addDirection(Direction::EAST, get<1>(tup));
+                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
                     start = {current_position.x, current_position.y};
                     path.addPath(returnToCC(autonomy, current_position, cc_pos)); // Return To CC
                     cout << "autonomy prima di un break: " << autonomy << endl;
@@ -76,34 +75,28 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                     autonomy -= steps;
                     // direction = Direction::WEST;
                     path.addDirection(Direction::EAST, steps);
-                    cout << "autonomy: " << autonomy << endl;
-                    cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
                 }
                 // Go South
                 // steps = min(11, area.getHeight() - current_position.y); // TODO: uncomment
-                steps = min(2, area.getHeight() - current_position.y);
-                cout << "south steps: " << steps << endl;
+                steps = min(21, area.getHeight() - current_position.y);
                 next_position = {current_position.x, current_position.y + steps};
 
                 tuple<Coordinate, int> tup = goSouth(autonomy, current_position, next_position, cc_pos);
-                cout << "coordinate: " << get<0>(tup).x << " " << get<0>(tup).y << "steps: " << get<1>(tup) << endl;
                 if (autonomy - steps != autonomy - get<1>(tup)) {
                     // va a sud finché può
                     cout << "escape 2" << endl;
                     current_position = get<0>(tup);
                     autonomy -= get<1>(tup);
                     path.addDirection(Direction::SOUTH, get<1>(tup));
+                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
                     start = {current_position.x, current_position.y};
                     path.addPath(returnToCC(autonomy, current_position, cc_pos)); // return to CC
-                    cout << "autonomy prima di un break: " << autonomy << endl;
                     break;
                 }
                 current_position = get<0>(tup);
                 autonomy -= get<1>(tup);
                 path.addDirection(Direction::SOUTH, get<1>(tup));
                 direction = Direction::WEST;
-                cout << "autonomy: " << autonomy << endl;
-                cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
 
 
             } else if (direction == Direction::WEST) {
@@ -112,14 +105,14 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                 next_position = {current_position.x - steps, current_position.y};
                 if (manhattanDistance(next_position, cc_pos) > autonomy - steps) {
                     // va a sinistra finché può
-                    cout << "escape 3" << endl;
+                    cout << "Escape Ovest" << endl;
                     tuple<Coordinate, int> tup = getAvailableCoord(autonomy, current_position, next_position, cc_pos);
                     current_position = get<0>(tup);
                     autonomy -= get<1>(tup);
                     path.addDirection(Direction::WEST, get<1>(tup));
+                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
                     start = {current_position.x, current_position.y};
                     path.addPath(returnToCC(autonomy, current_position, cc_pos)); // Return To CC
-                    cout << "autonomy prima di un break: " << autonomy << endl;
                     break;
                 } else {
                     // va a sinistra al massimo
@@ -127,23 +120,21 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                     autonomy -= steps;
                     direction = Direction::NORTH;
                     path.addDirection(Direction::WEST, steps);
-                    cout << "autonomy: " << autonomy << endl;
-                    cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
                 }
                 // Go South
                 // steps = min(11, area.getHeight() - current_position.y); // TODO: uncomment
-                steps = min(2, area.getHeight() - current_position.y);
+                steps = min(21, area.getHeight() - current_position.y);
                 next_position = {current_position.x, current_position.y + steps};
                 tuple<Coordinate, int> tup = goSouth(autonomy, current_position, next_position, cc_pos);
                 if (autonomy - steps != autonomy - get<1>(tup)) {
                     // va a sud finché può
-                    cout << "escape 4" << endl;
+                    cout << "escape SUD/W" << endl;
                     current_position = get<0>(tup);
                     autonomy -= get<1>(tup);
                     path.addDirection(Direction::SOUTH, get<1>(tup));
+                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
                     start = {current_position.x, current_position.y};
                     path.addPath(returnToCC(autonomy, current_position, cc_pos)); // return to CC
-                    cout << "autonomy prima di un break: " << autonomy << endl;
                     break;
                 }
                 // va a sud al massimo e setta la prossima direzione a destra
@@ -151,11 +142,10 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                 autonomy -= get<1>(tup);
                 path.addDirection(Direction::SOUTH, get<1>(tup));
                 direction = Direction::EAST;
-                cout << "autonomy: " << autonomy << endl;
-                cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
             }
         }
-        cout << "End: " << end.x << " " << end.y << endl;
+
+        // cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
         schedules.emplace_back(path_id, path, chrono::milliseconds(290000));
         path_id++;
     }
@@ -174,10 +164,10 @@ Path BasicStrategy::returnToCC(int autonomy, Coordinate current_position, Coordi
 
     if (current_position.y < cc_pos.y) {
         // Go North
-        path.addDirection(Direction::NORTH, abs(current_position.y - cc_pos.y));
+        path.addDirection(Direction::SOUTH, abs(current_position.y - cc_pos.y));
     } else {
         // Go South
-        path.addDirection(Direction::SOUTH, abs(current_position.y - cc_pos.y));
+        path.addDirection(Direction::NORTH, abs(current_position.y - cc_pos.y));
     }
     return path;
 }
@@ -189,23 +179,26 @@ tuple<Coordinate, int> BasicStrategy::getAvailableCoord(int autonomy, Coordinate
         Coordinate temp;
         if (current_position.x < next_position.x) {
             temp = {current_position.x + 1, current_position.y};
-            if (manhattanDistance(temp, cc_pos) < autonomy) {
+            if (manhattanDistance(temp, cc_pos) > autonomy - 1) {
                 return make_tuple(current_position, steps);
             } else {
                 steps++;
+                autonomy--;
                 current_position = temp; // Move to the next position
             }
 
         } else {
             temp = {current_position.x - 1, current_position.y};
-            if (manhattanDistance(temp, cc_pos) < autonomy) {
+            if (manhattanDistance(temp, cc_pos) > autonomy - 1) {
                 return make_tuple(current_position, steps);
             } else {
                 steps++;
+                autonomy--;
                 current_position = temp; // Move to the next position
             }
         }
     }
+
     return make_tuple(current_position, steps);
 }
 

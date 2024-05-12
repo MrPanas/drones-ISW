@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     cc_thread.join();
      */
 
-    Area area = Area(10, 10);
+    Area area = Area(6000, 6000);
 
     BasicStrategy strategy = BasicStrategy();
 
@@ -50,14 +50,14 @@ int main(int argc, char *argv[]) {
 
     cout << "path legth " << get<1>(schedules[0]).getPath().size() << endl;
 
-    cout << "path1: " << get<1>(schedules[0]).toString() << endl;
-    cout << "path2: " << get<1>(schedules[1]).toString() << endl;
-    cout << "path3: " << get<1>(schedules[2]).toString() << endl; // TODO: Bug quando può fare solo una parte della riga non lo fa e torna subito al cc
-    cout << "path4: " << get<1>(schedules[3]).toString() << endl; // TODO: Bug alla fine del percorso non Sud invertito con Nord
 
-    //for (DroneSchedule schedule : schedules) {
-    //    cout << "Drone: " << get<0>(schedule) << " Path: " << get<1>(schedule).toString() << " Time: " << get<2>(schedule).count() << endl;
-    //}
+    for (DroneSchedule schedule : schedules) {
+        cout << "Drone: " << get<0>(schedule) << " Path: " << get<1>(schedule).toString() << " Time: " << get<2>(schedule).count() << endl;
+    }
+
+    // Calcolo numero di droni necessari
+    // 3h / 4.50min = 36
+    // 36 * numero di droni = 8600
 
 
 
