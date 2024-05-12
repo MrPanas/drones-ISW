@@ -8,8 +8,10 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
 
     Coordinate cc_pos = {area.getWidth() / 2, area.getHeight() / 2};
     Coordinate current_position = cc_pos;
-    Coordinate end = {area.getWidth(), area.getHeight() - 10};
-    Coordinate start = {0, 10};
+    // Coordinate end = {area.getWidth(), area.getHeight() - 10};
+    // Coordinate start = {0, 10}; // TODO: uncomment
+    Coordinate start = {0, 1};
+    Coordinate end = {area.getWidth(), area.getHeight() - 1};
 
     vector<DroneSchedule> schedules;
 
@@ -17,10 +19,10 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
     int path_id = 0;
     while (current_position.x != end.x && current_position.y <= end.y) {
         current_position = cc_pos;
-        int autonomy = 500;
+        int autonomy = 30;
         Path path = Path();
 
-        cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
+        // cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
         int steps = abs(start.x - cc_pos.x);
         // Go To Start ___________
         if (start.x < cc_pos.x) {
@@ -50,7 +52,6 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         cout << "Start autonomy: " << autonomy << endl;
         // _______________________
         while(true) {
-            // TODO: Debug scrivendo ogni direzione che prende
 
             Coordinate next_position = current_position;
             if (direction == Direction::EAST) {
@@ -79,7 +80,8 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                     cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
                 }
                 // Go South
-                steps = min(11, area.getHeight() - current_position.y);
+                // steps = min(11, area.getHeight() - current_position.y); // TODO: uncomment
+                steps = min(2, area.getHeight() - current_position.y);
                 cout << "south steps: " << steps << endl;
                 next_position = {current_position.x, current_position.y + steps};
 
@@ -129,7 +131,8 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                     cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
                 }
                 // Go South
-                steps = min(11, area.getHeight() - current_position.y);
+                // steps = min(11, area.getHeight() - current_position.y); // TODO: uncomment
+                steps = min(2, area.getHeight() - current_position.y);
                 next_position = {current_position.x, current_position.y + steps};
                 tuple<Coordinate, int> tup = goSouth(autonomy, current_position, next_position, cc_pos);
                 if (autonomy - steps != autonomy - get<1>(tup)) {
