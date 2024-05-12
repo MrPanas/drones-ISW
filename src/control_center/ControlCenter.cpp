@@ -28,10 +28,10 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
     sender_ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
     if (sender_ctx_ == NULL || sender_ctx_->err) {
         if (sender_ctx_) {
-            std::cout << "Error: " << sender_ctx_->errstr << std::endl;
+            std::cout << "ControlCenter::ControlCenter: Redis Error: " << sender_ctx_->errstr << std::endl;
             redisFree(sender_ctx_);
         } else {
-            std::cout << "Can't allocate redis context" << std::endl;
+            std::cout << "ControlCenter::ControlCenter: Redis: Can't allocate redis context" << std::endl;
         }
     }
 
