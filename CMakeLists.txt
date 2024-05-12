@@ -102,6 +102,8 @@ add_executable(drone src/drone/main.cpp
         src/drone/Drone.cpp
         src/drone/Drone.h
         src/scanning_strategy/ScanningStrategy.h
+        src/scanning_strategy/BasicStrategy.cpp
+        src/scanning_strategy/BasicStrategy.h
         src/area/Area.cpp
         src/area/Area.hpp
         src/redis/StreamRedis.cpp
@@ -141,6 +143,8 @@ add_executable(test main.cpp
         src/drone/Drone.cpp
         src/drone/Drone.h
         src/scanning_strategy/ScanningStrategy.h
+        src/scanning_strategy/BasicStrategy.cpp
+        src/scanning_strategy/BasicStrategy.h
         src/area/Area.cpp
         src/area/Area.hpp
         src/redis/StreamRedis.cpp

@@ -146,7 +146,8 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         }
 
         // cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
-        schedules.emplace_back(path_id, path, chrono::milliseconds(290000));
+        cout << "pathId: " << path_id << " Path: " << path.toString() << endl;
+        schedules.emplace_back(path_id, path, chrono::milliseconds(10000)); //TODO: mettere 290000
         path_id++;
     }
     return schedules;

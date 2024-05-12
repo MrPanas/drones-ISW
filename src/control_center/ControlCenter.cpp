@@ -25,7 +25,7 @@
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
     area_ = Area(50, 50); // TODO: cancellare
     // Connect to redis
-    sender_ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
+    sender_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (sender_ctx_ == NULL || sender_ctx_->err) {
         if (sender_ctx_) {
             std::cout << "ControlCenter::ControlCenter: Redis Error: " << sender_ctx_->errstr << std::endl;
@@ -35,7 +35,7 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
         }
     }
 
-    listener_ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
+    listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (listener_ctx_ == NULL || listener_ctx_->err) {
         if (listener_ctx_) {
             std::cout << "Error: " << listener_ctx_->errstr << std::endl;
@@ -44,6 +44,10 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
             std::cout << "Can't allocate redis context" << std::endl;
         }
     }
+
+    Redis::destroyGroup(sender_ctx_, "cc_" + to_string(id_), "CC_" + to_string(id_));
+    Redis::destroyGroup(listener_ctx_, "cc_" + to_string(id_), "CC_" + to_string(id_));
+    Redis::deleteStream(sender_ctx_, "cc_" + to_string(id_));
 
     // create cc group
     string stream = "cc_" + to_string(id_);
@@ -85,11 +89,12 @@ void ControlCenter::listenDrones() {
     const string group = "CC_" + to_string(id_);
     const string consumer = "CC_" + to_string(id_);
 
+    cout << "ControlCenter::listenDrones: Listening for drones" << endl;
+
     while (true) {
         Redis::Response response = Redis::readMessageGroup(listener_ctx_, group, consumer, stream, 0);
 
         string messageId = get<0>(response);
-        cout << messageId << endl;
         if (messageId.empty()) {
             cerr << "ControlCenter::listenDrones: Error: Empty message" << endl;
             continue;
@@ -106,10 +111,9 @@ void ControlCenter::listenDrones() {
         bool changedState = message["changedState"] == "true";
 
         if (changedState) {
-            insertDroneLog(droneData);
+            // insertDroneLog(droneData);
         }
 
-        cout <<"ControlCenter::listenDrones: Drone state: " << to_string(droneData.state) << endl;
         switch (droneData.state) {
             case DroneState::READY:
                 if (!changedState) {
@@ -130,9 +134,8 @@ void ControlCenter::listenDrones() {
             case DroneState::WORKING:
                 // call in another thread the function that updates the map
                 {
-                    cout << "ControlCenter::listenDrones: Drone " << droneData.id << " is working" << endl;
-                    thread updateAreaThread(&ControlCenter::updateArea, this, droneData);
-                    updateAreaThread.detach(); // Detach the thread to allow it to run independently
+                    // thread updateAreaThread(&ControlCenter::updateArea, this, droneData);
+                    // updateAreaThread.detach(); // Detach the thread to allow it to run independently
                 }
                 break;
             case DroneState::CHARGING:
@@ -179,7 +182,6 @@ void ControlCenter::updateArea(DroneData droneData) {
             }
         }
     }
-    cout << "ControlCenter::updateArea: Area updated" << endl;
     // cout << area_.toString() << endl;
 }
 
@@ -226,7 +228,6 @@ void ControlCenter::initDrones() {
 
         readyDrones_.push_back(droneData);
 
-        cout << "ControlCenter::initDrones: BATTERIA: " << droneData.battery << endl;
 
         string query = "INSERT INTO drone (drone_id, battery, status) VALUES (" + to_string(droneData.id) + ", " + to_string(droneData.battery) + ", '" + to_string(droneData.state) + "') ON CONFLICT (drone_id) DO UPDATE SET battery = EXCLUDED.battery, status = EXCLUDED.status;"; // TODO: to_string(droneData.battery)
 
@@ -241,24 +242,24 @@ void ControlCenter::initDrones() {
 }
 
 void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
+    cout << "[1]ControlCenter::sendPath: Sending path to drone " << droneId << endl;
     const string stream = "stream_drone_" + to_string(droneId);
 
     string pathStr = path.toString();
 
     Redis::Message message;
     message["path"] = pathStr;
-    cout << "ControlCenter::sendPath: Sending path " << pathStr << " to drone " << droneId << endl;
 
     Redis::sendMessage(sender_ctx_, stream, message);
-
-    cout << "ControlCenter::sendPath: Path sent" << endl;
+    cout << "[2]ControlCenter::sendPath: Sending path to drone " << droneId << endl;
 }
 
 void ControlCenter::sendPathsToDrones() {
     // Open thread for each schedule
-//    vector<DroneSchedule> schedules = strategy_->createSchedules(area_); // TODO: uncomment
+    vector<DroneSchedule> schedules = strategy_->createSchedules(area_);
 
     // DEBUG TODO: Remove after try
+    /*
     Path p1 = Path();
     p1.addDirection(Direction::NORTH, 3);
     p1.addDirection(Direction::EAST, 2);
@@ -269,11 +270,11 @@ void ControlCenter::sendPathsToDrones() {
     vector<DroneSchedule> schedules = vector<DroneSchedule>();
     schedules.emplace_back(1, p1, chrono::milliseconds(10000));
     schedules.emplace_back(2, p2, chrono::milliseconds(10000));
+     */
     // _________
 
     // ADD paths to DB
     for (DroneSchedule schedule : schedules) {
-        cout << "ControlCenter::sendPathsToDrones: Drone: " << get<0>(schedule) << " Path: " << get<1>(schedule).toString() << " Time: " << get<2>(schedule).count() << endl;
         string query = "INSERT INTO path (path_id, path) VALUES (" + to_string(get<0>(schedule)) + ", '" + get<1>(schedule).toString() + "') ON CONFLICT (path_id) DO UPDATE SET path = EXCLUDED.path;";
         conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
     }
@@ -297,7 +298,6 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     chrono::milliseconds nextSend = get<2>(schedule);
 
     while (true) {
-        cout << "\n\nControlCenter::handleSchedule: joined while loop" << endl;
         //cout << "ControlCenter::handleSchedule: Sending path " << pathId << " to drones" << endl;
         // Get a drone from readyDrones_
         DroneData droneData = readyDrones_.back(); // TODO mettere un if size == 0 per gestire errori
@@ -311,7 +311,7 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
 
         sendPath(droneId, path);
 
-        insertCCLog(droneId, pathId);
+        //insertCCLog(droneId, pathId);
 
         // Add drone to workingDrones_
         workingDrones_.push_back(droneData);
@@ -332,4 +332,8 @@ void ControlCenter::insertDroneLog(DroneData data) {
     //conn_.ExecSQLcmd("INSERT INTO drone_log (id, message) VALUES (1, 'Drone " + to_string(data.id) + " started')");
     string query = "INSERT INTO drone_log (drone_id, path_id) VALUES (" + to_string(data.id) + ", 1);";
     conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+}
+
+Coordinate ControlCenter::getCCPosition() {
+    return Coordinate{area_.getWidth() / 2, area_.getHeight() / 2};
 }

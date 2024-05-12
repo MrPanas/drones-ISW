@@ -97,10 +97,12 @@ string Redis::sendMessage(redisContext *context, const string &stream, Message &
 
     if (reply == nullptr) {
         cerr << "sendMessage: Error: " << context->errstr << endl;
+        cout << "sendMessageXADD: " << xadd << endl;
         return "";
     }
     if (reply->type == REDIS_REPLY_ERROR) {
         cerr << "sendMessage: Error: " << reply->str << endl;
+        cout << "sendMessageXADD: " << xadd << endl;
         freeReplyObject(reply);
         return "";
     }
@@ -138,7 +140,7 @@ string Redis::sendJsonMessage(redisContext *context, const string &stream, const
  */
 long Redis::deleteStream(redisContext *context, const string &stream) {
     // Create a group
-    auto *reply = (redisReply *) redisCommand(context, "XDEL %s", stream.c_str());
+    auto *reply = (redisReply *) redisCommand(context, "DEL %s", stream.c_str());
     if (reply == nullptr) {
         cerr << "deleteStream: Error: " << context->errstr << endl;
         return -1;
@@ -274,4 +276,3 @@ Redis::GroupInfo Redis::getInfoGroup(redisContext *context, const string &stream
     freeReplyObject(reply);
     return groupInfo;
 }
-

@@ -23,6 +23,10 @@ int main(int argc, char* argv[]) {
     // Default values
     int height = 6000;
     int width = 6000;
+    unsigned int num_drones = 500;
+
+    // cc id
+    unsigned int cc_id = 1;
 
     // Define long options
     static struct option long_options[] = {
@@ -64,10 +68,7 @@ int main(int argc, char* argv[]) {
     BasicStrategy strategy = BasicStrategy();
 
     // number of drones needed
-    unsigned  int num_drones = 10;
 
-    // cc id
-    unsigned int cc_id = 1;
     // Initialize a ControlCenter object
     ControlCenter controlCenter = ControlCenter(cc_id, num_drones, &strategy, area);
 

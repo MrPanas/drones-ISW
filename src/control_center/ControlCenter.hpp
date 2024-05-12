@@ -45,6 +45,8 @@ public:
 
     void start();
 
+    Coordinate getCCPosition();
+
     void stop();
 
     // Destructor
