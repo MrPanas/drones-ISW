@@ -18,11 +18,9 @@
  *
  */
 
-// TODO: ricarica del drone (lato drone) [FATTO]
-// TODO: gestire che il cc toglie il drone da charging a ready e da working a charging [FATTO]
-// TODO: il cc deve aggiornare la mappa appena gli arriva il messaggio del drone [FATTO]
 // TODO: gestire chiusura di tutti i while true
-// TODO: creare collegamento con il db
+// TODO: a ogni cambio di stato del drone fare l'update nel db
+
 
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
     area_ = Area(50, 50); // TODO: cancellare
@@ -59,7 +57,7 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
 
 ControlCenter::ControlCenter(unsigned int id,
                              unsigned int num_drones,
-                             ScanningStrategy *strategy,
+                             BasicStrategy *strategy,
                              Area area) : ControlCenter(id, num_drones){
     strategy_ = strategy;
     area_ = std::move(area);
@@ -230,7 +228,7 @@ void ControlCenter::initDrones() {
 
         cout << "ControlCenter::initDrones: BATTERIA: " << droneData.battery << endl;
 
-        std::string query = "INSERT INTO drone (drone_id, battery, status) VALUES (" + to_string(droneData.id) + ", " + to_string(1) + ", '" + to_string(droneData.state) + "');"; // TODO: to_string(droneData.battery)
+        string query = "INSERT INTO drone (drone_id, battery, status) VALUES (" + to_string(droneData.id) + ", " + to_string(droneData.battery) + ", '" + to_string(droneData.state) + "') ON CONFLICT (drone_id) DO UPDATE SET battery = EXCLUDED.battery, status = EXCLUDED.status;"; // TODO: to_string(droneData.battery)
 
         // Converti la stringa in char *
         char *queryPtr = const_cast<char *>(query.c_str());
@@ -252,6 +250,7 @@ void ControlCenter::sendPath(unsigned int droneId, const Path& path) {
     cout << "ControlCenter::sendPath: Sending path " << pathStr << " to drone " << droneId << endl;
 
     Redis::sendMessage(sender_ctx_, stream, message);
+
     cout << "ControlCenter::sendPath: Path sent" << endl;
 }
 
@@ -271,6 +270,13 @@ void ControlCenter::sendPathsToDrones() {
     schedules.emplace_back(1, p1, chrono::milliseconds(10000));
     schedules.emplace_back(2, p2, chrono::milliseconds(10000));
     // _________
+
+    // ADD paths to DB
+    for (DroneSchedule schedule : schedules) {
+        cout << "ControlCenter::sendPathsToDrones: Drone: " << get<0>(schedule) << " Path: " << get<1>(schedule).toString() << " Time: " << get<2>(schedule).count() << endl;
+        string query = "INSERT INTO path (path_id, path) VALUES (" + to_string(get<0>(schedule)) + ", '" + get<1>(schedule).toString() + "') ON CONFLICT (path_id) DO UPDATE SET path = EXCLUDED.path;";
+        conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+    }
 
     vector<thread> threads;
     threads.reserve(schedules.size());
@@ -303,7 +309,9 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
 
         unsigned int droneId = droneData.id;
 
-        sendPath(droneId, path); // BUG: non procede oltre qua
+        sendPath(droneId, path);
+
+        insertCCLog(droneId, pathId);
 
         // Add drone to workingDrones_
         workingDrones_.push_back(droneData);
@@ -315,22 +323,13 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     }
 }
 
-void ControlCenter::insertCCLog() {
-    // Connect to the database
-    //Con2DB conn = Con2DB("localhost", "5432", "postgres", "postgres", "postgres");
-
-    // Insert the log
-    //conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center started')");
-
-    while (true) {
-        // Insert the log
-        //conn.ExecSQLcmd("INSERT INTO log (id, message) VALUES (1, 'Control Center running')");
-
-        // Sleep for 10 seconds
-        this_thread::sleep_for(chrono::seconds());
-    }
+void ControlCenter::insertCCLog(unsigned int droneId, unsigned int pathId) {
+    string query = "INSERT INTO cc_log (drone_id, path_id) VALUES (" + to_string(droneId) + ", " + to_string(pathId) + ");";
+    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
 }
 
 void ControlCenter::insertDroneLog(DroneData data) {
     //conn_.ExecSQLcmd("INSERT INTO drone_log (id, message) VALUES (1, 'Drone " + to_string(data.id) + " started')");
+    string query = "INSERT INTO drone_log (drone_id, path_id) VALUES (" + to_string(data.id) + ", 1);";
+    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
 }

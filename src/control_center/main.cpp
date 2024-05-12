@@ -15,7 +15,7 @@ using namespace std;
 int main(int argc, char *argv[]) {
 
     cout << "Hello, World!" << endl;
-    /*
+
     ControlCenter controlCenter = ControlCenter(1, 1);
     Drone drone1 = Drone(1, 1);
     Drone drone2 = Drone(2, 1);
@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
     drone_thread3.join();
     drone_thread4.join();
     cc_thread.join();
-     */
 
-    Area area = Area(6000, 6000);
+
+    /*Area area = Area(6000, 6000);
 
     BasicStrategy strategy = BasicStrategy();
 
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 
     for (DroneSchedule schedule : schedules) {
         cout << "Drone: " << get<0>(schedule) << " Path: " << get<1>(schedule).toString() << " Time: " << get<2>(schedule).count() << endl;
-    }
+    }*/
 
     // Calcolo numero di droni necessari
     // 3h / 4.50min = 36
