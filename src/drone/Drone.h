@@ -35,6 +35,7 @@ inline string to_string(DroneState state) {
         case DroneState::READY:
             return "READY";
     }
+    return "UNKNOWN";
 }
 
 inline DroneState to_state(const string& state) {

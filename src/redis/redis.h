@@ -10,9 +10,11 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 
-#define REDIS_HOST getenv("REDIS_HOST")
-#define REDIS_PORT getenv("REDIS_PORT")
+// #define REDIS_HOST getenv("REDIS_HOST")
+// #define REDIS_PORT getenv("REDIS_PORT")
 
+#define REDIS_HOST "localhost"
+#define REDIS_PORT 6379
 
 using namespace std;
 using json = nlohmann::json;
@@ -50,6 +52,7 @@ namespace Redis {
     long ackMessage(redisContext *context, const string &stream, const string &group, const string &messageId);
 
     GroupInfo getInfoGroup(redisContext *context, const string &stream, const string &groupName);
+
 }
 
 #endif //DRONE8_REDIS_H

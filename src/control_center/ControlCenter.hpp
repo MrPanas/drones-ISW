@@ -16,6 +16,7 @@
 #include "../drone/Drone.h"
 #include "../con2db/pgsql.h"
 #include <cmath>
+#include "../scanning_strategy/BasicStrategy.h"
 
 
 
@@ -35,14 +36,16 @@ using namespace std;
 class ControlCenter {
 public:
     ControlCenter(unsigned int id, unsigned int num_drones);
-    ControlCenter(unsigned int id, unsigned int num_drones, ScanningStrategy *strategy, Area area);
+    ControlCenter(unsigned int id, unsigned int num_drones, BasicStrategy *strategy, Area area); // TODO: basicStrategy cambiare con ScanningStrategy
 
-    void setStrategy(ScanningStrategy *strategy);
+    void setStrategy(BasicStrategy *strategy);
 
 
     void initDrones();
 
     void start();
+
+    Coordinate getCCPosition();
 
     void stop();
 
@@ -59,12 +62,12 @@ private:
 
     void sendPath(unsigned int droneId, const Path& path);
 
-    void insertCCLog();
+    void insertCCLog(unsigned int droneId, unsigned int pathId);
 
     void insertDroneLog(DroneData droneData);
 
     const unsigned int id_;
-    ScanningStrategy* strategy_{};
+    BasicStrategy* strategy_{};
     Area area_ = Area(0, 0);
     redisContext *sender_ctx_{};
     redisContext *listener_ctx_{};

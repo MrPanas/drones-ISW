@@ -4,9 +4,9 @@
 #include "Drone.h"
 
 Drone::Drone(unsigned int id) : id_(id){
-    current_data_ = {id_, 10, 10, 1, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
+    current_data_ = {id_, 500, 500, 1, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
     // cout << "Drone " << id_ << " created" << endl;
-    ctx_ = redisConnect(REDIS_HOST, stoi(REDIS_PORT));
+    ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (ctx_ == NULL || ctx_->err) {
         if (ctx_) {
             cout << "Drone::Drone: Error: " << ctx_->errstr << endl;
@@ -15,6 +15,8 @@ Drone::Drone(unsigned int id) : id_(id){
             cout << "Drone::Drone: Can't allocate redis context" << endl;
         }
     }
+    Redis::destroyGroup(ctx_, "stream_drone_" + to_string(id_), "Drone_" + to_string(id_));
+    Redis::deleteStream(ctx_, "stream_drone_" + to_string(id_));
 
     Redis::createGroup(ctx_, "stream_drone_" + to_string(id_), "Drone_" + to_string(id_) , true);
 
@@ -142,7 +144,6 @@ void Drone::sendDataToCC(bool changedState) {
 
     Redis::sendMessage(ctx_, stream, message);
 
-    cout << "Drone " << id_ << " sent data to Control Center " << cc_id_ << endl;
 }
 
 void Drone::chargeDrone() {

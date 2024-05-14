@@ -55,6 +55,8 @@ build CMakeFiles/cc.dir/src/control_center/main.cpp.o: CXX_COMPILER__cc_unscanne
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/control_center
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/control_center/ControlCenter.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o.d
@@ -62,6 +64,8 @@ build CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__cc
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/control_center
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/drone/Drone.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/drone/Drone.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/drone/Drone.cpp.o.d
@@ -69,6 +73,8 @@ build CMakeFiles/cc.dir/src/drone/Drone.cpp.o: CXX_COMPILER__cc_unscanned_Debug 
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/drone
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/area/Area.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/area/Area.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/area/Area.cpp.o.d
@@ -76,6 +82,8 @@ build CMakeFiles/cc.dir/src/area/Area.cpp.o: CXX_COMPILER__cc_unscanned_Debug /U
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/area
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o.d
@@ -83,6 +91,8 @@ build CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__cc_unscanned_
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/redis
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/redis/redis.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/redis.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/redis/redis.cpp.o.d
@@ -90,6 +100,8 @@ build CMakeFiles/cc.dir/src/redis/redis.cpp.o: CXX_COMPILER__cc_unscanned_Debug 
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/redis
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o.d
@@ -97,6 +109,8 @@ build CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__cc_unscanned_Debug
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/con2db
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o.d
@@ -104,6 +118,8 @@ build CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__cc_unsca
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/scanning_strategy
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 build CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/BasicStrategy.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o.d
@@ -111,6 +127,8 @@ build CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER_
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/scanning_strategy
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
+  TARGET_PDB = cc.pdb
 
 
 # =============================================================================
@@ -126,8 +144,9 @@ build cc: CXX_EXECUTABLE_LINKER__cc_Debug CMakeFiles/cc.dir/src/control_center/m
   OBJECT_DIR = CMakeFiles/cc.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = CMakeFiles/cc.dir/
   TARGET_FILE = cc
-  TARGET_PDB = cc.dbg
+  TARGET_PDB = cc.pdb
 
 # =============================================================================
 # Object build statements for EXECUTABLE target drone
@@ -144,6 +163,8 @@ build CMakeFiles/drone.dir/src/drone/main.cpp.o: CXX_COMPILER__drone_unscanned_D
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/drone
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
+  TARGET_PDB = drone.pdb
 
 build CMakeFiles/drone.dir/src/drone/Drone.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/drone/Drone.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/drone/Drone.cpp.o.d
@@ -151,6 +172,8 @@ build CMakeFiles/drone.dir/src/drone/Drone.cpp.o: CXX_COMPILER__drone_unscanned_
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/drone
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
+  TARGET_PDB = drone.pdb
 
 build CMakeFiles/drone.dir/src/area/Area.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/area/Area.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/area/Area.cpp.o.d
@@ -158,6 +181,8 @@ build CMakeFiles/drone.dir/src/area/Area.cpp.o: CXX_COMPILER__drone_unscanned_De
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/area
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
+  TARGET_PDB = drone.pdb
 
 build CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o.d
@@ -165,6 +190,8 @@ build CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__drone_unsc
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/redis
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
+  TARGET_PDB = drone.pdb
 
 build CMakeFiles/drone.dir/src/redis/redis.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/redis.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/redis/redis.cpp.o.d
@@ -172,6 +199,8 @@ build CMakeFiles/drone.dir/src/redis/redis.cpp.o: CXX_COMPILER__drone_unscanned_
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/redis
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
+  TARGET_PDB = drone.pdb
 
 build CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o.d
@@ -179,6 +208,8 @@ build CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__drone_unscanned
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/con2db
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
+  TARGET_PDB = drone.pdb
 
 build CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o.d
@@ -186,6 +217,8 @@ build CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__drone
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/scanning_strategy
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
+  TARGET_PDB = drone.pdb
 
 
 # =============================================================================
@@ -201,8 +234,9 @@ build drone: CXX_EXECUTABLE_LINKER__drone_Debug CMakeFiles/drone.dir/src/drone/m
   OBJECT_DIR = CMakeFiles/drone.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = CMakeFiles/drone.dir/
   TARGET_FILE = drone
-  TARGET_PDB = drone.dbg
+  TARGET_PDB = drone.pdb
 
 # =============================================================================
 # Object build statements for EXECUTABLE target test
@@ -219,6 +253,8 @@ build CMakeFiles/test.dir/main.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 build CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/control_center/ControlCenter.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o.d
@@ -226,6 +262,8 @@ build CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/control_center
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 build CMakeFiles/test.dir/src/drone/Drone.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/drone/Drone.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/drone/Drone.cpp.o.d
@@ -233,6 +271,8 @@ build CMakeFiles/test.dir/src/drone/Drone.cpp.o: CXX_COMPILER__test_unscanned_De
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/drone
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 build CMakeFiles/test.dir/src/area/Area.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/area/Area.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/area/Area.cpp.o.d
@@ -240,6 +280,8 @@ build CMakeFiles/test.dir/src/area/Area.cpp.o: CXX_COMPILER__test_unscanned_Debu
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/area
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 build CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o.d
@@ -247,6 +289,8 @@ build CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__test_unscan
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/redis
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 build CMakeFiles/test.dir/src/redis/redis.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/redis.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/redis/redis.cpp.o.d
@@ -254,6 +298,8 @@ build CMakeFiles/test.dir/src/redis/redis.cpp.o: CXX_COMPILER__test_unscanned_De
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/redis
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 build CMakeFiles/test.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/con2db/pgsql.cpp.o.d
@@ -261,6 +307,8 @@ build CMakeFiles/test.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__test_unscanned_D
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/con2db
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 build CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o.d
@@ -268,6 +316,8 @@ build CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__test_u
   INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/scanning_strategy
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
+  TARGET_PDB = test.pdb
 
 
 # =============================================================================
@@ -279,12 +329,13 @@ build CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__test_u
 
 build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/main.cpp.o CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/test.dir/src/drone/Drone.cpp.o CMakeFiles/test.dir/src/area/Area.cpp.o CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o CMakeFiles/test.dir/src/redis/redis.cpp.o CMakeFiles/test.dir/src/con2db/pgsql.cpp.o CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o || cc
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
-  LINK_LIBRARIES = -lhiredis  -lpq  -lredis++
+  LINK_LIBRARIES = -lhiredis  -lpq
   OBJECT_DIR = CMakeFiles/test.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = CMakeFiles/test.dir/
   TARGET_FILE = test
-  TARGET_PDB = test.dbg
+  TARGET_PDB = test.pdb
 
 
 #############################################
@@ -329,14 +380,14 @@ build all: phony cc drone test
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/gianlucaviviano/CLionProjects/drones-ISWProject/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCCompiler.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCCompilerABI.c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXCompiler.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCompilerIdDetection.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompileFeatures.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompilerABI.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeFindBinUtils.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeParseImplicitIncludeInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeParseImplicitLinkInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeParseLibraryArchitecture.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystem.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeTestCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeTestCXXCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeTestCompilerCommon.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/ADSP-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/ARMCC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/ARMClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Borland-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Cray-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CrayClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GHS-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/HP-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IAR-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Intel-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/LCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/MSVC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/NVHPC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/OrangeC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/PGI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/PathScale-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SCO-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/TI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Tasking-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Watcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XL-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/zOS-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Internal/FeatureTesting.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Determine-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/gianlucaviviano/CLionProjects/drones-ISWProject/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/gianlucaviviano/CLionProjects/drones-ISWProject/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake: phony
+build /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCCompiler.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCCompilerABI.c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXCompiler.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCompilerIdDetection.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompileFeatures.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompilerABI.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeFindBinUtils.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeParseImplicitIncludeInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeParseImplicitLinkInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeParseLibraryArchitecture.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystem.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeTestCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeTestCXXCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeTestCompilerCommon.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/ADSP-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/ARMCC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/ARMClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Borland-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Cray-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CrayClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GHS-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/HP-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IAR-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Intel-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/LCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/MSVC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/NVHPC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/OrangeC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/PGI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/PathScale-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SCO-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/TI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Tasking-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Watcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XL-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/zOS-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Internal/FeatureTesting.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Determine-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/gianlucaviviano/CLionProjects/drones-ISWProject/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake: phony
 
 
 #############################################
