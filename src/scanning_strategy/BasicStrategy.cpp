@@ -117,6 +117,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
 
             if (current_direction == Direction::SOUTH) {
                 if (current_pos.y == area.getHeight() - 1) {
+                    goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
                     current_pos = {current_pos.x, current_pos.y + 1};
                     break;
                 }
@@ -128,6 +129,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
     }
     return schedules;
 }
+// 77 149 73
 
 tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate current_pos, Coordinate next_pos, Coordinate cc_pos, Path& path, bool comeBack) {
     // TODO prova ad andare a next_position se non riesce va dove può e torna al CC e aggiorna anche il path

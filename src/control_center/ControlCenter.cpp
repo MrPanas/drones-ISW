@@ -221,10 +221,22 @@ void ControlCenter::initDrones() {
         droneData.battery = stof(message["battery"]);
         droneData.state = to_state(message["state"]);
 
-
-
 //        readyDrones_.push_back(droneData);
         addDroneToReady(droneData);
+
+
+        // Send the CC position to the drone
+        string drone_stream = "stream_drone_" + to_string(droneData.id);
+        Redis::Message init_message;
+
+        int x = getCCPosition().x;
+        int y = getCCPosition().y;
+        init_message["command"] = "init-drone";
+        init_message["cc-x"] = to_string(x);
+        init_message["cc-y"] = to_string(y);
+
+        Redis::sendMessage(listener_ctx_, drone_stream, init_message);
+
 
         // insertDroneLog(droneData);
 
@@ -247,6 +259,8 @@ void ControlCenter::initDrones() {
             cerr << "ControlCenter::listenDrones: Error: Can't delete message" << endl;
         }
     }
+
+    cout << "There are " << readyDrones_.size() << " drones ready" << endl;
 
     assert(readyDrones_.size() == num_drones_);
 }
@@ -275,10 +289,7 @@ void ControlCenter::sendPaths() {
                 return;
             }
         }
-
-
         threads.emplace_back(&ControlCenter::handleSchedule, this, schedule, ctx);
-
     }
 
     for (thread &t : threads) {
@@ -286,8 +297,6 @@ void ControlCenter::sendPaths() {
             t.join();
         }
     }
-
-
 }
 
 
@@ -301,34 +310,11 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
     string pathStr = path.toString();
 
     Redis::Message message;
+    message["command"] = "follow-path";
     message["path"] = pathStr;
-
-    // init redis context
-//    redisContext *ctx = redisConnect(REDIS_HOST, REDIS_PORT);
-//    if (ctx == NULL || ctx->err) {
-//        if (ctx) {
-//            std::cerr << "ControlCenter::handleSchedule: Redis Error: " << ctx->errstr << std::endl;
-//            redisFree(ctx);
-//            return;
-//        } else {
-//            std::cerr << "ControlCenter::handleSchedule: Redis: Can't allocate redis context" << std::endl;
-//            return;
-//        }
-//    }
-
-    // wait a moment
-
 
     // Send path to a ready drone every nextSend milliseconds
     while (!interrupt_.load()) {
-        //cout << "ControlCenter::handleSchedule: Sending path " << pathId << " to drones" << endl;
-
-        // Get a drone from readyDrones_
-//        DroneData droneData = readyDrones_.back(); // TODO mettere un if size == 0 per gestire errori
-
-        // Remove the drone from readyDrones_
-//        readyDrones_.pop_back();
-
         DroneData droneData = removeDroneFromReady();
         if (droneData.id == -1) {
             cerr << "ControlCenter::handleSchedule: Error: No drone available" << endl;
@@ -339,19 +325,18 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
         const string stream = "stream_drone_" + to_string(droneData.id);
 
         // Send the path to the drone
-        cout << "[1]ControlCenter::sendPath: Sending path to drone "<< droneData.id << endl;
+        // cout << "[1]ControlCenter::sendPath: Sending path to drone "<< droneData.id << endl;
         Redis::sendMessage(ctx, stream, message);
-        cout << "[2]ControlCenter::sendPath: Sending path to drone " << droneData.id << endl;
+        // cout << "[2]ControlCenter::sendPath: Sending path to drone " << droneData.id << endl;
 
         addDroneToWorking(droneData);
 
         //insertCCLog(droneId, pathId); TODO: uncomment this line
 
-        cout << "ControlCenter::handleSchedule: Sleeping for " << nextSend.count() << " milliseconds" << endl;
+        // cout << "ControlCenter::handleSchedule: Sleeping for " << nextSend.count() << " milliseconds" << endl;
 
         // Wait for the next send
         this_thread::sleep_for(nextSend);
-
     }
 
     // Free the redis context

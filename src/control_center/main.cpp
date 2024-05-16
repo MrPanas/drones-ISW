@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
      */
 
 
-    Area area = Area(10, 10);
+    Area area = Area(100, 100);
 
     BasicStrategy strategy = BasicStrategy();
 
@@ -48,6 +48,62 @@ int main(int argc, char *argv[]) {
     cout << "Schedules calculated" << endl;
 
     cout << "Schedules length: " << schedules.size() << endl;
+
+    // initialize grid 300*300
+    vector<vector<int>> grid(300, vector<int>(300, 0));
+    int cc_x = 150;
+    int cc_y = 150;
+    grid[cc_x][cc_y] = 1;
+    // che if all the paths cover all the area
+    for (DroneSchedule schedule : schedules) {
+        Path pathP = get<1>(schedule);
+        string path = pathP.toString();
+        size_t i = 0;
+        while (i < path.length()) {
+            int x = 150;
+            int y = 150;
+            char dir = path[i++];
+            string stepsStr;
+            while (i < path.length() && isdigit(path[i])) {
+                stepsStr += path[i++];
+            } // format is <dir><steps>_<dir><steps>... this reads the direction and the steps
+
+            i++;
+            int steps = stoi(stepsStr);
+
+            for (int j = 0; j < steps; j++) {
+                switch (dir) {
+                    case 'N':
+                        y--;
+                        break;
+                    case 'S':
+                        y++;
+                        break;
+                    case 'E':
+                        x--;
+                        break;
+                    case 'W':
+                        x++;
+                        break;
+                    default:
+                        cerr << "Drone::followPath: Invalid direction" << endl;
+                }
+                grid[x][y] = 1;
+            }
+        }
+        // Print if autonomy != 0
+    }
+
+    // Print grid
+    for (int i = 0; i < 300; i++) {
+        for (int j = 0; j < 300; j++) {
+            if (grid[i][j] == 0) {
+                cout << "x: " << i << " y: " << j << endl;
+                continue;
+            }
+        }
+        cout << endl;
+    }
 
 
     // Calcolo numero di droni necessari
