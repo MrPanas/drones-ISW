@@ -18,6 +18,7 @@ struct Coordinate {
 };
 
 
+class Area;
 /**
  * Interface for the scanning strategy
  */

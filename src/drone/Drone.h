@@ -48,13 +48,22 @@ inline DroneState to_state(const string& state) {
     }
     return DroneState::READY;
 }
+/**
+ * Struct that represents the data of the drone
+ *
+ * @id If id is -1, the data is invalid
 
+ */
 struct DroneData {
-    unsigned int id;
-    float x;
-    float y;
+    int id = -1;
+    int x;
+    int y;
     float battery;
     DroneState state;
+
+    bool operator==(const DroneData& other) const {
+        return id == other.id;
+    }
 };
 
 
