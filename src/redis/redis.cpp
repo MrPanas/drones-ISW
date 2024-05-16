@@ -247,7 +247,7 @@ Redis::Response Redis::readMessageGroup(redisContext *context, const string &gro
     // free
     return make_tuple(messageId, messageMap);
 }
-/*
+/**
  * Read group messages
  * @param context redis context
  *

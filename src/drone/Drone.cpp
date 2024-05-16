@@ -4,7 +4,7 @@
 #include "Drone.h"
 
 Drone::Drone(unsigned int id) : id_(id){
-    current_data_ = {id_, 150, 150, 1, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
+    current_data_ = {static_cast<int>(id_), 150, 150, 1, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
     // cout << "Drone " << id_ << " created" << endl;
     ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (ctx_ == NULL || ctx_->err) {
@@ -72,6 +72,7 @@ void Drone::listenCC() {
             cout << "Drone::listenCC: Error reading message" << endl;
             continue;
         }
+
         // delete message
         long n_delete = Redis::deleteMessage(ctx_, stream, message_id);
         if (n_delete == -1) {
@@ -102,6 +103,8 @@ void Drone::followPath(const string &path) {
 
     size_t i = 0;
     while (i < path.length()) {
+
+
         char dir = path[i++];
         string stepsStr;
         while (i < path.length() && isdigit(path[i])) {
@@ -128,11 +131,20 @@ void Drone::followPath(const string &path) {
                 default:
                     cerr << "Drone::followPath: Invalid direction" << endl;
             }
+
+            current_data_.battery = (float)autonomy_/(float)DRONE_AUTONOMY;
+
+            autonomy_--;
             sendDataToCC(false);
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
-            this_thread::sleep_for(chrono::milliseconds(2400));
+            this_thread::sleep_for(chrono::milliseconds(2400)); // 0.12 * 1000 * 20
         }
     }
+    // Print if autonomy != 0
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " finished the path with " << autonomy_ << " autonomy left" << endl;
+    }
+
     current_data_.state = DroneState::CHARGING;
     sendDataToCC(true);
     chargeDrone(); // TODO: va bene così ho deve essere aperto in un nuovo thread
@@ -168,6 +180,7 @@ void Drone::chargeDrone() {
 
     current_data_.battery = 1;
     current_data_.state = DroneState::READY;
+    autonomy_ = DRONE_AUTONOMY;
 
     sendDataToCC(true);
 }
