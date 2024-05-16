@@ -1,4 +1,8 @@
 #include "Session.hpp"
+#include <cstdio>
+#include <iostream>
+#include <ostream>
+#include <postgresql/libpq-fe.h>
 
 http_session::http_session(tcp::socket socket) : socket_(std::move(socket)) {}
 
@@ -27,6 +31,26 @@ void http_session::process_request() {
 
 // Handle specific request to generate a report
 void http_session::handle_request_report() {
+
+  try {
+    Con2DB db("localhost", "5432", "postgres", "postgres", "postgres");
+
+    char sqlcmd[256];
+    sprintf(sqlcmd, "SELECT * FROM drone");
+
+    PGresult *res = db.ExecSQLtuples(sqlcmd);
+
+    if (res != nullptr) {
+      int rows = PQntuples(res);
+      std::cout << "We have retrieved " << rows << " rows" << std::endl;
+      PQclear(res); // Clear the result object
+    } else {
+      std::cerr << "Failed to execute the SQL command." << std::endl;
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Exception: " << e.what() << std::endl;
+  }
+
   response_.version(request_.version());
   response_.keep_alive(request_.keep_alive());
   response_.result(http::status::created);

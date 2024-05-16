@@ -19,8 +19,7 @@
 #    add_executable(${target_name} ${ARGN})
 #    target_include_directories(${target_name} PRIVATE ${COMMON_INCLUDE_DIRS})
 #    target_link_libraries(${target_name} PRIVATE ${COMMON_LIBRARIES})
-#endfunction()
-#
+#endfunction() #
 ## Esegui la creazione degli eseguibili
 #create_executable(cc
 #        src/control_center/main.cpp
@@ -76,8 +75,8 @@ add_executable(cc src/control_center/main.cpp
         src/redis/StreamRedis.h
         src/redis/redis.cpp
         src/redis/redis.h
-#        src/server/Server.cpp
-#        src/server/Server.hpp
+       # src/server/Server.cpp
+       # src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
@@ -125,17 +124,22 @@ target_include_directories(drone PRIVATE "/usr/include/nlohmann")
 
 target_link_libraries(drone hiredis pq)
 
-#add_executable(server src/server/main.cpp
-#        src/server/Server.cpp
-#        src/server/Server.hpp
-#)
+add_executable(server src/server/main.cpp
+       src/server/Server.cpp
+       src/server/Server.hpp
+       src/server/Session.hpp
+       src/server/Session.cpp
+       src/con2db/pgsql.cpp
+       src/con2db/pgsql.h
+)
 # Includi la directory degli header di PostgreSQL
-#target_include_directories(server PRIVATE "/usr/include/postgresql")
+target_include_directories(server PRIVATE "/usr/include/postgresql")
 # Includi la directory degli header di nlohmann/json
-#target_include_directories(server PRIVATE "/usr/include/nlohmann")
+target_include_directories(server PRIVATE "/usr/include/nlohmann")
 
-#target_include_directories(server PRIVATE "/usr/local/include/sw")
+target_include_directories(server PRIVATE "/usr/local/include/sw")
 
+target_link_libraries(server PRIVATE pq)
 # Testing
 add_executable(test main.cpp
         src/control_center/ControlCenter.cpp
