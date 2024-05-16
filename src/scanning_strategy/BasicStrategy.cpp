@@ -23,6 +23,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         Path path = Path();
 
         // Go to start position ______
+        int steps = abs(current_pos.x - start_pos.x) + abs(current_pos.y - start_pos.y);
         tuple<Coordinate, bool> checkNext = goToPoint(autonomy, current_pos, start_pos, cc_pos, path, false);
         current_pos = get<0>(checkNext);
         bool comeBack = get<1>(checkNext);
@@ -31,8 +32,8 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
             goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
             break;
         }
-        int steps = abs(current_pos.x - start_pos.x) + abs(current_pos.y - start_pos.y);
         autonomy -= steps;
+        cout << "initial autonomy: " << autonomy << endl;
         // ___________________________
 
         while (true) {
@@ -139,6 +140,7 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
          }
          current_pos = {current_pos.x + 1, current_pos.y};
          steps++;
+         autonomy--;
     }
     path.addDirection(Direction::EAST, steps);
 
@@ -151,6 +153,7 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
         }
         current_pos = {current_pos.x - 1, current_pos.y};
         steps++;
+        autonomy--;
     }
     path.addDirection(Direction::WEST, steps);
 
@@ -163,6 +166,7 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
         }
         current_pos = {current_pos.x, current_pos.y + 1};
         steps++;
+        autonomy--;
     }
     path.addDirection(Direction::SOUTH, steps);
 
@@ -175,6 +179,7 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
         }
         current_pos = {current_pos.x, current_pos.y - 1};
         steps++;
+        autonomy--;
     }
     path.addDirection(Direction::NORTH, steps);
 
