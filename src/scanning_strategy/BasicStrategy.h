@@ -17,7 +17,7 @@ public:
     Path returnToCC(int autonomy, Coordinate current_position, Coordinate cc_pos);
 
     tuple<Coordinate, bool> goToPoint(int autonomy, Coordinate current_position, Coordinate next_position, Coordinate cc_pos, Path path, bool comeBack);
-    void goToCC(Coordinate current_position, Coordinate cc_pos, Path path);
+
 
     int manhattanDistance(Coordinate a, Coordinate b);
 };

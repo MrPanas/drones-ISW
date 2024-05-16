@@ -62,7 +62,7 @@ private:
     void listenDrones();
 
     void sendPaths();
-    void handleSchedule(DroneSchedule schedule);
+    void handleSchedule(DroneSchedule schedule, redisContext *ctx);
 
 
 //    void updateArea(DroneData droneData);
@@ -99,7 +99,7 @@ private:
         std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 //        std::cout << std::ctime(&now_c) << " ";
 
-        area_.printPercentage();
+//        area_.printPercentage();
 
     }
 
@@ -117,6 +117,8 @@ private:
         std::lock_guard<std::mutex> lock(lists_mutex_);
         readyDrones_.push_back(drone);
     }
+
+
 
     bool removeDroneFromWorking(const DroneData& droneToRemove) {
         std::lock_guard<std::mutex> lock(lists_mutex_);
@@ -150,6 +152,7 @@ private:
     }
 
 
+    void processMessage(Redis::Message message);
 };
 
 

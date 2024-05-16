@@ -83,6 +83,49 @@ ControlCenter::~ControlCenter() {
 
 }
 
+void ControlCenter::processMessage(Redis::Message message) {
+
+    // Create a DroneData object from the message
+    DroneData droneData = DroneData();
+    droneData.id = stoi(message["id"]);
+    droneData.x = stoi(message["x"]);
+    droneData.y = stoi(message["y"]);
+    droneData.battery = stof(message["battery"]);
+    droneData.state = to_state(message["state"]);
+
+    bool changedState = message["changedState"] == "true";
+
+
+
+    if (droneData.state == DroneState::WORKING)
+        updateArea(droneData);
+
+    if (!changedState) {
+        return;
+    }
+    // else changedState == true
+
+    // insertDroneLog(droneData);
+
+    switch (droneData.state) {
+        case DroneState::READY:
+            if (removeDroneFromCharging(droneData))
+                addDroneToReady(droneData);
+            break;
+        case DroneState::WORKING:
+            // when change to WORKING, it's handled by handleSchedule thread
+            break;
+        case DroneState::CHARGING:
+            if (removeDroneFromWorking(droneData))
+                addDroneToCharging(droneData);
+            break;
+        default:
+            cerr << "ControlCenter::listenDrones: Error: Invalid state" << endl;
+            break;
+    }
+
+}
+
 void ControlCenter::listenDrones() {
     const string stream = "cc_" + to_string(id_);
     const string group = "CC_" + to_string(id_);
@@ -94,86 +137,18 @@ void ControlCenter::listenDrones() {
         vector<Redis::Response> responses = Redis::readGroupMessages(listener_ctx_, group, consumer, stream, 0, 0);
 
         for (const auto &response : responses) {
-        string messageId = get<0>(response);
-        if (messageId.empty()) {
-            cerr << "ControlCenter::listenDrones: Error: Empty message" << endl;
-            continue;
-        }
 
-        Redis::Message message = get<1>(response);
-        DroneData droneData = DroneData();
-        droneData.id = stoi(message["id"]);
-        // convert string to float
-        droneData.x = stof(message["x"]);
-        droneData.y = stof(message["y"]);
-        droneData.battery = stof(message["battery"]);
-        droneData.state = to_state(message["state"]);
+            string messageId = get<0>(response);
 
-        bool changedState = message["changedState"] == "true";
+            if (messageId.empty()) {
+                cerr << "ControlCenter::listenDrones: Error: Empty message" << endl;
+                continue;
+            }
 
-        if (changedState) {
-            // insertDroneLog(droneData);
-        }
-        // Delete message from the stream
-//        long n_delete = Redis::deleteMessage(listener_ctx_, stream, messageId);
-//        if (n_delete == -1) {
-//            cerr << "ControlCenter::listenDrones: Error: Can't delete message" << endl;
-//        }
+            Redis::Message message = get<1>(response);
 
-        switch (droneData.state) {
-            case DroneState::READY:
-//                if (!changedState) {
-//                    break;
-//                }
-//                // delete drone from chargingDrones
-//                for (int i = 0; i < chargingDrones_.size(); i++) {
-//                    if (chargingDrones_[i].id == droneData.id) {
-//                        // Swap the element with the last one
-//                        swap(chargingDrones_[i], chargingDrones_.back());
-//                        // Erase the last element (which is now the one to be removed)
-//                        chargingDrones_.pop_back();
-//                        break;
-//                    }
-//                }
-                if (changedState && removeDroneFromCharging(droneData)) {
-                    addDroneToReady(droneData);
-                }
+            processMessage(message);
 
-
-                break;
-            case DroneState::WORKING:
-                // call in another thread the function that updates the map
-
-                    updateArea(droneData);
-//                  // thread updateAreaThread(&ControlCenter::updateArea, this, droneData);
-
-                    // updateAreaThread.detach(); // Detach the thread to allow it to run independently
-
-                break;
-            case DroneState::CHARGING:
-                if (!changedState) {
-                    break;
-                }
-//                // delete drone from workingDrones
-//                for (int i = 0; i < workingDrones_.size(); i++) {
-//                    if (workingDrones_[i].id == droneData.id) {
-//                        // Swap the element with the last one
-//                        swap(workingDrones_[i], workingDrones_.back());
-//                        // Erase the last element (which is now the one to be removed)
-//                        workingDrones_.pop_back();
-//                        break;
-//                    }
-//                }
-//                chargingDrones_.push_back(droneData);
-                if (removeDroneFromWorking(droneData)) {
-                    addDroneToCharging(droneData);
-                }
-
-                break;
-            default:
-                cerr << "ControlCenter::listenDrones: Error: Invalid state" << endl;
-                break;
-        }
             // Delete message from the stream
             long n_delete = Redis::deleteMessage(listener_ctx_, stream, messageId);
             if (n_delete == -1) {
@@ -181,47 +156,25 @@ void ControlCenter::listenDrones() {
             }
 
         }
-
-
-
     }
 }
 
-//void ControlCenter::updateArea(DroneData droneData) {
-//    float x = droneData.x;
-//    float y = droneData.y;
-     //TODO: rendere in futuro la distanza parametrica ???
-    // check every point of the field that has less than 10 meters of distance from the drone
 
-    // TODO mettere tutto questo in Area ?
-//    int start_x = std::max(static_cast<int>(x) - 10, 0);
-//    int start_y = std::max(static_cast<int>(y) - 10, 0);
-//    int end_x = std::min(static_cast<int>(std::ceil(x)) + 10, area_.getWidth());
-//    int end_y = std::min(static_cast<int>(std::ceil(y)) + 10, area_.getHeight());
-//
-//    for (int i = start_x; i < end_x; i++) {
-//        for (int j = start_y; j < end_y; j++) {
-//            // calcola la distanza manhattan
-//            int distance = static_cast<int>(abs(x - i) + abs(y - j));
-//            if (distance <= 10) {
-//                area_.resetPointTimer(i, j);
-//            }
-//        }
-//    }
-    // cout << area_.toString() << endl;
-//}
 
 void ControlCenter::stop() {
     interrupt_.store(true);
 }
 
-//void printAreaStatus(Area area) {
-//    while (true) {
-//        area.printPercentage();
-//        // wait 10 seconds
-//        this_thread::sleep_for(chrono::seconds(10));
-//    }
-//}
+void printAreaStatus(Area& area) {
+    while (true) {
+
+        area.printPercentage();
+        // wait 10 seconds
+        this_thread::sleep_for(chrono::seconds(10));
+    }
+}
+
+
 
 void ControlCenter::start() {
     cout << "ControlCenter::start: Starting Control Center" << endl;
@@ -229,7 +182,7 @@ void ControlCenter::start() {
 
     // insertLog();
     // print percentage each 10 seconds
-//    thread printAreaStatusThread(printAreaStatus, area_);
+    thread printAreaStatusThread(printAreaStatus, std::ref(area_));
 
     cout << "ControlCenter::start: Starting listenDrones thread" << endl;
     thread listen(&ControlCenter::listenDrones, this);
@@ -321,7 +274,7 @@ void ControlCenter::sendPaths() {
         }
 
 
-        threads.emplace_back(&ControlCenter::handleSchedule, this, schedule);
+        threads.emplace_back(&ControlCenter::handleSchedule, this, schedule, ctx);
 
     }
 
@@ -337,7 +290,7 @@ void ControlCenter::sendPaths() {
 
 
 
-void ControlCenter::handleSchedule(DroneSchedule schedule) {
+void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
     int pathId = get<0>(schedule);
     Path path = get<1>(schedule);
     chrono::milliseconds nextSend = get<2>(schedule); // TODO: add RATIO_TIME
@@ -348,17 +301,17 @@ void ControlCenter::handleSchedule(DroneSchedule schedule) {
     message["path"] = pathStr;
 
     // init redis context
-    redisContext *ctx = redisConnect(REDIS_HOST, REDIS_PORT);
-    if (ctx == NULL || ctx->err) {
-        if (ctx) {
-            std::cerr << "ControlCenter::handleSchedule: Redis Error: " << ctx->errstr << std::endl;
-            redisFree(ctx);
-            return;
-        } else {
-            std::cerr << "ControlCenter::handleSchedule: Redis: Can't allocate redis context" << std::endl;
-            return;
-        }
-    }
+//    redisContext *ctx = redisConnect(REDIS_HOST, REDIS_PORT);
+//    if (ctx == NULL || ctx->err) {
+//        if (ctx) {
+//            std::cerr << "ControlCenter::handleSchedule: Redis Error: " << ctx->errstr << std::endl;
+//            redisFree(ctx);
+//            return;
+//        } else {
+//            std::cerr << "ControlCenter::handleSchedule: Redis: Can't allocate redis context" << std::endl;
+//            return;
+//        }
+//    }
 
     // wait a moment
 

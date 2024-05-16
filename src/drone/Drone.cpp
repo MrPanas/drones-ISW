@@ -69,19 +69,21 @@ void Drone::listenCC() {
         Redis::Response res = Redis::readMessageGroup(ctx_, group, consumer, stream, 0);
         string message_id = get<0>(res);
         if (message_id.empty()) {
-            cout << "Error reading message" << endl;
+            cout << "Drone::listenCC: Error reading message" << endl;
             continue;
+        }
+        // delete message
+        long n_delete = Redis::deleteMessage(ctx_, stream, message_id);
+        if (n_delete == -1) {
+            cerr << "Drone::listenCC: Error: Can't delete message" << endl;
         }
 
         map<string, string> message = get<1>(res);
 
         future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
         future.wait();
-        // delete message
-        long n_delete = Redis::deleteMessage(ctx_, stream, message_id);
-        if (n_delete == -1) {
-            cerr << "Drone::listenCC: Error: Can't delete message" << endl;
-        }
+
+
 
     }
 }

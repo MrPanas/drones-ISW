@@ -108,25 +108,8 @@ void Area::updateArea(DroneData droneData) {
 //    cout << "Area::updateArea: " << droneData.x << " " << droneData.y << endl;
     int x = droneData.x;
     int y = droneData.y;
-//    int start_x = std::max(static_cast<int>(x) - 10, 0);
-//    int start_y = std::max(static_cast<int>(y) - 10, 0);
-//    int end_x = std::min(static_cast<int>(std::ceil(x)) + 10, width_);
-//    int end_y = std::min(static_cast<int>(std::ceil(y)) + 10, height_);
-//
-//    for (int i = start_x; i < end_x; i++) {
-//
-//        for (int j = start_y; j < end_y; j++) {
-//
-//            // calcola la distanza manhattan
-//            int distance = static_cast<int>(abs(x - i) + abs(y - j));
-//
-//            if (distance <= 10) {
-  cout << "Area::updateArea: " << x << " " << y << endl;
-                resetPointTimer(x, y);
 
-//            }
-//        }
-//    }
+    resetPointTimer(x, y);
 }
 
 void Area::printPercentage() {
