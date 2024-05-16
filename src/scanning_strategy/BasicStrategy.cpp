@@ -14,8 +14,10 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
     bool goEast = false;
     int path_id = 0;
 
-    while (current_pos != end_pos) {
+    while (current_pos.y < area.getHeight()) {
         cout << "---------------------path_id: " << path_id << "---------------------" << endl;
+        cout << "current_pos: " << current_pos.x << ", " << current_pos.y << endl;
+        cout << "end_pos: " << end_pos.x << ", " << end_pos.y << endl;
         current_pos = cc_pos;
         int autonomy = DRONE_AUTONOMY; // 15000/20 = 750
         Path path = Path();
@@ -36,28 +38,29 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         while (true) {
             // check if the drone reach the end of the area
             // TODO creare una funzione apposita
-            switch(current_direction) {
-                case Direction::EAST:
-                    if (current_pos.x == area.getWidth() - 1) {
-                        break; // TODO: questo break chiude il while giusto?
-                    }
-                    break;
-                case Direction::SOUTH:
-                    if (current_pos.y == area.getHeight() - 1) {
-                        break;
-                    }
-                    break;
-                case Direction::WEST:
-                    if (current_pos.x == 0) {
-                        break;
-                    }
-                    break;
-                case Direction::NORTH:
-                    if (current_pos.y == 0) {
-                        break;
-                    }
-                    break;
-            }
+//            switch(current_direction) {
+//                case Direction::EAST:
+//                    if (current_pos.x == area.getWidth() - 1) {
+//                        break; // TODO: questo break chiude il while giusto?
+//                    }
+//                    break;
+//                case Direction::SOUTH:
+//                    if (current_pos.y == area.getHeight() - 1) {
+//                        break;
+//                    }
+//                    break;
+//                case Direction::WEST:
+//                    if (current_pos.x == 0) {
+//                        break;
+//                    }
+//                    break;
+//                case Direction::NORTH:
+//                    if (current_pos.y == 0) {
+//                        break;
+//                    }
+//                    break;
+//            }
+
 
 
             Coordinate next_pos = current_pos;
@@ -110,6 +113,13 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                 autonomy -= steps;
                 current_direction = goEast ? Direction::EAST : Direction::WEST;
             }
+
+            if (current_direction == Direction::SOUTH) {
+                if (current_pos.y == area.getHeight() - 1) {
+                    current_pos = {current_pos.x, current_pos.y + 1};
+                    break;
+                }
+            }
         }
         cout << "path_id: " << path_id << ", path: " << path.toString() << endl;
         schedules.emplace_back(path_id, path, chrono::milliseconds(290000));
@@ -118,7 +128,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
     return schedules;
 }
 
-tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate current_pos, Coordinate next_pos, Coordinate cc_pos, Path path, bool comeBack) {
+tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate current_pos, Coordinate next_pos, Coordinate cc_pos, Path& path, bool comeBack) {
     // TODO prova ad andare a next_position se non riesce va dove può e torna al CC e aggiorna anche il path
     int steps = 0;
     while (current_pos.x < next_pos.x) {
