@@ -21,9 +21,7 @@
 
 // TODO: gestire chiusura di tutti i while true
 // TODO: a ogni cambio di stato del drone fare l'update nel db
-// TODO: gestire la batteria del drone (Drone.cpp)
-// TODO: Mandare posizione CC ai droni
-// TODO: implementare che il drone si scarica mentre lavora
+// TODO: decidere cosa rendere parametrico e farlo
 
 
 

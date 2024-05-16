@@ -180,6 +180,19 @@ void Drone::chargeDrone() {
 
     int charge_time = dis(gen); // Generate a random number between 2 and 3 hours
 
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds, autonomy: " << autonomy_ << endl;
+    }
+
+    // 1 : charge_time = (1 - current_data_.battery) : x
+    // x = charge_time * (1 - current_data_.battery)
+    charge_time = (int)((float)charge_time * (1 - current_data_.battery));
+
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds" << endl;
+    }
+
+
     this_thread::sleep_for(chrono::milliseconds(charge_time));
 
     current_data_.battery = 1;
