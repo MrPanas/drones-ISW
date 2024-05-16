@@ -12,6 +12,9 @@ vector<tuple<Direction, int>> Path::getPath() const {
 }
 
 void Path::addDirection(Direction dir, int steps) {
+    if (steps == 0) {
+        return;
+    }
     path_.emplace_back(dir, steps);
 }
 

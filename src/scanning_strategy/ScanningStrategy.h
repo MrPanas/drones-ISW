@@ -15,6 +15,16 @@ struct DroneData;
 struct Coordinate {
     int x;
     int y;
+
+    bool operator==(const Coordinate &rhs) const {
+        return x == rhs.x &&
+               y == rhs.y;
+    }
+
+    bool operator!=(const Coordinate &rhs) const {
+        return x != rhs.x ||
+               y != rhs.y;
+    }
 };
 
 

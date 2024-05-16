@@ -291,6 +291,8 @@ void ControlCenter::initDrones() {
             cerr << "ControlCenter::listenDrones: Error: Can't delete message" << endl;
         }
     }
+
+    assert(readyDrones_.size() == num_drones_);
 }
 
 

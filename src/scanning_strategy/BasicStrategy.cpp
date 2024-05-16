@@ -2,235 +2,174 @@
 
 using namespace std;
 
-
 vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
-    //int autonomy = 15000;
-
     Coordinate cc_pos = {area.getWidth() / 2, area.getHeight() / 2};
-    Coordinate current_position = cc_pos;
-    Coordinate end = {area.getWidth(), area.getHeight()};
-    Coordinate start = {0, 0}; // TODO: uncomment
-    // Coordinate start = {0, 1};
-    // Coordinate end = {area.getWidth(), area.getHeight() - 1};
+    Coordinate current_pos = cc_pos;
+    Coordinate end_pos = {area.getWidth()-1, area.getHeight()-1};
+    Coordinate start_pos = {0, 0};
 
     vector<DroneSchedule> schedules;
 
-    Direction direction = Direction::EAST;
+    Direction current_direction = Direction::EAST;
+    bool goEast = false;
     int path_id = 0;
-    while (current_position.x != end.x && current_position.y <= end.y) {
-        cout << "----------------path_id: " << path_id << "----------------" << endl;
-        current_position = cc_pos;
-        int autonomy = 750; // 15000/20 = 750
+
+    while (current_pos != end_pos) {
+        cout << "---------------------path_id: " << path_id << "---------------------" << endl;
+        current_pos = cc_pos;
+        int autonomy = DRONE_AUTONOMY; // 15000/20 = 750
         Path path = Path();
 
-        // cout << "Current Position: " << current_position.x << " " << current_position.y << endl;
-        int steps = abs(start.x - cc_pos.x);
-        // Go To Start ___________
-        if (start.x < cc_pos.x) {
-            // Go left
-            path.addDirection(Direction::WEST, steps);
-        } else {
-            // Go right
-            path.addDirection(Direction::EAST, steps);
+        // Go to start position ______
+        tuple<Coordinate, bool> checkNext = goToPoint(autonomy, current_pos, start_pos, cc_pos, path, false);
+        current_pos = get<0>(checkNext);
+        bool comeBack = get<1>(checkNext);
+        if (comeBack) {
+            // TODO: cambiare e mettere che da errore se va qua
+            goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
+            break;
         }
+        int steps = abs(current_pos.x - start_pos.x) + abs(current_pos.y - start_pos.y);
         autonomy -= steps;
+        // ___________________________
 
-        steps = abs(start.y - cc_pos.y);
-        if (start.y < cc_pos.y) {
-            // Go down
-            path.addDirection(Direction::NORTH, steps);
-        } else {
-            // Go up
-            path.addDirection(Direction::SOUTH, steps);
-        }
-        autonomy -= steps;
+        while (true) {
+            // check if the drone reach the end of the area
+            // TODO creare una funzione apposita
+            switch(current_direction) {
+                case Direction::EAST:
+                    if (current_pos.x == area.getWidth() - 1) {
+                        break; // TODO: questo break chiude il while giusto?
+                    }
+                    break;
+                case Direction::SOUTH:
+                    if (current_pos.y == area.getHeight() - 1) {
+                        break;
+                    }
+                    break;
+                case Direction::WEST:
+                    if (current_pos.x == 0) {
+                        break;
+                    }
+                    break;
+                case Direction::NORTH:
+                    if (current_pos.y == 0) {
+                        break;
+                    }
+                    break;
+            }
 
-        current_position = start;
 
-
-        // TODO mettere che se già non può tornare da errore
-        // _______________________
-        while(true) {
-            Coordinate next_position = current_position;
-            if (direction == Direction::EAST) {
+            Coordinate next_pos = current_pos;
+            if (current_direction == Direction::EAST) {
                 // va a destra
-                steps = area.getWidth() - current_position.x - 1;
-                next_position = {current_position.x + steps, current_position.y};
-                if (manhattanDistance(next_position, cc_pos) > autonomy - steps) {
-                    // va a destra finché può
-                    cout << "escape 1" << endl;
-                    tuple<Coordinate, int> tup = getAvailableCoord(autonomy, current_position, next_position, cc_pos);
-
-                    current_position = get<0>(tup);
-                    autonomy -= get<1>(tup);
-                    path.addDirection(Direction::EAST, get<1>(tup));
-                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
-                    start = {current_position.x, current_position.y};
-                    path.addPath(returnToCC(autonomy, current_position, cc_pos)); // Return To CC
-                    cout << "autonomy prima di un break: " << autonomy << endl;
-                    break;
-                } else {
-                    // va a destra al massimo e setta la prossima direzione a sinistra
-                    current_position.x += steps;
-                    autonomy -= steps;
-                    // direction = Direction::WEST;
-                    path.addDirection(Direction::EAST, steps);
-                }
-                // Go South
-                // steps = min(11, area.getHeight() - current_position.y); // TODO: uncomment
-                steps = min(1, area.getHeight() - current_position.y);
-                next_position = {current_position.x, current_position.y + steps};
-
-                tuple<Coordinate, int> tup = goSouth(autonomy, current_position, next_position, cc_pos);
-                if (autonomy - steps != autonomy - get<1>(tup)) {
-                    // va a sud finché può
-                    cout << "escape 2" << endl;
-                    current_position = get<0>(tup);
-                    autonomy -= get<1>(tup);
-                    path.addDirection(Direction::SOUTH, get<1>(tup));
-                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
-                    start = {current_position.x, current_position.y};
-                    path.addPath(returnToCC(autonomy, current_position, cc_pos)); // return to CC
+                steps = area.getWidth() - current_pos.x - 1;
+                next_pos = {current_pos.x + steps, current_pos.y};
+                checkNext = goToPoint(autonomy, current_pos, next_pos, cc_pos, path, false);
+                current_pos = get<0>(checkNext);
+                comeBack = get<1>(checkNext);
+                if (comeBack) {
+                    start_pos = current_pos;
+                    goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
                     break;
                 }
-                current_position = get<0>(tup);
-                autonomy -= get<1>(tup);
-                path.addDirection(Direction::SOUTH, get<1>(tup));
-                direction = Direction::WEST;
+                autonomy -= steps;
+                current_direction = Direction::SOUTH;
+                goEast = false;
+            }
 
+            else if (current_direction == Direction::WEST) {
+                steps = current_pos.x;
+                next_pos = {current_pos.x - steps, current_pos.y};
 
-            } else if (direction == Direction::WEST) {
-                // va a sinistra
-                steps = current_position.x;
-                next_position = {current_position.x - steps, current_position.y};
-                if (manhattanDistance(next_position, cc_pos) > autonomy - steps) {
-                    // va a sinistra finché può
-                    cout << "Escape Ovest" << endl;
-                    tuple<Coordinate, int> tup = getAvailableCoord(autonomy, current_position, next_position, cc_pos);
-                    current_position = get<0>(tup);
-                    autonomy -= get<1>(tup);
-                    path.addDirection(Direction::WEST, get<1>(tup));
-                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
-                    start = {current_position.x, current_position.y};
-                    path.addPath(returnToCC(autonomy, current_position, cc_pos)); // Return To CC
-                    break;
-                } else {
-                    // va a sinistra al massimo
-                    current_position.x -= steps;
-                    autonomy -= steps;
-                    direction = Direction::NORTH;
-                    path.addDirection(Direction::WEST, steps);
-                }
-                // Go South
-                // steps = min(11, area.getHeight() - current_position.y); // TODO: uncomment
-                steps = min(1, area.getHeight() - current_position.y);
-                next_position = {current_position.x, current_position.y + steps};
-                tuple<Coordinate, int> tup = goSouth(autonomy, current_position, next_position, cc_pos);
-                if (autonomy - steps != autonomy - get<1>(tup)) {
-                    // va a sud finché può
-                    cout << "escape SUD/W" << endl;
-                    current_position = get<0>(tup);
-                    autonomy -= get<1>(tup);
-                    path.addDirection(Direction::SOUTH, get<1>(tup));
-                    cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
-                    start = {current_position.x, current_position.y};
-                    path.addPath(returnToCC(autonomy, current_position, cc_pos)); // return to CC
+                checkNext = goToPoint(autonomy, current_pos, next_pos, cc_pos, path, false);
+                current_pos = get<0>(checkNext);
+                comeBack = get<1>(checkNext);
+                if (comeBack) {
+                    start_pos = current_pos;
+                    goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
                     break;
                 }
-                // va a sud al massimo e setta la prossima direzione a destra
-                current_position = get<0>(tup);
-                autonomy -= get<1>(tup);
-                path.addDirection(Direction::SOUTH, get<1>(tup));
-                direction = Direction::EAST;
+                autonomy -= steps;
+                current_direction = Direction::SOUTH;
+                goEast = true;
+            }
+
+            else if (current_direction == Direction::SOUTH) {
+                steps = 1;
+                next_pos = {current_pos.x, current_pos.y + steps};
+
+                checkNext = goToPoint(autonomy, current_pos, next_pos, cc_pos, path, false);
+                current_pos = get<0>(checkNext);
+                comeBack = get<1>(checkNext);
+                if (comeBack) {
+                    start_pos = current_pos;
+                    goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
+                    break;
+                }
+                autonomy -= steps;
+                current_direction = goEast ? Direction::EAST : Direction::WEST;
             }
         }
-
-        // cout << "Start: " << start.x << " " << start.y << " Current Position: " << current_position.x << " " << current_position.y << endl;
-        cout << "pathId: " << path_id << " Path: " << path.toString() << endl;
-        schedules.emplace_back(path_id, path, chrono::milliseconds(290000)); //TODO: mettere 290000
+        cout << "path_id: " << path_id << ", path: " << path.toString() << endl;
+        schedules.emplace_back(path_id, path, chrono::milliseconds(290000));
         path_id++;
     }
     return schedules;
 }
 
-Path BasicStrategy::returnToCC(int autonomy, Coordinate current_position, Coordinate cc_pos) {
-    Path path = Path();
-    if (current_position.x < cc_pos.x) {
-        // Go right
-        path.addDirection(Direction::EAST, abs(current_position.x - cc_pos.x));
-    } else {
-        // Go left
-        path.addDirection(Direction::WEST, abs(current_position.x - cc_pos.x));
-    }
-
-    if (current_position.y < cc_pos.y) {
-        // Go North
-        path.addDirection(Direction::SOUTH, abs(current_position.y - cc_pos.y));
-    } else {
-        // Go South
-        path.addDirection(Direction::NORTH, abs(current_position.y - cc_pos.y));
-    }
-    return path;
-}
-
-
-tuple<Coordinate, int> BasicStrategy::getAvailableCoord(int autonomy, Coordinate current_position, Coordinate next_position, Coordinate cc_pos) {
+tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate current_pos, Coordinate next_pos, Coordinate cc_pos, Path path, bool comeBack) {
+    // TODO prova ad andare a next_position se non riesce va dove può e torna al CC e aggiorna anche il path
     int steps = 0;
-    while (current_position.x != next_position.x) {
-        Coordinate temp;
-        if (current_position.x < next_position.x) {
-            temp = {current_position.x + 1, current_position.y};
-            if (manhattanDistance(temp, cc_pos) > autonomy - 1) {
-                return make_tuple(current_position, steps);
-            } else {
-                steps++;
-                autonomy--;
-                current_position = temp; // Move to the next position
-            }
-
-        } else {
-            temp = {current_position.x - 1, current_position.y};
-            if (manhattanDistance(temp, cc_pos) > autonomy - 1) {
-                return make_tuple(current_position, steps);
-            } else {
-                steps++;
-                autonomy--;
-                current_position = temp; // Move to the next position
-            }
-        }
+    while (current_pos.x < next_pos.x) {
+         // go right
+         if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
+             path.addDirection(Direction::EAST, steps);
+             return {current_pos, true};
+         }
+         current_pos = {current_pos.x + 1, current_pos.y};
+         steps++;
     }
+    path.addDirection(Direction::EAST, steps);
 
-    return make_tuple(current_position, steps);
-}
-
-tuple<Coordinate, int> BasicStrategy::goSouth(int autonomy, Coordinate current_position, Coordinate next_position, Coordinate cc_pos) {
-    int steps = 0;
-    while (current_position.y != next_position.y) {
-        Coordinate temp{};
-        if (current_position.y < next_position.y) {
-            temp = {current_position.x, current_position.y + 1};
-            if (manhattanDistance(temp, cc_pos) > autonomy) {
-                return make_tuple(current_position, steps);
-            } else {
-                steps++;
-                current_position = temp; // Move to the next position
-            }
-
-        } else {
-            temp = {current_position.x, current_position.y - 1};
-            if (manhattanDistance(temp, cc_pos) > autonomy) {
-                return make_tuple(current_position, steps);
-            } else {
-                steps++;
-                current_position = temp; // Move to the next position
-            }
+    steps = 0;
+    while (current_pos.x > next_pos.x) {
+        // go left
+        if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
+            path.addDirection(Direction::WEST, steps);
+            return {current_pos, true};
         }
+        current_pos = {current_pos.x - 1, current_pos.y};
+        steps++;
     }
-    return make_tuple(current_position, steps);
+    path.addDirection(Direction::WEST, steps);
+
+    steps = 0;
+    while (current_pos.y < next_pos.y) {
+        // go down
+        if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
+            path.addDirection(Direction::SOUTH, steps);
+            return {current_pos, true};
+        }
+        current_pos = {current_pos.x, current_pos.y + 1};
+        steps++;
+    }
+    path.addDirection(Direction::SOUTH, steps);
+
+    steps = 0;
+    while (current_pos.y > next_pos.y) {
+        // go up
+        if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
+            path.addDirection(Direction::NORTH, steps);
+            return {current_pos, true};
+        }
+        current_pos = {current_pos.x, current_pos.y - 1};
+        steps++;
+    }
+    path.addDirection(Direction::NORTH, steps);
+
+    return {current_pos, false};
 }
 
 
-int BasicStrategy::manhattanDistance(Coordinate a, Coordinate b) {
-    return abs(a.x - b.x) + abs(a.y - b.y);
-}
 

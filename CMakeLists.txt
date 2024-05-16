@@ -84,7 +84,7 @@ add_executable(cc src/control_center/main.cpp
         src/scanning_strategy/Path.cpp
         src/scanning_strategy/BasicStrategy.cpp
         src/scanning_strategy/BasicStrategy.h
-        src/control_center/ThreadPool.cpp
+        src/scanning_strategy/config.h
 )
 
 
@@ -118,7 +118,7 @@ add_executable(drone src/drone/main.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
         src/scanning_strategy/Path.cpp
-        src/control_center/ThreadPool.cpp
+        src/scanning_strategy/config.h
 )
 
 target_include_directories(drone PRIVATE "/usr/include/hiredis")
@@ -155,10 +155,11 @@ add_executable(test main.cpp
         src/redis/redis.h
         # src/server/Server.cpp
         # src/server/Server.hpp
-#        src/con2db/pgsql.c
+        src/con2db/pgsql.cpp
+        src/con2db/pgsql.h
         src/scanning_strategy/Path.h
         src/scanning_strategy/Path.cpp
-        src/control_center/ThreadPool.cpp
+        src/scanning_strategy/config.h
 )
 # Includi la directory degli header di Hiredis
 target_include_directories(test PRIVATE "/usr/include/hiredis")
@@ -174,34 +175,4 @@ target_link_libraries(test PRIVATE hiredis pq)
 
 add_dependencies(cc drone)
 
-#add_dependencies(test cc)
-
-add_executable(test2 main2.cpp
-        src/control_center/ControlCenter.cpp
-        src/control_center/ControlCenter.hpp
-        src/drone/Drone.cpp
-        src/drone/Drone.h
-        src/scanning_strategy/ScanningStrategy.h
-        src/scanning_strategy/BasicStrategy.cpp
-        src/scanning_strategy/BasicStrategy.h
-        src/area/Area.cpp
-        src/area/Area.hpp
-        src/redis/StreamRedis.cpp
-        src/redis/StreamRedis.h
-        src/redis/redis.cpp
-        src/redis/redis.h
-        # src/server/Server.cpp
-        # src/server/Server.hpp
-
-        src/scanning_strategy/Path.h
-        src/scanning_strategy/Path.cpp)
-
-target_include_directories(test2 PRIVATE "/usr/include/hiredis")
-
-target_include_directories(test PRIVATE "/usr/local/include/sw")
-
-target_include_directories(test PRIVATE "/usr/include/postgresql")
-# Includi la directory degli header di nlohmann/json
-target_include_directories(test PRIVATE "/usr/include/nlohmann")
-
-target_link_libraries(test2 PRIVATE hiredis pq)
+add_dependencies(test cc)

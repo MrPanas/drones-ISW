@@ -244,6 +244,7 @@ Redis::Response Redis::readMessageGroup(redisContext *context, const string &gro
         i++;
     }
     freeReplyObject(reply);
+    // free
     return make_tuple(messageId, messageMap);
 }
 /*
