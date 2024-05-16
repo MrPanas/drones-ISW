@@ -171,5 +171,9 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
     return {current_pos, false};
 }
 
+int BasicStrategy::manhattanDistance(Coordinate a, Coordinate b) {
+    return abs(a.x - b.x) + abs(a.y - b.y);
+}
+
 
 
