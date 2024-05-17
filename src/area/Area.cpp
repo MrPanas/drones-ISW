@@ -24,7 +24,8 @@ long long Point::getElapsedTime() const {
 
 PointState Point::getState() const {
 //     5 min in milisecondi: 5 * 60 * 1000 = 300000
-    if (state_ == PointState::UNCHECKED || getElapsedTime() > 300000) {
+    int time = static_cast<int>(300000 * TIME_ACCELERATION);
+    if (state_ == PointState::UNCHECKED || getElapsedTime() > time) {
         return PointState::UNCHECKED;
     }
     return PointState::CHECKED;

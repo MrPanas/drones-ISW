@@ -141,7 +141,8 @@ void Drone::followPath(const string &path) {
             autonomy_--;
             sendDataToCC(false);
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
-            this_thread::sleep_for(chrono::milliseconds(10)); // TODO: mettere 2400
+            int sleep_time = static_cast<int>(2400 * TIME_ACCELERATION);
+            this_thread::sleep_for(chrono::milliseconds(sleep_time)); // TODO: mettere 2400
         }
     }
     // Print if autonomy != 0
@@ -193,7 +194,8 @@ void Drone::chargeDrone() {
     }
 
 
-    this_thread::sleep_for(chrono::milliseconds(charge_time));
+    int sleep_time = static_cast<int>(charge_time * TIME_ACCELERATION);
+    this_thread::sleep_for(chrono::milliseconds(sleep_time));
 
     current_data_.battery = 1;
     current_data_.state = DroneState::READY;

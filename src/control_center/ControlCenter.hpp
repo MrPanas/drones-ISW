@@ -21,6 +21,7 @@
 #include <csignal>
 #include <deque>
 #include <mutex>
+#include "../scanning_strategy/config.h"
 
 
 
