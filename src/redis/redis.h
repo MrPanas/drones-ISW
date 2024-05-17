@@ -53,6 +53,14 @@ namespace Redis {
 
     GroupInfo getInfoGroup(redisContext *context, const string &stream, const string &groupName);
 
+    long deleteMessage(redisContext *context, const string &stream, const string &messageId);
+
+    vector<Response> readGroupMessages(redisContext *context,
+                                       const string &group,
+                                       const string &consumer,
+                                       const string &stream,
+                                       int block,
+                                       int count);
 }
 
 #endif //DRONE8_REDIS_H

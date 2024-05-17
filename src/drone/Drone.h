@@ -13,6 +13,7 @@
 #include "../redis/redis.h"
 #include <future>
 #include <random>
+#include "../scanning_strategy/config.h"
 
 
 // Forward declaration
@@ -48,13 +49,22 @@ inline DroneState to_state(const string& state) {
     }
     return DroneState::READY;
 }
+/**
+ * Struct that represents the data of the drone
+ *
+ * @id If id is -1, the data is invalid
 
+ */
 struct DroneData {
-    unsigned int id;
-    float x;
-    float y;
+    int id = -1;
+    int x;
+    int y;
     float battery;
     DroneState state;
+
+    bool operator==(const DroneData& other) const {
+        return id == other.id;
+    }
 };
 
 
@@ -86,6 +96,7 @@ private:
     unsigned int cc_id_{};
     redisContext *ctx_;
     DroneData current_data_{};
+    int autonomy_ = DRONE_AUTONOMY;
 
     void listenCC();
 

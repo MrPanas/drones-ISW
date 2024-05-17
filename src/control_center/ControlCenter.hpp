@@ -17,6 +17,11 @@
 #include "../con2db/pgsql.h"
 #include <cmath>
 #include "../scanning_strategy/BasicStrategy.h"
+#include <atomic>
+#include <csignal>
+#include <deque>
+#include <mutex>
+
 
 
 
@@ -56,11 +61,13 @@ private:
 
     void listenDrones();
 
-    void updateArea(DroneData droneData);
+    void sendPaths();
+    void handleSchedule(DroneSchedule schedule, redisContext *ctx);
 
-    void sendPathsToDrones();
 
-    void sendPath(unsigned int droneId, const Path& path);
+//    void updateArea(DroneData droneData);
+
+
 
     void insertCCLog(unsigned int droneId, unsigned int pathId);
 
@@ -69,17 +76,85 @@ private:
     const unsigned int id_;
     BasicStrategy* strategy_{};
     Area area_ = Area(0, 0);
-    redisContext *sender_ctx_{};
+
     redisContext *listener_ctx_{};
 
-    Con2DB conn_;
-
     unsigned int num_drones_;
-    vector<DroneData> workingDrones_;
-    vector<DroneData> chargingDrones_;
-    vector<DroneData> readyDrones_;
+    std::deque<DroneData> workingDrones_;
+    std::deque<DroneData> chargingDrones_;
+    std::deque<DroneData> readyDrones_;
+    std::mutex lists_mutex_;
+    std::atomic<bool> interrupt_{false};
 
-    void handleSchedule(DroneSchedule schedule);
+    // mutex fot area
+    std::mutex area_mutex_;
+
+    void updateArea(DroneData droneData){
+//        std::lock_guard<std::mutex> lock(area_mutex_);
+
+        area_.updateArea(droneData);
+        // get current time
+        auto now = std::chrono::system_clock::now();
+        // print the current moment
+        std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+//        std::cout << std::ctime(&now_c) << " ";
+
+//        area_.printPercentage();
+
+    }
+
+    void addDroneToWorking(const DroneData& drone) {
+        std::lock_guard<std::mutex> lock(lists_mutex_);
+        workingDrones_.push_back(drone);
+    }
+
+    void addDroneToCharging(const DroneData& drone) {
+        std::lock_guard<std::mutex> lock(lists_mutex_);
+        chargingDrones_.push_back(drone);
+    }
+
+    void addDroneToReady(const DroneData& drone) {
+        std::lock_guard<std::mutex> lock(lists_mutex_);
+        readyDrones_.push_back(drone);
+    }
+
+
+
+    bool removeDroneFromWorking(const DroneData& droneToRemove) {
+        std::lock_guard<std::mutex> lock(lists_mutex_);
+        auto it = std::find(workingDrones_.begin(), workingDrones_.end(), droneToRemove);
+        if (it != workingDrones_.end()) {
+            workingDrones_.erase(it);
+            return true;
+        }
+        return false;
+    }
+
+    bool removeDroneFromCharging(const DroneData& droneToRemove) {
+        std::lock_guard<std::mutex> lock(lists_mutex_);
+        auto it = std::find(chargingDrones_.begin(), chargingDrones_.end(), droneToRemove);
+        if (it != chargingDrones_.end()) {
+            chargingDrones_.erase(it);
+            return true;
+        }
+        return false;
+    }
+
+    DroneData removeDroneFromReady() {
+        std::lock_guard<std::mutex> lock(lists_mutex_);
+        if (readyDrones_.empty()) {
+            // Se la lista è vuota, restituisci un drone vuoto
+            return DroneData{};
+        }
+        DroneData drone = readyDrones_.front();
+        readyDrones_.pop_front();
+        return drone;
+    }
+
+
+    void processMessage(Redis::Message message);
 };
+
+
 
 #endif //DRONE8_CONTROLCENTER_HPP

@@ -3,6 +3,8 @@
 //
 
 #include "Area.hpp"
+#include "../drone/Drone.h"
+
 
 using namespace std;
 
@@ -21,7 +23,8 @@ long long Point::getElapsedTime() const {
 }
 
 PointState Point::getState() const {
-    if (state_ == PointState::UNCHECKED || getElapsedTime() > 5000) {
+//     5 min in milisecondi: 5 * 60 * 1000 = 300000
+    if (state_ == PointState::UNCHECKED || getElapsedTime() > 300000) {
         return PointState::UNCHECKED;
     }
     return PointState::CHECKED;
@@ -37,15 +40,23 @@ void Point::resetTimer() {
 // ############ AREA ############
 
 Area::Area(int width, int height) : width_(width), height_(height) {
-    grid_.resize(width_);
-    // width and height in meters
-    for (int i = 0; i < width_; i++) {
-        grid_[i].resize(height_);
-        for (int j = 0; j < height_; j++) {
-            // Init the grid
-            grid_[i][j] = Point();
-        }
+    // print that the area is being created
+    cout << "Creating Area with width: " << width_ << " and height: " << height_ << endl;
+
+    // create the grid with the given width and height
+
+//    Grid grid(60, std::vector<Point>(60, Point()));
+//
+    grid_ = Grid(width, vector<Point>(height, Point()));
+
+    // get height of grid_
+    cout << "Area::Area: grid_.size(): " << grid_.size() << endl;
+
+    // get width of grid_
+    if (!grid_.empty()) {
+        cout << "Area::Area: grid_[0].size(): " << grid_[0].size() << endl;
     }
+
 }
 
 int Area::getWidth() const {
@@ -69,6 +80,10 @@ const Point& Area::getPoint(int x, int y) const {
 }
 
 void Area::resetPointTimer(int x, int y) {
+    // check bounds
+    if (x < 0 || x >= width_ || y < 0 || y >= height_) {
+        return;
+    }
     grid_[x][y].resetTimer();
 }
 
@@ -89,5 +104,26 @@ string Area::toString() const {
     return result;
 }
 
+void Area::updateArea(DroneData droneData) {
+//    cout << "Area::updateArea: " << droneData.x << " " << droneData.y << endl;
+    int x = droneData.x;
+    int y = droneData.y;
 
+    resetPointTimer(x, y);
+}
 
+void Area::printPercentage() {
+    int checked = 0;
+    for (int i = 0; i < width_; i++) {
+        for (int j = 0; j < height_; j++) {
+
+            if (grid_[i][j].getState() == PointState::CHECKED) {
+                checked++;
+//                cout << "Checked: " << checked << endl;
+            }
+        }
+    }
+    cout << "Area::printPercentage: " << checked << " / " << width_ * height_ << " = "
+         << (checked * 100) / (width_ * height_) << "%" << endl;
+
+}

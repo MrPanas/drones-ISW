@@ -3,9 +3,15 @@
 #include <getopt.h> // For getopt_long
 #include "src/control_center/ControlCenter.hpp"
 #include "src/scanning_strategy/BasicStrategy.h"
-
+#include <atomic>
+#include <csignal>
 
 using namespace std;
+
+
+
+
+
 
 void printHelp(char* name) {
     cout << "Usage: "<< name << endl;
@@ -19,11 +25,51 @@ void printHelp(char* name) {
  * --height: Height of the area
  * --width: Width of the area
  */
+
+
+
 int main(int argc, char* argv[]) {
+//    redisContext *context = redisConnect(REDIS_HOST, REDIS_PORT);
+//    if (context == NULL || context->err) {
+//        if (context) {
+//            cout << "main: Error: " << context->errstr << endl;
+//            redisFree(context);
+//        } else {
+//            cout << "main: Can't allocate redis context" << endl;
+//        }
+//        return EXIT_FAILURE;
+//    }
+//
+//
+//    auto messages = Redis::readGroupMessages(context, "CC_1", "consumer", "cc_1", -1, 0);
+//
+//    // print size
+//    cout << "main: messages.size(): " << messages.size() << endl;
+//
+//    // Print messages
+//    for (const auto& message : messages) {
+//        string messageId = get<0>(message);
+//        cout << "Message: " <<messageId << endl;
+//        for (const auto& field : get<1>(message)) {
+//            cout << field.first << ": " << field.second << endl;
+//        }
+//
+//        // Delete message
+//        Redis::deleteMessage(context, "cc_1", get<0>(message));
+//    }
+//    redisFree(context);
+//
+//
+//    return EXIT_SUCCESS;
+
+
     // Default values
-    int height = 6000;
-    int width = 6000;
-    unsigned int num_drones = 500;
+    int height = 300;
+    int width = 300;
+    unsigned int num_drones = 9000;
+
+    // signal handling
+
 
     // cc id
     unsigned int cc_id = 1;
@@ -59,7 +105,7 @@ int main(int argc, char* argv[]) {
                 return EXIT_FAILURE;
         }
     }
-    cout << "Height: " << height << " Width: " << width << endl;
+    cout << "main: Height: " << height << " Width: " << width << endl;
 
     // Initialize an Area object
     Area area = Area(width, height);
@@ -76,16 +122,17 @@ int main(int argc, char* argv[]) {
     vector<Drone> drones;
     drones.reserve(num_drones);
     for (unsigned int i = 0; i < num_drones; i++) {
-
         drones.emplace_back(i, cc_id);
     }
 
     // Start drones
-    cout << "Starting drones" << endl;
-    vector<thread> drone_threads;
-    drone_threads.reserve(drones.size());
-    for (Drone &drone : drones) {
-        drone_threads.emplace_back(&Drone::start, &drone);
+    cout << "main: Starting drones" << endl;
+    vector<thread> drone_threads(drones.size());
+
+    for (unsigned int i = 0; i < num_drones; i++) {
+        drone_threads[i] = thread(&Drone::start, &drones[i]);
+        // sleep for 1ms to
+//        this_thread::sleep_for(chrono::milliseconds(7));
     }
 
 
@@ -95,9 +142,7 @@ int main(int argc, char* argv[]) {
 
 
     // Wait for all threads to finish
-    for (thread &drone_thread : drone_threads) {
-        drone_thread.join();
-    }
+
     cc_thread.join();
 
     cout << "All threads finished" << endl;

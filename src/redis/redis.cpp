@@ -112,6 +112,47 @@ string Redis::sendMessage(redisContext *context, const string &stream, Message &
     return messageId;
 }
 
+
+
+
+
+// XDEL key id [id ...]
+
+/**
+ * Delete a message from a stream
+ * @param context redis context
+ * @param stream stream name
+ * @param messageId message id
+ * @return number of messages deleted
+ */
+long Redis::deleteMessage(redisContext *context, const string &stream, const string &messageId) {
+    // Delete a message
+    // convert to char*
+    char *streamChr = new char[stream.length() + 1];
+    strcpy(streamChr, stream.c_str());
+    char *messageIdChr = new char[messageId.length() + 1];
+    strcpy(messageIdChr, messageId.c_str());
+
+    auto *reply = (redisReply *) redisCommand(context, "XDEL %s %s", streamChr, messageIdChr);
+    delete[] streamChr;
+    delete[] messageIdChr;
+
+    if (reply == nullptr) {
+        cerr << "deleteMessage: Error: " << context->errstr << endl;
+        return -1;
+    }
+    if (reply->type == REDIS_REPLY_ERROR) {
+        cerr << "deleteMessage: Error: " << reply->str << endl;
+        freeReplyObject(reply);
+        return -1;
+    }
+    long result = reply->integer;
+    freeReplyObject(reply);
+
+    return result;
+}
+
+
 /**
  * Send a json message to a stream
  * @param context redis context
@@ -168,9 +209,14 @@ Redis::Response Redis::readMessageGroup(redisContext *context, const string &gro
     // Create the XREADGROUP command
     string blockStr = block >= 0 ? "BLOCK " + to_string(block) : "";
     string xreadgroup =
-            "XREADGROUP GROUP " + group + " " + consumer + " COUNT 1 " + blockStr + " STREAMS " + stream + " >";
+            "XREADGROUP GROUP " + group + " " + consumer + " NOACK COUNT 1 " + blockStr + " STREAMS " + stream + " >";
 
-    auto *reply = (redisReply *) redisCommand(context, xreadgroup.c_str());
+    // convert to char*
+    char *cstr = new char[xreadgroup.length() + 1];
+    strcpy(cstr, xreadgroup.c_str());
+
+    auto *reply = (redisReply *) redisCommand(context, cstr);
+    delete[] cstr;
     if (reply == nullptr) {
         cerr << "readMessageGroup1: Error: " << context->errstr << endl;
         return make_tuple("", map<string, string>());
@@ -198,7 +244,77 @@ Redis::Response Redis::readMessageGroup(redisContext *context, const string &gro
         i++;
     }
     freeReplyObject(reply);
+    // free
     return make_tuple(messageId, messageMap);
+}
+/**
+ * Read group messages
+ * @param context redis context
+ *
+ * @param group group name
+ * @param consumer consumer name
+ * @param stream stream name
+ * @param block block time in milliseconds, 0 for waiting or -1 for no blocking
+ * @param count number of messages to read at once, 0 for all
+ * @return list of messages
+ */
+vector<Redis::Response> Redis::readGroupMessages(redisContext *context,
+                                                 const string &group,
+                                                 const string &consumer,
+                                                 const string &stream,
+                                                 int block,
+                                                 int count) {
+    // Read a message from a group
+    // Create the XREADGROUP command
+    string blockStr = block >= 0 ? "BLOCK " + to_string(block) : "";
+    string countStr = count > 0 ? "COUNT " + to_string(count) : "";
+    string xreadgroup =
+            "XREADGROUP GROUP " + group + " " + consumer + " NOACK " + countStr + " " + blockStr + " STREAMS " +
+            stream + " >";
+
+
+    auto *reply = (redisReply *) redisCommand(context, xreadgroup.c_str());
+
+    if (reply == nullptr) {
+        cerr << "readMessageGroup1: Error: " << context->errstr << endl;
+        return {};
+    }
+    if (reply->type == REDIS_REPLY_ERROR) {
+        cerr << "readMessageGroup2: Error: " << reply->str << endl;
+        freeReplyObject(reply);
+        return {};
+    }
+
+    if (reply->type != REDIS_REPLY_ARRAY || reply->elements == 0) {
+        //        cerr << "readMessageGroup: Error: Expected an array or empty" << endl;
+        freeReplyObject(reply);
+        return {};
+    }
+
+
+    vector<Redis::Response> messages;
+
+    //               arr        stream
+    reply = reply->element[0]->element[1];
+//    cout << "readGroupMessages: reply->elements: " << reply->elements<< endl;
+    for (int i = 0; i < reply->elements; i++) {
+
+        // Get the message
+        //                              arr   msg
+        string messageId = reply-> element[i]->element[0]->str;
+
+        auto *message = reply->element[i]->element[1];
+
+        map<string, string> messageMap;
+        for (int j = 0; j < message->elements; j++) {
+            messageMap[message->element[j]->str] = message->element[j + 1]->str;
+            j++;
+        }
+        messages.emplace_back(messageId, messageMap);
+    }
+
+    freeReplyObject(reply);
+    return messages;
 }
 
 

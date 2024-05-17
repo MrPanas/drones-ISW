@@ -8,16 +8,27 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include "../drone/Drone.h"
+#include <mutex>
 
 using namespace std;
 
 using IntGrid = vector<vector<int>>;
 
+struct DroneData;
+
 
 enum PointState {
     CHECKED,
     UNCHECKED,
+
+
 };
+
+// create PointState comparison operator
+
+
+
 /**
  * Class that represents a point in the grid
  */
@@ -51,11 +62,16 @@ public:
 
     const Point& getPoint(int x, int y) const;
     void resetPointTimer(int x, int y);
+    void updateArea(DroneData data);
+    void printPercentage();
 
 private:
     int width_;
     int height_;
     Grid grid_;
+
+
+
 };
 
 

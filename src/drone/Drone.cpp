@@ -4,7 +4,7 @@
 #include "Drone.h"
 
 Drone::Drone(unsigned int id) : id_(id){
-    current_data_ = {id_, 500, 500, 1, DroneState::READY}; // TODO cambiare x,y con le coordinate del CC
+    current_data_ = {static_cast<int>(id_), -1, -1, 1, DroneState::READY};
     // cout << "Drone " << id_ << " created" << endl;
     ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (ctx_ == NULL || ctx_->err) {
@@ -68,14 +68,30 @@ void Drone::listenCC() {
         Redis::Response res = Redis::readMessageGroup(ctx_, group, consumer, stream, 0);
         string message_id = get<0>(res);
         if (message_id.empty()) {
-            cout << "Error reading message" << endl;
+            cout << "Drone::listenCC: Error reading message" << endl;
             continue;
         }
 
-        map<string, string> message = get<1>(res);
+        // delete message
+        long n_delete = Redis::deleteMessage(ctx_, stream, message_id);
+        if (n_delete == -1) {
+            cerr << "Drone::listenCC: Error: Can't delete message" << endl;
+        }
 
-        future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
+        Redis::Message message = get<1>(res);
+        if (message["command"] == "init-drone") {
+            int x = stoi(message["cc-x"]);
+            int y = stoi(message["cc-y"]);
+            current_data_ = {current_data_.id, x, y, current_data_.battery, current_data_.state};
+        }
 
+        else if (message["command"] == "follow-path") {
+            // cout << "Drone " << id_ << " received a path" << endl;
+            //thread follow(&Drone::followPath, this, message["path"]);
+            //follow.join();
+            future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
+            future.wait();
+        }
     }
 }
 
@@ -111,19 +127,28 @@ void Drone::followPath(const string &path) {
                     current_data_.y++;
                     break;
                 case 'E':
-                    current_data_.x--;
+                    current_data_.x++;
                     break;
                 case 'W':
-                    current_data_.x++;
+                    current_data_.x--;
                     break;
                 default:
                     cerr << "Drone::followPath: Invalid direction" << endl;
             }
+
+            current_data_.battery = (float)autonomy_/(float)DRONE_AUTONOMY;
+
+            autonomy_--;
             sendDataToCC(false);
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
-            this_thread::sleep_for(chrono::milliseconds(120));
+            this_thread::sleep_for(chrono::milliseconds(10)); // TODO: mettere 2400
         }
     }
+    // Print if autonomy != 0
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " finished the path with " << autonomy_ << " autonomy left" << endl;
+    }
+
     current_data_.state = DroneState::CHARGING;
     sendDataToCC(true);
     chargeDrone(); // TODO: va bene così ho deve essere aperto in un nuovo thread
@@ -155,10 +180,24 @@ void Drone::chargeDrone() {
 
     int charge_time = dis(gen); // Generate a random number between 2 and 3 hours
 
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds, autonomy: " << autonomy_ << endl;
+    }
+
+    // 1 : charge_time = (1 - current_data_.battery) : x
+    // x = charge_time * (1 - current_data_.battery)
+    charge_time = (int)((float)charge_time * (1 - current_data_.battery));
+
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds" << endl;
+    }
+
+
     this_thread::sleep_for(chrono::milliseconds(charge_time));
 
     current_data_.battery = 1;
     current_data_.state = DroneState::READY;
+    autonomy_ = DRONE_AUTONOMY;
 
     sendDataToCC(true);
 }
