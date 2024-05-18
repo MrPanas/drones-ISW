@@ -21,7 +21,7 @@ void http_session::do_read() {
   auto self = shared_from_this();
   std::cout << "After creating self" << std::endl;
   http::request_parser<http::string_body> parser;
-  parser.body_limit(1024 * 1024 * 5); // Set body limit to at least 2 MB
+  parser.body_limit(1024 * 1024 * 10000); // Set body limit to at least 2 MB
   std::cout << "Entering async read" << std::endl;
   http::async_read(socket_, buffer_, request_,
                    [self](beast::error_code ec, std::size_t bytes_transferred) {
