@@ -14,6 +14,9 @@ void http_session::run() { do_read(); }
 
 void http_session::do_read() {
   auto self = shared_from_this();
+  beast::flat_buffer buffer_;
+  http::request_parser<http::string_body> parser;
+  parser.body_limit(1024 * 1024 * 2); // Set body limit to at least 2 MB
   http::async_read(socket_, buffer_, request_,
                    [self](beast::error_code ec, std::size_t bytes_transferred) {
                      if (!ec) {

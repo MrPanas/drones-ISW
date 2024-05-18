@@ -61,10 +61,9 @@ CREATE TABLE IF NOT EXISTS drone_log (
 
 CREATE TABLE IF NOT EXISTS report_image
 (
-    image_id  serial
-    PRIMARY KEY,
+    image_id  SERIAL PRIMARY KEY,
     cc_id     int,
-    image_url varchar(255) not null
+    image_url varchar(255) NOT NULL
 );
 
 
