@@ -20,7 +20,6 @@
  */
 
 // TODO: a ogni cambio di stato del drone fare l'update nel db
-// TODO: decidere cosa rendere parametrico e farlo
 // TODO: aggiungere cc_id in drone
 // TODO: il cc manda al server la mappa
 // TODO: aggiungere il libcurl al docker ?
@@ -210,20 +209,26 @@ void ControlCenter::stop() {
 
 void ControlCenter::printAreaStatus() {
     while (!interrupt_.load()){
+
         Grid grid = area_.getGrid();
 
         json jsonData;
 
+        json areaJson;
         for (const auto &row : grid) {
             json rowJson;
             for (const auto &timestamp : row) {
                 rowJson.push_back(chrono::duration_cast<chrono::milliseconds>(timestamp.time_since_epoch()).count());
             }
-            jsonData.push_back(rowJson);
+            areaJson.push_back(rowJson);
         }
 
+        jsonData["area"] = areaJson;
+        jsonData["cc-id"] = id_;
+
+
         // curl to server
-        string url = "127.0.0.1:5432/api/area";
+        string url = "127.0.0.1:3000/report";
         string data = jsonData.dump();
         curl_global_init(CURL_GLOBAL_ALL);
         CURL *curl = curl_easy_init();
@@ -235,7 +240,18 @@ void ControlCenter::printAreaStatus() {
             headers = curl_slist_append(headers, "Content-Type: application/json");
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
+            // Set the POST data
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+
+            // Perform the request
+            CURLcode res = curl_easy_perform(curl);
+            if (res != CURLE_OK) {
+                cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << endl;
+            }
+
+            // Clean up
+            curl_easy_cleanup(curl);
+            curl_slist_free_all(headers);
         }
 
 
