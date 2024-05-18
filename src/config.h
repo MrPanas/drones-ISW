@@ -15,6 +15,7 @@ namespace Config {
     extern int DRONE_STEPS; // autonomy in meters
 
     extern int POINT_EXPIRATION_TIME; // in milliseconds
+    extern int NUMBER_OF_DRONES;
 }
 
 #endif //DRONE8_CONFIG_H

@@ -48,13 +48,8 @@ int main(int argc, char* argv[]) {
     int width = -1;
     int scan_range = -1;
     int drone_autonomy = -1;
-    unsigned int num_drones = 9000;
-
-    // signal handling
-
-
-    // cc id
-    unsigned int cc_id = 1;
+    int point_exp_time = -1;
+    int num_drones = -1;
 
     // Define long options
     static struct option long_options[] = {
@@ -62,6 +57,8 @@ int main(int argc, char* argv[]) {
             {"width", required_argument, nullptr, 'w'},
             {"scan_range", required_argument, nullptr, 'r'},
             {"autonomy", required_argument, nullptr, 'a'},
+            {"point_exp_time", required_argument, nullptr, 'e'},
+            {"num_drones", required_argument, nullptr, 'n'},
             {nullptr, 0, nullptr, 0}
     };
 
@@ -78,6 +75,7 @@ int main(int argc, char* argv[]) {
                 }
                 Config::AREA_HEIGHT = height;
                 break;
+
             case 'w':
                 width = stoi(optarg);
                 if (width < 0) {
@@ -86,6 +84,7 @@ int main(int argc, char* argv[]) {
                 }
                 Config::AREA_WIDTH = width;
                 break;
+
             case 'r':
                 scan_range = stoi(optarg);
                 if (scan_range < 0) {
@@ -94,6 +93,7 @@ int main(int argc, char* argv[]) {
                 }
                 Config::SCAN_RANGE = scan_range;
                 break;
+
             case 'a':
                 drone_autonomy = stoi(optarg);
                 if (drone_autonomy < 0) {
@@ -101,8 +101,26 @@ int main(int argc, char* argv[]) {
                     return EXIT_FAILURE;
                 }
                 Config::DRONE_AUTONOMY = drone_autonomy;
-
                 break;
+
+            case 'e':
+                point_exp_time = stoi(optarg);
+                if (point_exp_time <= 0) {
+                    printHelp(argv[0]);
+                    return EXIT_FAILURE;
+                }
+                Config::POINT_EXPIRATION_TIME = point_exp_time;
+                break;
+
+            case 'n':
+                num_drones = stoi(optarg);
+                if (num_drones <= 0) {
+                    printHelp(argv[0]);
+                    return EXIT_FAILURE;
+                }
+                Config::NUMBER_OF_DRONES = num_drones;
+                break;
+
             default:
                 printHelp(argv[0]);
                 return EXIT_FAILURE;
@@ -123,15 +141,16 @@ int main(int argc, char* argv[]) {
     // Initialize a BasicStrategy object
     BasicStrategy strategy = BasicStrategy();
 
-    // number of drones needed
+    // cc id
+    unsigned int cc_id = 1;
 
     // Initialize a ControlCenter object
-    ControlCenter controlCenter = ControlCenter(cc_id, num_drones, &strategy, area);
+    ControlCenter controlCenter = ControlCenter(cc_id, Config::NUMBER_OF_DRONES, &strategy, area);
 
     // Initialize drones
     vector<Drone> drones;
-    drones.reserve(num_drones);
-    for (unsigned int i = 0; i < num_drones; i++) {
+    drones.reserve(Config::NUMBER_OF_DRONES);
+    for (unsigned int i = 0; i < Config::NUMBER_OF_DRONES; i++) {
         drones.emplace_back(i, cc_id);
     }
 
@@ -139,7 +158,7 @@ int main(int argc, char* argv[]) {
     cout << "main: Starting drones" << endl;
     vector<thread> drone_threads(drones.size());
 
-    for (unsigned int i = 0; i < num_drones; i++) {
+    for (unsigned int i = 0; i < Config::NUMBER_OF_DRONES; i++) {
         drone_threads[i] = thread(&Drone::start, &drones[i]);
 
     }
@@ -170,7 +189,7 @@ int main(int argc, char* argv[]) {
     cc_thread.join();
     cout << "main: Control center stopped" << endl;
 
-    for (unsigned int i = 0; i < num_drones; i++) {
+    for (unsigned int i = 0; i < Config::NUMBER_OF_DRONES; i++) {
 //        cout << "main: Stopping drone " << i << endl;
         if (drone_threads[i].joinable()) {
             drone_threads[i].join();
