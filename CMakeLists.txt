@@ -23,8 +23,7 @@
 ## Esegui la creazione degli eseguibili
 #create_executable(cc
 #        src/control_center/main.cpp
-#        src/control_center/ControlCenter.cpp
-#        src/drone/Drone.cpp
+#        src/control_center/ControlCenter.cpp src/drone/Drone.cpp
 #        src/scanning_strategy/SimpleStrategy.cpp
 #        src/area/Area.cpp
 #        src/redis/StreamRedis.cpp
@@ -56,7 +55,7 @@
 
 
 
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.22)
 project(drone8)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -75,8 +74,6 @@ add_executable(cc src/control_center/main.cpp
         src/redis/StreamRedis.h
         src/redis/redis.cpp
         src/redis/redis.h
-       # src/server/Server.cpp
-       # src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
@@ -111,8 +108,6 @@ add_executable(drone src/drone/main.cpp
         src/drone/main.cpp
         src/redis/redis.cpp
         src/redis/redis.h
-#        src/server/Server.cpp
-#        src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
@@ -140,8 +135,14 @@ target_include_directories(server PRIVATE "/usr/include/postgresql")
 target_include_directories(server PRIVATE "/usr/include/nlohmann")
 
 target_include_directories(server PRIVATE "/usr/local/include/sw")
+# Includi cairo per la visulizzazione della mappa
+target_include_directories(server PRIVATE "/usr/include/cairo")
 
 target_link_libraries(server PRIVATE pq)
+
+
+
+
 # Testing
 add_executable(test main.cpp
         src/control_center/ControlCenter.cpp
@@ -157,8 +158,6 @@ add_executable(test main.cpp
         src/redis/StreamRedis.h
         src/redis/redis.cpp
         src/redis/redis.h
-        # src/server/Server.cpp
-        # src/server/Server.hpp
         src/con2db/pgsql.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h

@@ -7,7 +7,22 @@
 #include <boost/beast.hpp>
 #include <boost/beast/http/message.hpp>
 #include <boost/beast/http/verb.hpp>
+#include <cairo/cairo.h>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <exception>
+#include <iomanip>
+#include <iostream>
+#include <list>
 #include <memory>
+#include <nlohmann/json.hpp>
+#include <ostream>
+#include <postgresql/libpq-fe.h>
+#include <sstream>
+#include <string>
 
 // Define namespaces for convenience
 namespace beast = boost::beast; // from <boost/beast.hpp>

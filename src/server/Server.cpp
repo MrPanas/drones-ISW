@@ -49,7 +49,6 @@ void do_listen(net::io_context &ioc, tcp::endpoint endpoint) {
       std::cerr << "Acceptor open error: " << ec.message() << std::endl;
       return;
     }
-
     acceptor.set_option(net::socket_base::reuse_address(true), ec);
     if (ec) {
       std::cerr << "Set option error: " << ec.message() << std::endl;
