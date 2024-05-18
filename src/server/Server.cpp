@@ -5,35 +5,39 @@
 #include <memory>
 #include <ostream>
 
-Server::Server(std::string host, std::string port, std::string password) {
-  try {
-    net::io_context ioc{1};
-    net::executor_work_guard<net::io_context::executor_type> work =
-        net::make_work_guard(ioc);
+Server::Server(std::string host, std::string port, std::string password) : host_(host), port_(port), password_(password) {
+    std::cout << "Server created with host_: " << host << ", port_: " << port << ", password_: " << password << std::endl;
+}
 
-    unsigned short port_num =
-        std::stoi(port); // Ensure this conversion is valid.
+void Server::start() {
+    try {
+        net::io_context ioc{1};
+        net::executor_work_guard<net::io_context::executor_type> work =
+                net::make_work_guard(ioc);
 
-    std::cout << "Port: " << port_num << std::endl;
+        unsigned short port_num =
+                std::stoi(port_); // Ensure this conversion is valid.
 
-    boost::system::error_code ec; // Define the error_code object
-    net::ip::address address = net::ip::make_address(host, ec);
-    if (ec) {
-      std::cerr << "Address resolution error: " << ec.message() << std::endl;
-      throw std::runtime_error("Failed to resolve host address.");
+        std::cout << "Port: " << port_num << std::endl;
+
+        boost::system::error_code ec; // Define the error_code object
+        net::ip::address address = net::ip::make_address(host_, ec);
+        if (ec) {
+            std::cerr << "Address resolution error: " << ec.message() << std::endl;
+            throw std::runtime_error("Failed to resolve host_ address.");
+        }
+
+        tcp::endpoint endpoint(address, port_num);
+        std::cout << "Endpoint created: " << endpoint << std::endl;
+
+        do_listen(ioc, endpoint);
+
+        ioc.run();
+
+    } catch (std::exception const &e) {
+        std::cerr << "Server initialization error: " << e.what() << std::endl;
+        throw; // Re-throwing to catch it in main if needed
     }
-
-    tcp::endpoint endpoint(address, port_num);
-    std::cout << "Endpoint created: " << endpoint << std::endl;
-
-    do_listen(ioc, endpoint);
-
-    ioc.run();
-
-  } catch (std::exception const &e) {
-    std::cerr << "Server initialization error: " << e.what() << std::endl;
-    throw; // Re-throwing to catch it in main if needed
-  }
 }
 
 void do_listen(net::io_context &ioc, tcp::endpoint endpoint) {

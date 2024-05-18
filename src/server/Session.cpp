@@ -35,7 +35,6 @@ void http_session::process_request() {
 // TODO: pass cc_id
 void http_session::handle_request_report() {
   try {
-
     auto request_json = json::parse(request_.body());
 
     auto grid_last_visited =

@@ -226,7 +226,7 @@ void ControlCenter::printAreaStatus() {
         jsonData["area"] = areaJson;
         jsonData["cc-id"] = id_;
 
-
+        cout << "Sending data to server" << endl;
         // curl to server
         string url = "127.0.0.1:3000/report";
         string data = jsonData.dump();
@@ -253,6 +253,8 @@ void ControlCenter::printAreaStatus() {
             curl_easy_cleanup(curl);
             curl_slist_free_all(headers);
         }
+
+        cout << "Sent data to server" << endl;
 
 
         area_.printPercentage();

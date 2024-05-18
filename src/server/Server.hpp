@@ -24,15 +24,16 @@ void do_listen(net::io_context &ioc, tcp::endpoint endpoint);
 
 class Server {
 public:
-  // Il costruttore crea crea il server, crea un sockert sul host
+  // Il costruttore crea crea il server, crea un sockert sul host_
   Server(std::string host, std::string port, std::string password);
+  void start();
 
 private:
-  PGconn *conn;
-  std::string host;
-  std::string port;
-  std::string password;
-  int socket;
+  PGconn *conn{};
+  std::string host_;
+  std::string port_;
+  std::string password_;
+  int socket{};
 };
 
 #endif // DRONE8_SERVER_HPP

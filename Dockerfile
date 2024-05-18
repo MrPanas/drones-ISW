@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Installa le dipendenze
-RUN apk add --update gcc g++ clang gdb cmake make ninja autoconf automake dos2unix tar rsync hiredis hiredis-dev libpq-dev nlohmann-json valgrind git redis curl-dev\
+RUN apk add --update gcc g++ clang gdb cmake make ninja autoconf automake dos2unix tar rsync hiredis hiredis-dev libpq-dev nlohmann-json valgrind git redis curl-dev boost-dev\
     && rm -rf /tmp/* /var/cache/apk/*
 
 # RUN apt-get update && apt-get install -y curl libcurl4-openssl-dev

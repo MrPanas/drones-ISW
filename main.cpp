@@ -6,9 +6,11 @@
 #include <atomic>
 #include <csignal>
 #include "src/config.h"
+#include "src/server/Server.hpp"
 
 using namespace std;
 
+std::atomic<bool> stop(false);
 
 
 void printHelp(char* name) {
@@ -20,21 +22,17 @@ void printHelp(char* name) {
     cout << "  --autonomy <autonomy>    Autonomy of the drones. Must be greater than 0." << endl;
 }
 
-/**
- * This main takes the following arguments:
- * --height: Height of the area
- * --width: Width of the area
- */
-
-std::atomic<bool> stop(false);
-
 void signalHandler(int signum) {
     std::cout << "Ctrl+C premuto!" << std::endl;
     // Puoi aggiungere altro codice qui se desideri
     stop = true;
 }
 
-
+/**
+ * This main takes the following arguments:
+ * --height/-h: Height of the area
+ * --width: Width of the area
+ */
 int main(int argc, char* argv[]) {
 
     signal(SIGINT, signalHandler);
@@ -126,7 +124,11 @@ int main(int argc, char* argv[]) {
                 return EXIT_FAILURE;
         }
     }
-
+    string server_host = "127.0.0.1";
+    string server_port = "3000";
+    string server_password = "secure";
+    Server server(server_host, server_port, server_password);
+    thread server_thread(&Server::start, &server);
 
     Config::AREA_WIDTH = ceil(Config::AREA_WIDTH / (Config::SCAN_RANGE * 2));
     Config::AREA_HEIGHT = ceil(Config::AREA_HEIGHT / (Config::SCAN_RANGE * 2)); // every square represents the area scanned by a drone
@@ -168,22 +170,10 @@ int main(int argc, char* argv[]) {
     cout << "main:Starting control center" << endl;
     thread cc_thread(&ControlCenter::start, &controlCenter);
 
-    while (!stop) {
-        // open thread to stop
-    }
-    cout << "main: Stopping threads. WAIT" << endl;
+    while (!stop) {}
+    cout << "main: Stopping threads: WAIT" << endl;
 
     controlCenter.stop();
-
-//    for (unsigned int i = 0; i < num_drones; i++) {
-//        cout << "main: Stopping drone " << i << endl;
-//        if (drone_threads[i].joinable()) {
-//            drone_threads[i].join();
-//        }
-////        drone_threads[i].join();
-//    }
-//    cout << "main: All drones stopped" << endl;
-
 
     // Wait for all threads to finish
     cc_thread.join();
@@ -196,7 +186,6 @@ int main(int argc, char* argv[]) {
         }
     }
     cout << "main: All drones stopped" << endl;
-
 
     cout << "All threads finished" << endl;
 

@@ -7,7 +7,7 @@ Con2DB::Con2DB(const char *hostname, const char *port, const char *username,
 
   char buf[1000];
 
-  sprintf(buf, "host=%s port=%s user=%s password=%s dbname=%s", hostname, port,
+  sprintf(buf, "host_=%s port_=%s user=%s password_=%s dbname=%s", hostname, port,
           username, password, dbname);
 
   // connect linux user to database (must have privileges)

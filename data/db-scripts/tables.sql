@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS drone_log (
     FOREIGN KEY (cc_id) REFERENCES control_center (cc_id)
 );
 
-CREATE TABLE report_image
+CREATE TABLE IF NOT EXISTS report_image
 (
     image_id  serial
     PRIMARY KEY,
