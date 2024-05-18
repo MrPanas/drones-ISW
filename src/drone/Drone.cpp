@@ -3,6 +3,9 @@
 #include <thread>
 #include "Drone.h"
 
+
+std::atomic<bool> Drone::stopFlag_{false};
+
 Drone::Drone(unsigned int id) : id_(id){
     current_data_ = {static_cast<int>(id_), -1, -1, 1, DroneState::READY};
     // cout << "Drone " << id_ << " created" << endl;
@@ -30,7 +33,7 @@ Drone::~Drone() {
     Redis::destroyGroup(ctx_, "stream_drone_" + to_string(id_), "Drone_" + to_string(id_));
     redisFree(ctx_);
 
-    cout << "Drone " << id_ << " destroyed" << endl;
+//   cout << "Drone::~Drone: Drone " << id_ << " " << endl;
 }
 
 unsigned int Drone::getId() const {
@@ -53,9 +56,7 @@ void Drone::start() {
     sendDataToCC(false);
 
     thread listen(&Drone::listenCC, this);
-
-    // Attendere il completamento del thread
-    listen.join();
+    listen.detach();
 }
 
 void Drone::listenCC() {
@@ -64,7 +65,7 @@ void Drone::listenCC() {
     string stream = "stream_drone_" + to_string(id_);
 
     // cout << "Drone::listenCC: Drone " << id_ << " is listening to Control Center " << cc_id_ << endl;
-    while (true) {
+    while (!stopFlag_.load()) {
         Redis::Response res = Redis::readMessageGroup(ctx_, group, consumer, stream, 0);
         string message_id = get<0>(res);
         if (message_id.empty()) {
@@ -90,9 +91,20 @@ void Drone::listenCC() {
             //thread follow(&Drone::followPath, this, message["path"]);
             //follow.join();
             future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
-            future.wait();
+
+
+        } else if (message["command"] == "stop") {
+
+            current_data_.state = DroneState::STOPPING;
+            stopFlag_.store(true);
+//            cout << "Drone " << id_ << " stopping" << endl;
+//            sendDataToCC(true);
+            break;
         }
+
     }
+//    cout << "Exit listenCC drone " << current_data_.id<< endl;
+
 }
 
 /**
@@ -109,6 +121,8 @@ void Drone::followPath(const string &path) {
 
     size_t i = 0;
     while (i < path.length()) {
+
+
         char dir = path[i++];
         string stepsStr;
         while (i < path.length() && isdigit(path[i])) {
@@ -119,6 +133,14 @@ void Drone::followPath(const string &path) {
         int steps = stoi(stepsStr);
 
         for (int j = 0; j < steps; j++) {
+
+            // check if stop
+            if (stopFlag_.load()) {
+//                cout << "Drone " << id_ << " stopped" << endl;
+                return ;
+            }
+
+
             switch (dir) {
                 case 'N':
                     current_data_.y--;
@@ -139,9 +161,11 @@ void Drone::followPath(const string &path) {
             current_data_.battery = (float)autonomy_/(float)DRONE_AUTONOMY;
 
             autonomy_--;
+
             sendDataToCC(false);
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
-            this_thread::sleep_for(chrono::milliseconds(10)); // TODO: mettere 2400
+            int sleep_time = static_cast<int>(2400 * TIME_ACCELERATION);
+            this_thread::sleep_for(chrono::milliseconds(sleep_time)); // TODO: mettere 2400
         }
     }
     // Print if autonomy != 0
@@ -193,7 +217,8 @@ void Drone::chargeDrone() {
     }
 
 
-    this_thread::sleep_for(chrono::milliseconds(charge_time));
+    int sleep_time = static_cast<int>(charge_time * TIME_ACCELERATION);
+    this_thread::sleep_for(chrono::milliseconds(sleep_time));
 
     current_data_.battery = 1;
     current_data_.state = DroneState::READY;

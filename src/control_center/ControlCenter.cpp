@@ -42,10 +42,19 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
             std::cout << "Can't allocate redis context" << std::endl;
         }
     }
+    sender_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
+    if (sender_ctx_ == NULL || sender_ctx_->err) {
+        if (sender_ctx_) {
+            std::cout << "Error: " << sender_ctx_->errstr << std::endl;
+            redisFree(sender_ctx_);
+        } else {
+            std::cout << "Can't allocate redis context" << std::endl;
+        }
+    }
 
 
     Redis::destroyGroup(listener_ctx_, "cc_" + to_string(id_), "CC_" + to_string(id_));
-    Redis::destroyGroup(listener_ctx_, "cc_" + to_string(id_), "CC_" + to_string(id_));
+
     Redis::deleteStream(listener_ctx_, "cc_" + to_string(id_));
 
     // create cc group
@@ -127,6 +136,8 @@ void ControlCenter::processMessage(Redis::Message message) {
 
 }
 
+
+
 void ControlCenter::listenDrones() {
     const string stream = "cc_" + to_string(id_);
     const string group = "CC_" + to_string(id_);
@@ -148,6 +159,12 @@ void ControlCenter::listenDrones() {
 
             Redis::Message message = get<1>(response);
 
+            if (message["command"] == "quit") {
+                cout << "ControlCenter::listenDrones: Received quit message" << endl;
+                stop();
+                break;
+            }
+
             processMessage(message);
 
             // Delete message from the stream
@@ -158,18 +175,47 @@ void ControlCenter::listenDrones() {
 
         }
     }
+    cout  << "ControlCenter::listenDrones: Stopped listening for drones" << endl;
 }
 
 
 
 void ControlCenter::stop() {
+    std::lock_guard<std::mutex> lock(lists_mutex_);
+    cout << "ControlCenter::stop: Stopping Control Center" << endl;
     interrupt_.store(true);
+
+    // Send to all drones to stop
+
+    // merge ready, working, charging drones to allDrones
+
+    // create allDrones
+    std::deque<DroneData> allDrones;
+    allDrones.insert(allDrones.end(), readyDrones_.begin(), readyDrones_.end());
+    allDrones.insert(allDrones.end(), workingDrones_.begin(), workingDrones_.end());
+    allDrones.insert(allDrones.end(), chargingDrones_.begin(), chargingDrones_.end());
+
+
+        cout << "ControlCenter::stop: Stopping " << allDrones.size() << " drones" << endl;
+    for (const DroneData &drone: allDrones) {
+        //        cout << "ControlCenter::stop: Stopping drone " << drone.id << endl;
+        string stream = "stream_drone_" + to_string(drone.id);
+        Redis::Message message;
+        message["command"] = "stop";
+        Redis::sendMessage(sender_ctx_, stream, message);
+    }
+
+    // send to cc quit message
+    string stream = "cc_1"; // TODO: check if it's correct
+    Redis::Message message;
+    message["command"] = "quit";
+    Redis::sendMessage(sender_ctx_, stream, message);
 }
 
-void printAreaStatus(Area& area) {
-    while (true) {
+void ControlCenter::printAreaStatus() {
+    while (!interrupt_.load()){
 
-        area.printPercentage();
+        area_.printPercentage();
         // wait 10 seconds
         this_thread::sleep_for(chrono::seconds(10));
     }
@@ -183,7 +229,7 @@ void ControlCenter::start() {
 
     // insertLog();
     // print percentage each 10 seconds
-    thread printAreaStatusThread(printAreaStatus, std::ref(area_));
+    thread printAreaStatusThread(&ControlCenter::printAreaStatus, this);
 
     cout << "ControlCenter::start: Starting listenDrones thread" << endl;
     thread listen(&ControlCenter::listenDrones, this);
@@ -192,9 +238,16 @@ void ControlCenter::start() {
     thread send(&ControlCenter::sendPaths, this);
 
     // Wait for the threads to finish
-    send.join();
-    listen.join();
+    printAreaStatusThread.join();
+    cout << "ControlCenter::start: printAreaStatus thread finished" << endl;
 
+
+    send.join();
+    cout << "ControlCenter::start: sendPaths thread finished" << endl;
+    listen.join();
+    cout << "ControlCenter::start: listenDrones thread finished" << endl;
+
+    cout << "ControlCenter::start: Stopped Control Center" << endl;
 }
 
 void ControlCenter::initDrones() {
@@ -311,6 +364,8 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
     message["command"] = "follow-path";
     message["path"] = pathStr;
 
+    string stream = "stream_drone_-1";
+
     // Send path to a ready drone every nextSend milliseconds
     while (!interrupt_.load()) {
         DroneData droneData = removeDroneFromReady();
@@ -320,7 +375,7 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
 //          TODO: Handle better this case
         }
 
-        const string stream = "stream_drone_" + to_string(droneData.id);
+        stream = "stream_drone_" + to_string(droneData.id);
 
         // Send the path to the drone
         // cout << "[1]ControlCenter::sendPath: Sending path to drone "<< droneData.id << endl;
@@ -334,8 +389,17 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
         // cout << "ControlCenter::handleSchedule: Sleeping for " << nextSend.count() << " milliseconds" << endl;
 
         // Wait for the next send
-        this_thread::sleep_for(nextSend);
+        for (int i = 0; i < nextSend.count()/1000; i++) {
+            if (interrupt_.load()) {
+                break;
+            }
+            this_thread::sleep_for(chrono::seconds(1));
+        }
+
+//        this_thread::sleep_for(nextSend);
     }
+
+
 
     // Free the redis context
     redisFree(ctx);

@@ -21,6 +21,7 @@
 #include <csignal>
 #include <deque>
 #include <mutex>
+#include "../scanning_strategy/config.h"
 
 
 
@@ -64,7 +65,7 @@ private:
     void sendPaths();
     void handleSchedule(DroneSchedule schedule, redisContext *ctx);
 
-
+    void printAreaStatus();
 //    void updateArea(DroneData droneData);
 
 
@@ -78,6 +79,7 @@ private:
     Area area_ = Area(0, 0);
 
     redisContext *listener_ctx_{};
+    redisContext *sender_ctx_{};
 
     unsigned int num_drones_;
     std::deque<DroneData> workingDrones_;

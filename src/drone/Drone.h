@@ -5,7 +5,7 @@
 #ifndef DRONE8_DRONE_H
 #define DRONE8_DRONE_H
 
-
+#include <atomic>
 #include <string>
 #include <hiredis.h>
 #include "../scanning_strategy/ScanningStrategy.h"
@@ -25,6 +25,7 @@ enum class DroneState {
     WORKING,
     CHARGING,
     READY,
+    STOPPING,
 };
 
 inline string to_string(DroneState state) {
@@ -97,6 +98,7 @@ private:
     redisContext *ctx_;
     DroneData current_data_{};
     int autonomy_ = DRONE_AUTONOMY;
+    static std::atomic<bool> stopFlag_;
 
     void listenCC();
 
