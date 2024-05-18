@@ -126,7 +126,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         }
         cout << "path_id: " << path_id << ", path: " << path.toString() << endl;
         // cast to int 290000 * TIME_ACCELERATION
-        int time = static_cast<int>(290000 * TIME_ACCELERATION);
+        int time = static_cast<int>((Config::POINT_EXPIRATION_TIME - 10000)* TIME_ACCELERATION);
         schedules.emplace_back(path_id, path, chrono::milliseconds(time));
         path_id++;
     }

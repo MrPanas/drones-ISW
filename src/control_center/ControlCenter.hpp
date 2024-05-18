@@ -87,22 +87,6 @@ private:
     std::mutex lists_mutex_;
     std::atomic<bool> interrupt_{false};
 
-    // mutex fot area
-    std::mutex area_mutex_;
-
-    void updateArea(DroneData droneData){
-//        std::lock_guard<std::mutex> lock(area_mutex_);
-
-        area_.updateArea(droneData);
-        // get current time
-        auto now = std::chrono::system_clock::now();
-        // print the current moment
-        std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-//        std::cout << std::ctime(&now_c) << " ";
-
-//        area_.printPercentage();
-
-    }
 
     void addDroneToWorking(const DroneData& drone) {
         std::lock_guard<std::mutex> lock(lists_mutex_);

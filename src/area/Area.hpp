@@ -14,39 +14,12 @@
 
 using namespace std;
 
-using IntGrid = vector<vector<int>>;
-
 struct DroneData;
 
 
-enum PointState {
-    CHECKED,
-    UNCHECKED,
+using Timestamp = chrono::system_clock::time_point;
 
-
-};
-
-// create PointState comparison operator
-
-
-
-/**
- * Class that represents a point in the grid
- */
-class Point {
-public:
-    Point();
-    long long getElapsedTime() const; // const perchè non modifica lo stato dell'oggetto
-    void resetTimer();
-    PointState getState() const;
-
-
-private:
-    chrono::steady_clock::time_point start_time_;
-    PointState state_;
-};
-
-using Grid = vector<vector<Point>>;
+using Grid = vector<vector<Timestamp>>;
 /**
  * Class that represents the area
  */
@@ -55,15 +28,13 @@ public:
     Area(int width, int height);
     int getWidth() const;
     int getHeight() const;
+    Grid getGrid() const;
     void setWidth(int width);
     void setHeight(int height);
-    pair<int, int> getCCPosition() const; // TODO:implement
 
     string toString() const;
 
-    const Point& getPoint(int x, int y) const;
-    void resetPointTimer(int x, int y);
-    void updateArea(DroneData data);
+    void updatePoint(int x, int y);
     void printPercentage();
 
 private:

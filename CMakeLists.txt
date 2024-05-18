@@ -139,10 +139,10 @@ target_include_directories(server PRIVATE "/usr/include/postgresql")
 target_include_directories(server PRIVATE "/usr/include/nlohmann")
 
 target_include_directories(server PRIVATE "/usr/local/include/sw")
-# Includi cairo per la visulizzazione della mappa
-target_include_directories(server PRIVATE "/usr/include/cairo")
 
-target_link_libraries(server PRIVATE pq)
+target_include_directories(server PRIVATE "/usr/include/curl")
+
+target_link_libraries(server PRIVATE pq curl)
 
 
 

@@ -104,7 +104,7 @@ void ControlCenter::processMessage(Redis::Message message) {
 
 
     if (droneData.state == DroneState::WORKING)
-        updateArea(droneData);
+        area_.updatePoint(droneData.x, droneData.y);
 
     if (!changedState) {
         return;
@@ -210,6 +210,34 @@ void ControlCenter::stop() {
 
 void ControlCenter::printAreaStatus() {
     while (!interrupt_.load()){
+        Grid grid = area_.getGrid();
+
+        json jsonData;
+
+        for (const auto &row : grid) {
+            json rowJson;
+            for (const auto &timestamp : row) {
+                rowJson.push_back(chrono::duration_cast<chrono::milliseconds>(timestamp.time_since_epoch()).count());
+            }
+            jsonData.push_back(rowJson);
+        }
+
+        // curl to server
+        string url = "127.0.0.1:5432/api/area";
+        string data = jsonData.dump();
+        curl_global_init(CURL_GLOBAL_ALL);
+        CURL *curl = curl_easy_init();
+        if (curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+            // Impostazione del tipo di contenuto della richiesta
+            struct curl_slist *headers = NULL;
+            headers = curl_slist_append(headers, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+        }
+
 
         area_.printPercentage();
         // wait 10 seconds

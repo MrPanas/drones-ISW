@@ -226,6 +226,60 @@ build drone: CXX_EXECUTABLE_LINKER__drone_Debug CMakeFiles/drone.dir/src/drone/m
   TARGET_PDB = drone.dbg
 
 # =============================================================================
+# Object build statements for EXECUTABLE target server
+
+
+#############################################
+# Order-only phony target for server
+
+build cmake_object_order_depends_target_server: phony || CMakeFiles/server.dir
+
+build CMakeFiles/server.dir/src/server/main.cpp.o: CXX_COMPILER__server_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/server/main.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/server/main.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/server
+
+build CMakeFiles/server.dir/src/server/Server.cpp.o: CXX_COMPILER__server_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/server/Server.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/server/Server.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/server
+
+build CMakeFiles/server.dir/src/server/Session.cpp.o: CXX_COMPILER__server_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/server/Session.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/server/Session.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/server
+
+build CMakeFiles/server.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__server_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/con2db/pgsql.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/con2db
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target server
+
+
+#############################################
+# Link the executable server
+
+build server: CXX_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/src/server/main.cpp.o CMakeFiles/server.dir/src/server/Server.cpp.o CMakeFiles/server.dir/src/server/Session.cpp.o CMakeFiles/server.dir/src/con2db/pgsql.cpp.o
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+  LINK_LIBRARIES = -lpq  -lcurl
+  OBJECT_DIR = CMakeFiles/server.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = server
+  TARGET_PDB = server.dbg
+
+# =============================================================================
 # Object build statements for EXECUTABLE target test
 
 
@@ -355,7 +409,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /Users/gianlucaviviano/CLionProjects/drones-ISWProject/cmake-build-debug
 
-build all: phony cc drone test
+build all: phony cc drone server test
 
 # =============================================================================
 # Built-in targets

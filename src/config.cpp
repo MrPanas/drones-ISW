@@ -7,4 +7,6 @@ namespace Config {
     int DRONE_AUTONOMY = 30;
     int DRONE_SPEED = 30;
     int DRONE_STEPS = 15000;
+
+    int POINT_EXPIRATION_TIME = 300000;
 }
