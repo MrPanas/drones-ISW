@@ -17,6 +17,14 @@ services:
 #    depends_on:
 #      - redis
 #      - postgres
+  server:
+    container_name: server
+    build:
+      context: src/server
+      dockerfile: Dockerfile
+    ports:
+        - "3000:3000"
+
   redis:
     container_name: redis
     image: redis:alpine

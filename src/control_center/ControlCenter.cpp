@@ -228,7 +228,7 @@ void ControlCenter::printAreaStatus() {
 
         cout << "Sending data to server" << endl;
         // curl to server
-        string url = "http://localhost:3000/report";
+        string url = "http://127.0.0.1:3000/report";
         string data = jsonData.dump();
         size_t jsonLengthInBytes = data.length();
 
