@@ -10,7 +10,7 @@
 #include <chrono>
 #include "../drone/Drone.h"
 #include <mutex>
-#include "../scanning_strategy/config.h"
+#include "../config.h"
 
 using namespace std;
 

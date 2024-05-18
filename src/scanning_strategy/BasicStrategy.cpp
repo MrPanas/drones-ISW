@@ -19,7 +19,8 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         cout << "current_pos: " << current_pos.x << ", " << current_pos.y << endl;
         cout << "end_pos: " << end_pos.x << ", " << end_pos.y << endl;
         current_pos = cc_pos;
-        int autonomy = DRONE_AUTONOMY; // 15000/20 = 750
+        int autonomy = Config::DRONE_STEPS; // 15000/20 = 750
+        cout << "autonomy: " << autonomy << endl;
         Path path = Path();
 
         // Go to start position ______

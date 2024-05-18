@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /Users/mrpana/CLionProjects/drones8/cmake-build-debug/
+cmake_ninja_workdir = /Users/gianlucaviviano/CLionProjects/drones-ISWProject/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target cc
 
@@ -49,68 +49,75 @@ cmake_ninja_workdir = /Users/mrpana/CLionProjects/drones8/cmake-build-debug/
 
 build cmake_object_order_depends_target_cc: phony || drone
 
-build CMakeFiles/cc.dir/src/control_center/main.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/control_center/main.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/control_center/main.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/control_center/main.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/control_center/main.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/control_center
 
-build CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/control_center/ControlCenter.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/control_center/ControlCenter.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/control_center
 
-build CMakeFiles/cc.dir/src/drone/Drone.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/drone/Drone.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/drone/Drone.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/drone/Drone.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/drone/Drone.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/drone
 
-build CMakeFiles/cc.dir/src/area/Area.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/area/Area.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/area/Area.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/area/Area.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/area/Area.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/area
 
-build CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/redis
 
-build CMakeFiles/cc.dir/src/redis/redis.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/redis/redis.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/redis/redis.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/redis.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/redis/redis.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/redis
 
-build CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/con2db/pgsql.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/con2db
 
-build CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/scanning_strategy
 
-build CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/scanning_strategy/BasicStrategy.cpp || cmake_object_order_depends_target_cc
+build CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/BasicStrategy.cpp || cmake_object_order_depends_target_cc
   DEP_FILE = CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/cc.dir
   OBJECT_FILE_DIR = CMakeFiles/cc.dir/src/scanning_strategy
+
+build CMakeFiles/cc.dir/src/config.cpp.o: CXX_COMPILER__cc_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/config.cpp || cmake_object_order_depends_target_cc
+  DEP_FILE = CMakeFiles/cc.dir/src/config.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
+  OBJECT_DIR = CMakeFiles/cc.dir
+  OBJECT_FILE_DIR = CMakeFiles/cc.dir/src
 
 
 # =============================================================================
@@ -120,9 +127,9 @@ build CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER_
 #############################################
 # Link the executable cc
 
-build cc: CXX_EXECUTABLE_LINKER__cc_Debug CMakeFiles/cc.dir/src/control_center/main.cpp.o CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/cc.dir/src/drone/Drone.cpp.o CMakeFiles/cc.dir/src/area/Area.cpp.o CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o CMakeFiles/cc.dir/src/redis/redis.cpp.o CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o || drone
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk
-  LINK_LIBRARIES = -lhiredis  -lpq
+build cc: CXX_EXECUTABLE_LINKER__cc_Debug CMakeFiles/cc.dir/src/control_center/main.cpp.o CMakeFiles/cc.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/cc.dir/src/drone/Drone.cpp.o CMakeFiles/cc.dir/src/area/Area.cpp.o CMakeFiles/cc.dir/src/redis/StreamRedis.cpp.o CMakeFiles/cc.dir/src/redis/redis.cpp.o CMakeFiles/cc.dir/src/con2db/pgsql.cpp.o CMakeFiles/cc.dir/src/scanning_strategy/Path.cpp.o CMakeFiles/cc.dir/src/scanning_strategy/BasicStrategy.cpp.o CMakeFiles/cc.dir/src/config.cpp.o || drone
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+  LINK_LIBRARIES = -lhiredis  -lpq  -lcurl
   OBJECT_DIR = CMakeFiles/cc.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -138,61 +145,68 @@ build cc: CXX_EXECUTABLE_LINKER__cc_Debug CMakeFiles/cc.dir/src/control_center/m
 
 build cmake_object_order_depends_target_drone: phony || CMakeFiles/drone.dir
 
-build CMakeFiles/drone.dir/src/drone/main.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/drone/main.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/drone/main.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/drone/main.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/drone/main.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/drone
 
-build CMakeFiles/drone.dir/src/drone/Drone.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/drone/Drone.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/drone/Drone.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/drone/Drone.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/drone/Drone.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/drone
 
-build CMakeFiles/drone.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/scanning_strategy/BasicStrategy.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/BasicStrategy.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/scanning_strategy/BasicStrategy.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/scanning_strategy
 
-build CMakeFiles/drone.dir/src/area/Area.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/area/Area.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/area/Area.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/area/Area.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/area/Area.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/area
 
-build CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/redis
 
-build CMakeFiles/drone.dir/src/redis/redis.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/redis/redis.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/redis/redis.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/redis.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/redis/redis.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/redis
 
-build CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/con2db/pgsql.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/con2db
 
-build CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_drone
+build CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_drone
   DEP_FILE = CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/drone.dir
   OBJECT_FILE_DIR = CMakeFiles/drone.dir/src/scanning_strategy
+
+build CMakeFiles/drone.dir/src/config.cpp.o: CXX_COMPILER__drone_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/config.cpp || cmake_object_order_depends_target_drone
+  DEP_FILE = CMakeFiles/drone.dir/src/config.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/include/curl
+  OBJECT_DIR = CMakeFiles/drone.dir
+  OBJECT_FILE_DIR = CMakeFiles/drone.dir/src
 
 
 # =============================================================================
@@ -202,9 +216,9 @@ build CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__drone
 #############################################
 # Link the executable drone
 
-build drone: CXX_EXECUTABLE_LINKER__drone_Debug CMakeFiles/drone.dir/src/drone/main.cpp.o CMakeFiles/drone.dir/src/drone/Drone.cpp.o CMakeFiles/drone.dir/src/scanning_strategy/BasicStrategy.cpp.o CMakeFiles/drone.dir/src/area/Area.cpp.o CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o CMakeFiles/drone.dir/src/redis/redis.cpp.o CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk
-  LINK_LIBRARIES = -lhiredis  -lpq
+build drone: CXX_EXECUTABLE_LINKER__drone_Debug CMakeFiles/drone.dir/src/drone/main.cpp.o CMakeFiles/drone.dir/src/drone/Drone.cpp.o CMakeFiles/drone.dir/src/scanning_strategy/BasicStrategy.cpp.o CMakeFiles/drone.dir/src/area/Area.cpp.o CMakeFiles/drone.dir/src/redis/StreamRedis.cpp.o CMakeFiles/drone.dir/src/redis/redis.cpp.o CMakeFiles/drone.dir/src/con2db/pgsql.cpp.o CMakeFiles/drone.dir/src/scanning_strategy/Path.cpp.o CMakeFiles/drone.dir/src/config.cpp.o
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+  LINK_LIBRARIES = -lhiredis  -lpq  -lcurl
   OBJECT_DIR = CMakeFiles/drone.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -220,68 +234,75 @@ build drone: CXX_EXECUTABLE_LINKER__drone_Debug CMakeFiles/drone.dir/src/drone/m
 
 build cmake_object_order_depends_target_test: phony || cc
 
-build CMakeFiles/test.dir/main.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/main.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/main.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/main.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/main.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir
 
-build CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/control_center/ControlCenter.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/control_center/ControlCenter.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/control_center
 
-build CMakeFiles/test.dir/src/drone/Drone.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/drone/Drone.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/drone/Drone.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/drone/Drone.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/drone/Drone.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/drone
 
-build CMakeFiles/test.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/scanning_strategy/BasicStrategy.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/scanning_strategy/BasicStrategy.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/BasicStrategy.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/scanning_strategy/BasicStrategy.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/scanning_strategy
 
-build CMakeFiles/test.dir/src/area/Area.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/area/Area.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/area/Area.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/area/Area.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/area/Area.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/area
 
-build CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/StreamRedis.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/redis
 
-build CMakeFiles/test.dir/src/redis/redis.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/redis/redis.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/redis/redis.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/redis/redis.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/redis/redis.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/redis
 
-build CMakeFiles/test.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/con2db/pgsql.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/con2db/pgsql.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/con2db/pgsql.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/con2db/pgsql.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/con2db
 
-build CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/mrpana/CLionProjects/drones8/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_test
+build CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/scanning_strategy/Path.cpp || cmake_object_order_depends_target_test
   DEP_FILE = CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src/scanning_strategy
+
+build CMakeFiles/test.dir/src/config.cpp.o: CXX_COMPILER__test_unscanned_Debug /Users/gianlucaviviano/CLionProjects/drones-ISWProject/src/config.cpp || cmake_object_order_depends_target_test
+  DEP_FILE = CMakeFiles/test.dir/src/config.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  INCLUDES = -I/usr/include/hiredis -I/usr/include/postgresql -I/usr/include/nlohmann -I/usr/local/include/sw -I/usr/include/curl
+  OBJECT_DIR = CMakeFiles/test.dir
+  OBJECT_FILE_DIR = CMakeFiles/test.dir/src
 
 
 # =============================================================================
@@ -291,52 +312,21 @@ build CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o: CXX_COMPILER__test_u
 #############################################
 # Link the executable test
 
-build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/main.cpp.o CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/test.dir/src/drone/Drone.cpp.o CMakeFiles/test.dir/src/scanning_strategy/BasicStrategy.cpp.o CMakeFiles/test.dir/src/area/Area.cpp.o CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o CMakeFiles/test.dir/src/redis/redis.cpp.o CMakeFiles/test.dir/src/con2db/pgsql.cpp.o CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o || cc
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk
-  LINK_LIBRARIES = -lhiredis  -lpq
+build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/main.cpp.o CMakeFiles/test.dir/src/control_center/ControlCenter.cpp.o CMakeFiles/test.dir/src/drone/Drone.cpp.o CMakeFiles/test.dir/src/scanning_strategy/BasicStrategy.cpp.o CMakeFiles/test.dir/src/area/Area.cpp.o CMakeFiles/test.dir/src/redis/StreamRedis.cpp.o CMakeFiles/test.dir/src/redis/redis.cpp.o CMakeFiles/test.dir/src/con2db/pgsql.cpp.o CMakeFiles/test.dir/src/scanning_strategy/Path.cpp.o CMakeFiles/test.dir/src/config.cpp.o || cc
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+  LINK_LIBRARIES = -lhiredis  -lpq  -lcurl
   OBJECT_DIR = CMakeFiles/test.dir
   POST_BUILD = :
   PRE_LINK = :
   TARGET_FILE = test
   TARGET_PDB = test.dbg
 
-# =============================================================================
-# Object build statements for EXECUTABLE target test2
-
-
-#############################################
-# Order-only phony target for test2
-
-build cmake_object_order_depends_target_test2: phony || CMakeFiles/test2.dir
-
-build CMakeFiles/test2.dir/main2.cpp.o: CXX_COMPILER__test2_unscanned_Debug /Users/mrpana/CLionProjects/drones8/main2.cpp || cmake_object_order_depends_target_test2
-  DEP_FILE = CMakeFiles/test2.dir/main2.cpp.o.d
-  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/test2.dir
-  OBJECT_FILE_DIR = CMakeFiles/test2.dir
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target test2
-
-
-#############################################
-# Link the executable test2
-
-build test2: CXX_EXECUTABLE_LINKER__test2_Debug CMakeFiles/test2.dir/main2.cpp.o
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk
-  OBJECT_DIR = CMakeFiles/test2.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = test2
-  TARGET_PDB = test2.dbg
-
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/mrpana/CLionProjects/drones8/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /Users/gianlucaviviano/CLionProjects/drones-ISWProject/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -347,7 +337,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/mrpana/CLionProjects/drones8/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake --regenerate-during-build -S/Users/mrpana/CLionProjects/drones8 -B/Users/mrpana/CLionProjects/drones8/cmake-build-debug
+  COMMAND = cd /Users/gianlucaviviano/CLionProjects/drones-ISWProject/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake --regenerate-during-build -S/Users/gianlucaviviano/CLionProjects/drones-ISWProject -B/Users/gianlucaviviano/CLionProjects/drones-ISWProject/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -363,9 +353,9 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /Users/mrpana/CLionProjects/drones8/cmake-build-debug
+# Folder: /Users/gianlucaviviano/CLionProjects/drones-ISWProject/cmake-build-debug
 
-build all: phony cc drone test test2
+build all: phony cc drone test
 
 # =============================================================================
 # Built-in targets
@@ -374,14 +364,14 @@ build all: phony cc drone test test2
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/mrpana/CLionProjects/drones8/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/gianlucaviviano/CLionProjects/drones-ISWProject/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/mrpana/CLionProjects/drones8/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake: phony
+build /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /Users/gianlucaviviano/CLionProjects/drones-ISWProject/CMakeLists.txt CMakeCache.txt CMakeFiles/3.28.1/CMakeCCompiler.cmake CMakeFiles/3.28.1/CMakeCXXCompiler.cmake CMakeFiles/3.28.1/CMakeSystem.cmake: phony
 
 
 #############################################

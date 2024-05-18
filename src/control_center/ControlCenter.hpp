@@ -21,9 +21,8 @@
 #include <csignal>
 #include <deque>
 #include <mutex>
-#include "../scanning_strategy/config.h"
-
-
+#include "../config.h"
+#include <curl/curl.h>
 
 
 enum class ControlCenterState {

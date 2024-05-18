@@ -4,7 +4,7 @@
 #define DRONE8_BASICSTRATEGY_H
 
 #include "ScanningStrategy.h"
-#include "config.h"
+#include "../config.h"
 
 class BasicStrategy {
 public:

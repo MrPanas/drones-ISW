@@ -19,20 +19,16 @@
  *
  */
 
-// TODO: gestire chiusura di tutti i while true
 // TODO: a ogni cambio di stato del drone fare l'update nel db
 // TODO: decidere cosa rendere parametrico e farlo
-
+// TODO: aggiungere cc_id in drone
+// TODO: il cc manda al server la mappa
+// TODO: aggiungere il libcurl al docker ?
 
 
 
 
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones) {
-
-
-
-
-
     listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (listener_ctx_ == NULL || listener_ctx_->err) {
         if (listener_ctx_) {

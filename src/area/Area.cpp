@@ -126,5 +126,4 @@ void Area::printPercentage() {
     }
     cout << "Area::printPercentage: " << checked << " / " << width_ * height_ << " = "
          << (checked * 100) / (width_ * height_) << "%" << endl;
-
 }
