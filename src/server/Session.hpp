@@ -1,7 +1,6 @@
 #ifndef HTTP_SESSION_HPP
 #define HTTP_SESSION_HPP
 
-#include "../con2db/pgsql.h"
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
 #include <boost/beast/http/message.hpp>

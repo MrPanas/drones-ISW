@@ -7,6 +7,8 @@ int main() {
     std::string password = "secure"; // Example, not used directly here.
 
     Server server(host, port, password); // This constructs and runs the server
+    server.start();
+
   } catch (const std::exception &e) {
     std::cerr << "Fatal error: " << e.what() << std::endl;
     return EXIT_FAILURE;
