@@ -35,11 +35,13 @@ void http_session::process_request() {
 // TODO: pass cc_id
 void http_session::handle_request_report() {
   try {
-    // Parse the JSON request body
+
     auto request_json = json::parse(request_.body());
+
     auto grid_last_visited =
-        request_json.at("area").get<std::vector<std::vector<std::string>>>();
-    auto cc_id = request_json.at("cc_id").get<int>();
+        request_json.at("area").get<std::vector<std::vector<long>>>();
+
+    auto cc_id = request_json.at("cc-id").get<int>();
 
     Con2DB db("localhost", "5432", "postgres", "postgres", "postgres");
     char sqlcmd[512];

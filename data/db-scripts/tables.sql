@@ -58,3 +58,13 @@ CREATE TABLE IF NOT EXISTS drone_log (
     FOREIGN KEY (drone_id) REFERENCES drone (drone_id),
     FOREIGN KEY (cc_id) REFERENCES control_center (cc_id)
 );
+
+CREATE TABLE report_image
+(
+    image_id  serial
+    PRIMARY KEY,
+    cc_id     int,
+    image_url varchar(255) not null
+);
+
+
