@@ -10,9 +10,6 @@ using namespace std;
 
 
 
-
-
-
 void printHelp(char* name) {
     cout << "Usage: "<< name << endl;
     cout << "Options:" << endl;
@@ -26,41 +23,21 @@ void printHelp(char* name) {
  * --width: Width of the area
  */
 
+std::atomic<bool> stop(false);
+
+void signalHandler(int signum) {
+    std::cout << "Ctrl+C premuto!" << std::endl;
+    // Puoi aggiungere altro codice qui se desideri
+    stop = true;
+}
 
 
 int main(int argc, char* argv[]) {
-//    redisContext *context = redisConnect(REDIS_HOST, REDIS_PORT);
-//    if (context == NULL || context->err) {
-//        if (context) {
-//            cout << "main: Error: " << context->errstr << endl;
-//            redisFree(context);
-//        } else {
-//            cout << "main: Can't allocate redis context" << endl;
-//        }
-//        return EXIT_FAILURE;
-//    }
-//
-//
-//    auto messages = Redis::readGroupMessages(context, "CC_1", "consumer", "cc_1", -1, 0);
-//
-//    // print size
-//    cout << "main: messages.size(): " << messages.size() << endl;
-//
-//    // Print messages
-//    for (const auto& message : messages) {
-//        string messageId = get<0>(message);
-//        cout << "Message: " <<messageId << endl;
-//        for (const auto& field : get<1>(message)) {
-//            cout << field.first << ": " << field.second << endl;
-//        }
-//
-//        // Delete message
-//        Redis::deleteMessage(context, "cc_1", get<0>(message));
-//    }
-//    redisFree(context);
-//
-//
-//    return EXIT_SUCCESS;
+
+    signal(SIGINT, signalHandler);
+
+    std::cout << "Premi Ctrl+C per generare un segnale di interruzione." << std::endl;
+
 
 
     // Default values
@@ -87,14 +64,14 @@ int main(int argc, char* argv[]) {
     while ((opt = getopt_long(argc, argv, "h:w:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'h':
-                height = atoi(optarg);
+                height = stoi(optarg);
                 if (height <= 0) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
                 break;
             case 'w':
-                width = atoi(optarg);
+                width = stoi(optarg);
                 if (width <= 0) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
@@ -131,19 +108,43 @@ int main(int argc, char* argv[]) {
 
     for (unsigned int i = 0; i < num_drones; i++) {
         drone_threads[i] = thread(&Drone::start, &drones[i]);
-        // sleep for 1ms to
-//        this_thread::sleep_for(chrono::milliseconds(7));
+
     }
 
 
     // Start control center
-    cout << "Starting control center" << endl;
+    cout << "main:Starting control center" << endl;
     thread cc_thread(&ControlCenter::start, &controlCenter);
+
+    while (!stop) {
+        // open thread to stop
+    }
+    cout << "main: Stopping threads. WAIT" << endl;
+
+    controlCenter.stop();
+
+//    for (unsigned int i = 0; i < num_drones; i++) {
+//        cout << "main: Stopping drone " << i << endl;
+//        if (drone_threads[i].joinable()) {
+//            drone_threads[i].join();
+//        }
+////        drone_threads[i].join();
+//    }
+//    cout << "main: All drones stopped" << endl;
 
 
     // Wait for all threads to finish
-
     cc_thread.join();
+    cout << "main: Control center stopped" << endl;
+
+    for (unsigned int i = 0; i < num_drones; i++) {
+//        cout << "main: Stopping drone " << i << endl;
+        if (drone_threads[i].joinable()) {
+            drone_threads[i].join();
+        }
+    }
+    cout << "main: All drones stopped" << endl;
+
 
     cout << "All threads finished" << endl;
 

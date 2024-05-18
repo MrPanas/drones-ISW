@@ -176,3 +176,5 @@ target_link_libraries(test PRIVATE hiredis pq)
 add_dependencies(cc drone)
 
 add_dependencies(test cc)
+
+add_executable(test2 main2.cpp)
