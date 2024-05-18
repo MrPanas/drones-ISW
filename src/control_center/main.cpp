@@ -6,6 +6,7 @@
 #include "../drone/Drone.h"
 #include "../scanning_strategy/BasicStrategy.h"
 #include "../area/Area.hpp"
+#include "../config.h"
 
 
 #include <iostream>

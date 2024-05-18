@@ -158,7 +158,7 @@ void Drone::followPath(const string &path) {
                     cerr << "Drone::followPath: Invalid direction" << endl;
             }
 
-            current_data_.battery = (float)autonomy_/(float)DRONE_AUTONOMY;
+            current_data_.battery = (float)autonomy_/(float)Config::DRONE_STEPS;
 
             autonomy_--;
 
@@ -222,7 +222,7 @@ void Drone::chargeDrone() {
 
     current_data_.battery = 1;
     current_data_.state = DroneState::READY;
-    autonomy_ = DRONE_AUTONOMY;
+    autonomy_ = Config::DRONE_STEPS;
 
     sendDataToCC(true);
 }

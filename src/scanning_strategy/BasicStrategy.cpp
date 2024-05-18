@@ -19,7 +19,8 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         cout << "current_pos: " << current_pos.x << ", " << current_pos.y << endl;
         cout << "end_pos: " << end_pos.x << ", " << end_pos.y << endl;
         current_pos = cc_pos;
-        int autonomy = DRONE_AUTONOMY; // 15000/20 = 750
+        int autonomy = Config::DRONE_STEPS; // 15000/20 = 750
+        cout << "autonomy: " << autonomy << endl;
         Path path = Path();
 
         // Go to start position ______
@@ -125,7 +126,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         }
         cout << "path_id: " << path_id << ", path: " << path.toString() << endl;
         // cast to int 290000 * TIME_ACCELERATION
-        int time = static_cast<int>(290000 * TIME_ACCELERATION);
+        int time = static_cast<int>((Config::POINT_EXPIRATION_TIME - 10000)* TIME_ACCELERATION);
         schedules.emplace_back(path_id, path, chrono::milliseconds(time));
         path_id++;
     }

@@ -5,6 +5,7 @@
 #include "src/scanning_strategy/BasicStrategy.h"
 #include <atomic>
 #include <csignal>
+#include "src/config.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ void printHelp(char* name) {
     cout << "Options:" << endl;
     cout << "  --height <height>  Height of the area. Must be greater than 0." << endl;
     cout << "  --width <width>    Width of the area. Must be greater than 0." << endl;
+    cout << "  --scan_range <scan_range>    Scan range of the drones. Must be greater than 0." << endl;
+    cout << "  --autonomy <autonomy>    Autonomy of the drones. Must be greater than 0." << endl;
 }
 
 /**
@@ -41,8 +44,10 @@ int main(int argc, char* argv[]) {
 
 
     // Default values
-    int height = 300;
-    int width = 300;
+    int height = -1;
+    int width = -1;
+    int scan_range = -1;
+    int drone_autonomy = -1;
     unsigned int num_drones = 9000;
 
     // signal handling
@@ -55,37 +60,65 @@ int main(int argc, char* argv[]) {
     static struct option long_options[] = {
             {"height", required_argument, nullptr, 'h'},
             {"width", required_argument, nullptr, 'w'},
+            {"scan_range", required_argument, nullptr, 'r'},
+            {"autonomy", required_argument, nullptr, 'a'},
             {nullptr, 0, nullptr, 0}
     };
 
     // Parse arguments
     int option_index = 0;
     int opt;
-    while ((opt = getopt_long(argc, argv, "h:w:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "h:w:r:a", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'h':
                 height = stoi(optarg);
-                if (height <= 0) {
+                if (height < 0) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
+                Config::AREA_HEIGHT = height;
                 break;
             case 'w':
                 width = stoi(optarg);
-                if (width <= 0) {
+                if (width < 0) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
+                Config::AREA_WIDTH = width;
+                break;
+            case 'r':
+                scan_range = stoi(optarg);
+                if (scan_range < 0) {
+                    printHelp(argv[0]);
+                    return EXIT_FAILURE;
+                }
+                Config::SCAN_RANGE = scan_range;
+                break;
+            case 'a':
+                drone_autonomy = stoi(optarg);
+                if (drone_autonomy < 0) {
+                    printHelp(argv[0]);
+                    return EXIT_FAILURE;
+                }
+                Config::DRONE_AUTONOMY = drone_autonomy;
+
                 break;
             default:
                 printHelp(argv[0]);
                 return EXIT_FAILURE;
         }
     }
-    cout << "main: Height: " << height << " Width: " << width << endl;
+
+
+    Config::AREA_WIDTH = ceil(Config::AREA_WIDTH / (Config::SCAN_RANGE * 2));
+    Config::AREA_HEIGHT = ceil(Config::AREA_HEIGHT / (Config::SCAN_RANGE * 2)); // every square represents the area scanned by a drone
+    Config::DRONE_STEPS = static_cast<int>((Config::DRONE_AUTONOMY * Config::DRONE_SPEED * 1000 / 60) / 20); // represents the autonomy in steps
+
+    cout << "main: Height: " << Config::AREA_HEIGHT << " Width: " << Config::AREA_WIDTH << endl;
+    cout << "main: DRone steps: " << Config::DRONE_STEPS << endl;
 
     // Initialize an Area object
-    Area area = Area(width, height);
+    Area area = Area(Config::AREA_WIDTH, Config::AREA_HEIGHT);
 
     // Initialize a BasicStrategy object
     BasicStrategy strategy = BasicStrategy();

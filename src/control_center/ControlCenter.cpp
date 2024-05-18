@@ -19,20 +19,16 @@
  *
  */
 
-// TODO: gestire chiusura di tutti i while true
 // TODO: a ogni cambio di stato del drone fare l'update nel db
 // TODO: decidere cosa rendere parametrico e farlo
-
+// TODO: aggiungere cc_id in drone
+// TODO: il cc manda al server la mappa
+// TODO: aggiungere il libcurl al docker ?
 
 
 
 
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones) {
-
-
-
-
-
     listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (listener_ctx_ == NULL || listener_ctx_->err) {
         if (listener_ctx_) {
@@ -108,7 +104,7 @@ void ControlCenter::processMessage(Redis::Message message) {
 
 
     if (droneData.state == DroneState::WORKING)
-        updateArea(droneData);
+        area_.updatePoint(droneData.x, droneData.y);
 
     if (!changedState) {
         return;
@@ -214,6 +210,34 @@ void ControlCenter::stop() {
 
 void ControlCenter::printAreaStatus() {
     while (!interrupt_.load()){
+        Grid grid = area_.getGrid();
+
+        json jsonData;
+
+        for (const auto &row : grid) {
+            json rowJson;
+            for (const auto &timestamp : row) {
+                rowJson.push_back(chrono::duration_cast<chrono::milliseconds>(timestamp.time_since_epoch()).count());
+            }
+            jsonData.push_back(rowJson);
+        }
+
+        // curl to server
+        string url = "127.0.0.1:5432/api/area";
+        string data = jsonData.dump();
+        curl_global_init(CURL_GLOBAL_ALL);
+        CURL *curl = curl_easy_init();
+        if (curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+            // Impostazione del tipo di contenuto della richiesta
+            struct curl_slist *headers = NULL;
+            headers = curl_slist_append(headers, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+        }
+
 
         area_.printPercentage();
         // wait 10 seconds

@@ -80,7 +80,8 @@ add_executable(cc src/control_center/main.cpp
         src/scanning_strategy/Path.cpp
         src/scanning_strategy/BasicStrategy.cpp
         src/scanning_strategy/BasicStrategy.h
-        src/scanning_strategy/config.h
+        src/config.h
+        src/config.cpp
 )
 
 
@@ -90,9 +91,10 @@ add_executable(cc src/control_center/main.cpp
 target_include_directories(cc PRIVATE "/usr/include/hiredis")
 target_include_directories(cc PRIVATE "/usr/include/postgresql")
 target_include_directories(cc PRIVATE "/usr/include/nlohmann")
+target_include_directories(cc PRIVATE "/usr/include/curl")
 
 
-target_link_libraries(cc hiredis pq)
+target_link_libraries(cc hiredis pq curl)
 
 # DRONE
 add_executable(drone src/drone/main.cpp
@@ -112,14 +114,16 @@ add_executable(drone src/drone/main.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
         src/scanning_strategy/Path.cpp
-        src/scanning_strategy/config.h
+        src/config.h
+        src/config.cpp
 )
 
 target_include_directories(drone PRIVATE "/usr/include/hiredis")
 target_include_directories(drone PRIVATE "/usr/include/postgresql")
 target_include_directories(drone PRIVATE "/usr/include/nlohmann")
+target_include_directories(drone PRIVATE "/usr/include/curl")
 
-target_link_libraries(drone hiredis pq)
+target_link_libraries(drone hiredis pq curl)
 
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/area_snapshots")
 
@@ -137,10 +141,10 @@ target_include_directories(server PRIVATE "/usr/include/postgresql")
 target_include_directories(server PRIVATE "/usr/include/nlohmann")
 
 target_include_directories(server PRIVATE "/usr/local/include/sw")
-# Includi cairo per la visulizzazione della mappa
-target_include_directories(server PRIVATE "/usr/include/cairo")
 
-target_link_libraries(server PRIVATE pq)
+target_include_directories(server PRIVATE "/usr/include/curl")
+
+target_link_libraries(server PRIVATE pq curl)
 
 
 
@@ -164,7 +168,8 @@ add_executable(test main.cpp
         src/con2db/pgsql.h
         src/scanning_strategy/Path.h
         src/scanning_strategy/Path.cpp
-        src/scanning_strategy/config.h
+        src/config.h
+        src/config.cpp
 )
 # Includi la directory degli header di Hiredis
 target_include_directories(test PRIVATE "/usr/include/hiredis")
@@ -175,8 +180,10 @@ target_include_directories(test PRIVATE "/usr/include/nlohmann")
 
 target_include_directories(test PRIVATE "/usr/local/include/sw")
 
+target_include_directories(test PRIVATE "/usr/include/curl")
+
 # Linka le librerie Hiredis e PostgreSQL
-target_link_libraries(test PRIVATE hiredis pq)
+target_link_libraries(test PRIVATE hiredis pq curl)
 
 add_dependencies(cc drone)
 

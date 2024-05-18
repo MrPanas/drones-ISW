@@ -13,7 +13,7 @@
 #include "../redis/redis.h"
 #include <future>
 #include <random>
-#include "../scanning_strategy/config.h"
+#include "../config.h"
 
 
 // Forward declaration
@@ -97,7 +97,7 @@ private:
     unsigned int cc_id_{};
     redisContext *ctx_;
     DroneData current_data_{};
-    int autonomy_ = DRONE_AUTONOMY;
+    int autonomy_ = Config::DRONE_STEPS;
     static std::atomic<bool> stopFlag_;
 
     void listenCC();
