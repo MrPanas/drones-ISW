@@ -48,3 +48,16 @@ CREATE TABLE IF NOT EXISTS drone_log (
     FOREIGN KEY (path_id) REFERENCES path (path_id),
     FOREIGN KEY (drone_id) REFERENCES drone (drone_id)
 );
+
+CREATE TABLE IF NOT EXISTS report_image (
+    image_id SERIAL PRIMARY KEY,
+    cc_id int,
+    image_url varchar(255) NOT NULL
+); 
+
+
+
+
+
+
+

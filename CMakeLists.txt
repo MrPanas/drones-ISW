@@ -121,6 +121,8 @@ target_include_directories(drone PRIVATE "/usr/include/nlohmann")
 
 target_link_libraries(drone hiredis pq)
 
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/area_snapshots")
+
 add_executable(server src/server/main.cpp
        src/server/Server.cpp
        src/server/Server.hpp
@@ -180,4 +182,3 @@ add_dependencies(cc drone)
 
 add_dependencies(test cc)
 
-add_executable(test2 main2.cpp)
