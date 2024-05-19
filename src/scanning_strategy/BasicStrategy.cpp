@@ -2,6 +2,10 @@
 
 using namespace std;
 
+BasicStrategy::BasicStrategy() : ScanningStrategy() {
+    cout << "BasicStrategy created" << endl;
+}
+
 vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
     Coordinate cc_pos = {area.getWidth() / 2, area.getHeight() / 2};
     Coordinate current_pos = cc_pos;
@@ -38,33 +42,6 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         // ___________________________
 
         while (true) {
-            // check if the drone reach the end of the area
-            // TODO creare una funzione apposita
-//            switch(current_direction) {
-//                case Direction::EAST:
-//                    if (current_pos.x == area.getWidth() - 1) {
-//                        break; // TODO: questo break chiude il while giusto?
-//                    }
-//                    break;
-//                case Direction::SOUTH:
-//                    if (current_pos.y == area.getHeight() - 1) {
-//                        break;
-//                    }
-//                    break;
-//                case Direction::WEST:
-//                    if (current_pos.x == 0) {
-//                        break;
-//                    }
-//                    break;
-//                case Direction::NORTH:
-//                    if (current_pos.y == 0) {
-//                        break;
-//                    }
-//                    break;
-//            }
-
-
-
             Coordinate next_pos = current_pos;
             if (current_direction == Direction::EAST) {
                 // va a destra
@@ -132,7 +109,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
     }
     return schedules;
 }
-// 77 149 73
+
 
 tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate current_pos, Coordinate next_pos, Coordinate cc_pos, Path& path, bool comeBack) {
     // TODO prova ad andare a next_position se non riesce va dove può e torna al CC e aggiorna anche il path
@@ -191,9 +168,16 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
     return {current_pos, false};
 }
 
+BasicStrategy::~BasicStrategy() {
+    cout << "BasicStrategy destroyed" << endl;
+}
+
+
+
+/*
 int BasicStrategy::manhattanDistance(Coordinate a, Coordinate b) {
     return abs(a.x - b.x) + abs(a.y - b.y);
 }
-
+*/ //TODO: se funziona tutto cancellare
 
 

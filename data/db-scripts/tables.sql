@@ -8,7 +8,7 @@ DO $$
           AND typtype = 'e'
     ) THEN
         -- Crea il tipo ENUM solo se non esiste già
-        CREATE TYPE status AS ENUM ('SCANNING', 'CHARGING', 'MOVING', 'IDLE');
+        CREATE TYPE status AS ENUM ('READY', 'CHARGING', 'WORKING');
     END IF;
 END $$;
 

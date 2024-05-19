@@ -34,13 +34,12 @@ class Area;
  */
 class ScanningStrategy {
 public:
-    virtual ~ScanningStrategy() = default; // Distruttore virtuale per la classe astratta
-    virtual vector<DroneSchedule> createSchedules(Area area);
-    tuple<Coordinate, int> getAvailableCoord(int autonomy, Coordinate current_position, Coordinate next_position, Coordinate cc_pos);
-    tuple<Coordinate, int> goSouth(int autonomy, Coordinate current_position, Coordinate end, Coordinate cc_pos);
-    Path returnToCC(int autonomy, Coordinate current_position, Coordinate cc_pos);
+    virtual ~ScanningStrategy() {}; // Distruttore virtuale per la classe astratta
+    virtual vector<DroneSchedule> createSchedules(Area area) = 0;
 
-    int manhattanDistance(Coordinate a, Coordinate b);
+    int manhattanDistance(Coordinate a, Coordinate b) {
+        return abs(a.x - b.x) + abs(a.y - b.y);
+    }
 };
 
 
