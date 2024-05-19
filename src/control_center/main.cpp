@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
      */
 
 
-    Area area = Area(100, 100);
+    Area area = Area(300, 300);
 
     BasicStrategy strategy = BasicStrategy();
 
@@ -49,6 +49,8 @@ int main(int argc, char *argv[]) {
     cout << "Schedules calculated" << endl;
 
     cout << "Schedules length: " << schedules.size() << endl;
+
+    return 0;
 
     // initialize grid 300*300
     vector<vector<int>> grid(300, vector<int>(300, 0));
@@ -99,7 +101,6 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < 300; i++) {
         for (int j = 0; j < 300; j++) {
             if (grid[i][j] == 0) {
-                cout << "x: " << i << " y: " << j << endl;
                 continue;
             }
         }

@@ -91,7 +91,6 @@ void http_session::handle_return_report() {
     send_not_found();
   }
 }
-
 void http_session::handle_request_report() {
 
   auto request_json = json::parse(request_.body());
@@ -159,6 +158,22 @@ void http_session::handle_request_report() {
   response_.body() = R"({"message": "CSV file created successfully"})";
   response_.prepare_payload();
   do_write();
+
+  // Delete the second most recent image if it exists
+  snprintf(sqlcmd, sizeof(sqlcmd),
+           "SELECT image_url FROM report_image WHERE cc_id = %d ORDER BY "
+           "image_id DESC LIMIT 1 OFFSET 1",
+           cc_id);
+
+  res = db.ExecSQLtuples(sqlcmd);
+  if (PQntuples(res) > 0) {
+    char *second_image_url = PQgetvalue(res, 0, PQfnumber(res, "image_url"));
+    std::string second_full_path = second_image_url;
+    if (std::filesystem::exists(second_full_path)) {
+      std::filesystem::remove(second_full_path);
+    }
+  }
+  PQclear(res);
 }
 
 void http_session::send_not_found() {
