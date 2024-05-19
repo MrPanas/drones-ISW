@@ -35,7 +35,6 @@ void Con2DB::finish() {
 
   PQfinish(conn);
   conn = NULL;
-  exit(1);
 }
 
 /* use this for commands returning no data, e.g. INSERT */
