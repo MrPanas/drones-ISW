@@ -21,9 +21,7 @@
 
 // TODO: documentare il codice
 // TODO: rendere BasicStrategy -> ScanningStrategy
-
-/* ---------------- PUBLIC METHODS ---------------- */
-/* ------ Constructors ------ */
+// TODO PER PATRYK: ControlCenter.hpp NON DEVONO ESSERCI LE FUNZIONI IMPLEMENTATE, MA SOLO LE FIRME
 
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
     listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
