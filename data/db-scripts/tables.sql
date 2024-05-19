@@ -1,4 +1,16 @@
-CREATE TYPE status AS ENUM ('SCANNING', 'CHARGING', 'MOVING', 'IDLE');
+DO $$
+   BEGIN
+    -- Verifica se il tipo ENUM esiste già
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_type
+        WHERE typname = 'status'
+          AND typtype = 'e'
+    ) THEN
+        -- Crea il tipo ENUM solo se non esiste già
+        CREATE TYPE status AS ENUM ('SCANNING', 'CHARGING', 'MOVING', 'IDLE');
+    END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS area (
     width int,
@@ -26,6 +38,7 @@ CREATE TABLE IF NOT EXISTS path (
     path text
 );
 
+/*
 CREATE TABLE IF NOT EXISTS cc_log (
     cc_log_id int PRIMARY KEY,
     drone_id  int,
@@ -46,6 +59,7 @@ CREATE TABLE IF NOT EXISTS area_log (
     time_unchecked bigint,
     FOREIGN KEY (area_width, area_height) REFERENCES area (width, height)
 );
+*/
 
 CREATE TABLE IF NOT EXISTS drone_log (
     log_id SERIAL PRIMARY KEY,
