@@ -42,6 +42,8 @@ private:
   void handle_get_report(int cc_id);
   void send_not_found();
   void do_write();
+  int get_area_id(int cc_id);
+  void insert_area_log(int area_id, float coverage);
 
   void prepare_response(http::status status, const std::string &body,
                         const std::string &content_type);

@@ -68,11 +68,19 @@ void http_session::process_request() {
 void http_session::handle_post_report() {
   auto request_json = json::parse(request_.body());
 
+  //  Parse Body
   auto grid_last_visited =
       request_json.at("area").get<std::vector<std::vector<long>>>();
   auto cc_id = request_json.at("cc-id").get<int>();
+  auto area_coverage = request_json.at("area_percentage").get<float>();
 
   std::string csv_file_path = create_csv_file(cc_id, grid_last_visited);
+
+  int area_id = get_area_id(cc_id);
+
+  if (area_id >= 0) {
+    insert_area_log(area_id, area_coverage);
+  }
 
   snprintf(sqlcmd_, sizeof(sqlcmd_),
            "INSERT INTO report_image (cc_id, image_url) VALUES (%d, '%s')",
@@ -96,7 +104,6 @@ void http_session::handle_post_report() {
   }
   db_.finish();
 }
-
 /**
  * @brief Handle GET request to return the latest report and delete the second
  * most recent image
@@ -255,6 +262,52 @@ void http_session::delete_image_file(const std::string &file_path) {
   if (std::filesystem::exists(file_path)) {
     std::filesystem::remove(file_path);
   }
+}
+
+/**
+ * @brief Retrieve area_id for a given cc
+ *
+ * @param  cc_id
+ * @return area_id or -1 if not found
+ */
+int http_session::get_area_id(int cc_id) {
+  snprintf(sqlcmd_, sizeof(sqlcmd_),
+           "SELECT area.id FROM control_center INNER JOIN area ON area.id = "
+           "control_center.area_id WHERE control_center.id = %d",
+           cc_id);
+
+  PGresult *res = db_.ExecSQLtuples(sqlcmd_);
+
+  int area_id = -1;
+
+  if (PQntuples(res) > 0) {
+    area_id = strtol(PQgetvalue(res, 0, PQfnumber(res, "id")), NULL, 10);
+  }
+  PQclear(res);
+
+  return area_id;
+}
+
+/**
+ * @brief Retrieve area_id for a given cc
+ *
+ * @param  area_id
+ * @param  coverage
+ * @throws std::runtime_error if insertion fails
+ */
+void http_session::insert_area_log(int area_id, float coverage) {
+
+  snprintf(sqlcmd_, sizeof(sqlcmd_),
+           "INSERT INTO area_log (area_id, percentage, time) VALUES (%d, %.6f, "
+           "now())",
+           area_id, coverage);
+
+  PGresult *res = db_.ExecSQLcmd(sqlcmd_);
+  if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+    PQclear(res);
+    throw std::runtime_error("Failed to insert log into area_log table");
+  }
+  PQclear(res);
 }
 
 /**
