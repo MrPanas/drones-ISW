@@ -1,19 +1,28 @@
 #include "Session.hpp"
-#include <fstream>
-#include <iostream>
-#include <nlohmann/json.hpp>
 #include <ostream>
-#include <postgresql/libpq-fe.h>
 
 using tcp = boost::asio::ip::tcp;    // from <boost/asio/ip/tcp.hpp>
 namespace http = boost::beast::http; // from <boost/beast/http.hpp>
-namespace beast = boost::beast;      // from <boost/beast/core.hpp>
-using json = nlohmann::json;
+namespace beast =
+    boost::beast; // from <boost/beast/core.hpp> using json = nlohmann::json;
 
-http_session::http_session(tcp::socket socket) : socket_(std::move(socket)) {}
+/**
+ * @brief Construct a new http session::http session object
+ *
+ * @param socket TCP socket for the session
+ */
+http_session::http_session(tcp::socket socket)
+    : socket_(std::move(socket)),
+      db_("postgres", "5432", "postgres", "postgres", "postgres") {}
 
+/**
+ * @brief Start the session by reading from the socket
+ */
 void http_session::run() { do_read(); }
 
+/**
+ * @brief Asynchronously read the HTTP request from the socket
+ */
 void http_session::do_read() {
   auto self = shared_from_this();
   auto parser = std::make_shared<http::request_parser<http::string_body>>();
@@ -34,39 +43,70 @@ void http_session::do_read() {
       });
 }
 
+/**
+ * @brief Process the HTTP request and route it to the appropriate handler
+ */
 void http_session::process_request() {
   if (request_.method() == http::verb::post && request_.target() == "/report") {
-    handle_request_report();
+    handle_post_report();
   } else if (request_.method() == http::verb::get &&
              request_.target() == "/report") {
-
-    handle_return_report();
-
+    handle_get_report();
   } else {
     send_not_found();
   }
 }
 
-void http_session::handle_return_report() {
+/**
+ * @brief Handle POST request to create a report
+ */
+void http_session::handle_post_report() {
   auto request_json = json::parse(request_.body());
+
+  auto grid_last_visited =
+      request_json.at("area").get<std::vector<std::vector<long>>>();
   auto cc_id = request_json.at("cc-id").get<int>();
 
-  Con2DB db("postgres", "5432", "postgres", "postgres", "postgres");
-  char sqlcmd[512];
-  snprintf(sqlcmd, sizeof(sqlcmd),
-           "SELECT image_url FROM report_image WHERE cc_id = %d ORDER BY "
-           "image_id DESC LIMIT 1",
-           cc_id);
+  std::string csv_file_path = create_csv_file(cc_id, grid_last_visited);
 
-  PGresult *res = db.ExecSQLtuples(sqlcmd);
-  if (PQntuples(res) > 0) {
-    char *image_url = PQgetvalue(res, 0, PQfnumber(res, "image_url"));
-    std::string full_path = image_url;
+  snprintf(sqlcmd_, sizeof(sqlcmd_),
+           "INSERT INTO report_image (cc_id, image_url) VALUES (%d, '%s')",
+           cc_id, csv_file_path.c_str());
 
+  PGresult *res = db_.ExecSQLcmd(sqlcmd_);
+  if (PQresultStatus(res) != PGRES_COMMAND_OK) {
     PQclear(res);
+    throw std::runtime_error("Failed to insert record into report_image table");
+  }
+  PQclear(res);
 
+  prepare_response(http::status::created,
+                   R"({"message": "CSV file created successfully"})",
+                   "application/json");
+  do_write();
+}
+
+/**
+ * @brief Handle GET request to return the latest report and delete the second
+ * most recent image
+ */
+void http_session::handle_get_report() {
+
+  std::string path = request_.target().to_string();
+  std::size_t pos = path.find_last_of('/');
+  if (pos == std::string::npos) {
+    send_not_found();
+  }
+
+  int cc_id = std::stoi(path.substr(pos + 1));
+
+  std::cout << "We retrive CC_ID: " << cc_id << std::endl;
+
+  std::string latest_image_path = get_image_url(cc_id, 0);
+
+  if (!latest_image_path.empty()) {
     // Open CSV file for reading
-    std::ifstream csv_file(full_path);
+    std::ifstream csv_file(latest_image_path);
     if (!csv_file.is_open()) {
       throw std::runtime_error("Failed to open CSV file for reading");
     }
@@ -78,37 +118,102 @@ void http_session::handle_return_report() {
     csv_file.close();
 
     // Set up the HTTP response
-    response_.version(request_.version());
-    response_.keep_alive(request_.keep_alive());
-    response_.result(http::status::ok);
-    response_.set(http::field::server, "Beast/Boost");
-    response_.set(http::field::content_type, "text/csv");
-    response_.body() = csv_content;
-    response_.prepare_payload();
+    prepare_response(http::status::ok, csv_content, "text/csv");
     do_write();
+
+    // Delete the second most recent image if it exists
+    std::string second_image_path = get_image_url(cc_id, 1);
+    if (!second_image_path.empty()) {
+      delete_image_file(second_image_path);
+    }
   } else {
-    PQclear(res);
     send_not_found();
   }
 }
-void http_session::handle_request_report() {
 
-  auto request_json = json::parse(request_.body());
+/**
+ * @brief Prepare the HTTP response with the given status, body, and content
+ * type
+ *
+ * @param status HTTP status code
+ * @param body Response body
+ * @param content_type Content type of the response
+ */
+void http_session::prepare_response(http::status status,
+                                    const std::string &body,
+                                    const std::string &content_type) {
+  response_.version(request_.version());
+  response_.keep_alive(request_.keep_alive());
+  response_.result(status);
+  response_.set(http::field::server, "Beast/Boost");
+  response_.set(http::field::content_type, content_type);
+  response_.body() = body;
+  response_.prepare_payload();
+}
 
-  auto grid_last_visited =
-      request_json.at("area").get<std::vector<std::vector<long>>>();
-  auto cc_id = request_json.at("cc-id").get<int>();
+/**
+ * @brief Get the image URL from the database
+ *
+ * @param cc_id Control Center ID
+ * @param offset Offset for the image (0 for latest, 1 for second latest)
+ * @return std::string Image URL
+ */
+std::string http_session::get_image_url(int cc_id, int offset) {
+  snprintf(sqlcmd_, sizeof(sqlcmd_),
+           "SELECT image_url FROM report_image WHERE cc_id = %d ORDER BY "
+           "image_id DESC LIMIT 1 OFFSET %d",
+           cc_id, offset);
 
+  PGresult *res = db_.ExecSQLtuples(sqlcmd_);
+  std::string image_url;
+  if (PQntuples(res) > 0) {
+    image_url = PQgetvalue(res, 0, PQfnumber(res, "image_url"));
+  }
+  PQclear(res);
+  return image_url;
+}
+
+/**
+ * @brief Write data to a CSV file
+ *
+ * @param file_path Path to the CSV file
+ * @param data Data to write
+ */
+void http_session::write_csv_file(const std::string &file_path,
+                                  const std::vector<std::vector<long>> &data) {
+  std::ofstream csv_file(file_path);
+  if (!csv_file.is_open()) {
+    throw std::runtime_error("Failed to open CSV file for writing");
+  }
+
+  for (const auto &row : data) {
+    for (size_t i = 0; i < row.size(); ++i) {
+      csv_file << row[i];
+      if (i != row.size() - 1) {
+        csv_file << ",";
+      }
+    }
+    csv_file << "\n";
+  }
+  csv_file.close();
+}
+
+/**
+ * @brief Create a CSV file for the report
+ *
+ * @param cc_id Control Center ID
+ * @param grid_last_visited Data to write to the CSV
+ * @return std::string Path to the created CSV file
+ */
+std::string http_session::create_csv_file(
+    int cc_id, const std::vector<std::vector<long>> &grid_last_visited) {
   int last_inserted_image_id = 0;
-  Con2DB db("postgres", "5432", "postgres", "postgres", "postgres");
-  char sqlcmd[512];
   snprintf(
-      sqlcmd, sizeof(sqlcmd),
+      sqlcmd_, sizeof(sqlcmd_),
       "SELECT max(image_id) AS image_id FROM report_image WHERE cc_id = %d",
       cc_id);
 
-  PGresult *res = db.ExecSQLtuples(sqlcmd);
-
+  PGresult *res = db_.ExecSQLtuples(sqlcmd_);
   if (PQntuples(res) > 0) {
     char *image_id_str = PQgetvalue(res, 0, PQfnumber(res, "image_id"));
     if (image_id_str != NULL) {
@@ -121,73 +226,34 @@ void http_session::handle_request_report() {
   csv_file_path << "./area_snapshots/report_" << cc_id << "image_"
                 << last_inserted_image_id << ".csv";
 
-  // Open CSV file for writing
-  std::ofstream csv_file(csv_file_path.str());
-  if (!csv_file.is_open()) {
-    throw std::runtime_error("Failed to open CSV file for writing");
-  }
-
-  // Write the array to the CSV file
-  for (const auto &row : grid_last_visited) {
-    for (size_t i = 0; i < row.size(); ++i) {
-      csv_file << row[i];
-      if (i != row.size() - 1) {
-        csv_file << ",";
-      }
-    }
-    csv_file << "\n";
-  }
-  csv_file.close();
-
-  snprintf(sqlcmd, sizeof(sqlcmd),
-           "INSERT INTO report_image (cc_id, image_url) VALUES (%d, '%s')",
-           cc_id, csv_file_path.str().c_str());
-
-  res = db.ExecSQLcmd(sqlcmd);
-  if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-    PQclear(res);
-    throw std::runtime_error("Failed to insert record into report_image table");
-  }
-  PQclear(res);
-
-  response_.version(request_.version());
-  response_.keep_alive(request_.keep_alive());
-  response_.result(http::status::created);
-  response_.set(http::field::server, "Beast/Boost");
-  response_.set(http::field::content_type, "application/json");
-  response_.body() = R"({"message": "CSV file created successfully"})";
-  response_.prepare_payload();
-  do_write();
-
-  // Delete the second most recent image if it exists
-  snprintf(sqlcmd, sizeof(sqlcmd),
-           "SELECT image_url FROM report_image WHERE cc_id = %d ORDER BY "
-           "image_id DESC LIMIT 1 OFFSET 1",
-           cc_id);
-
-  res = db.ExecSQLtuples(sqlcmd);
-  if (PQntuples(res) > 0) {
-    char *second_image_url = PQgetvalue(res, 0, PQfnumber(res, "image_url"));
-    std::string second_full_path = second_image_url;
-    if (std::filesystem::exists(second_full_path)) {
-      std::filesystem::remove(second_full_path);
-    }
-  }
-  PQclear(res);
+  write_csv_file(csv_file_path.str(), grid_last_visited);
+  return csv_file_path.str();
 }
 
+/**
+ * @brief Delete an image file
+ *
+ * @param file_path Path to the image file
+ */
+void http_session::delete_image_file(const std::string &file_path) {
+  if (std::filesystem::exists(file_path)) {
+    std::filesystem::remove(file_path);
+  }
+}
+
+/**
+ * @brief Send a 404 Not Found response
+ */
 void http_session::send_not_found() {
   std::cout << "Sending not found response" << std::endl;
-  response_.version(request_.version());
-  response_.keep_alive(request_.keep_alive());
-  response_.result(http::status::not_found);
-  response_.set(http::field::server, "Beast/Boost");
-  response_.set(http::field::content_type, "application/json");
-  response_.body() = R"({"error": "Not Found"})";
-  response_.prepare_payload();
+  prepare_response(http::status::not_found, R"({"error": "Not Found"})",
+                   "application/json");
   do_write();
 }
 
+/**
+ * @brief Asynchronously write the HTTP response to the socket
+ */
 void http_session::do_write() {
   auto self = shared_from_this();
   std::cout << "Writing response" << std::endl;
