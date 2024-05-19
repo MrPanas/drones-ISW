@@ -19,19 +19,19 @@ using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 class http_session : public std::enable_shared_from_this<http_session> {
 public:
-    explicit http_session(tcp::socket socket);
-    void run();
+  explicit http_session(tcp::socket socket);
+  void run();
 
 private:
-    tcp::socket socket_;
-    beast::flat_buffer buffer_; // Buffer for reading, must be persisted
-    http::request<http::string_body> request_;
-    http::response<http::string_body> response_;
+  tcp::socket socket_;
+  beast::flat_buffer buffer_; // Buffer for reading, must be persisted
+  http::request<http::string_body> request_;
+  http::response<http::string_body> response_;
 
-    void do_read();
-    void process_request();
-    void handle_request_report();
-    void handle_return_report();
+  void do_read();
+  void process_request();
+  void handle_request_report();
+  void handle_return_report();
   void send_not_found();
   void do_write();
 };
