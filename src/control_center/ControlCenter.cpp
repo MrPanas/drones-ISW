@@ -1,10 +1,6 @@
 #include <iostream>
 #include <utility>
 #include "ControlCenter.hpp"
-#include "../redis/redis.h"
-
-
-
 
 /*
  * Control Center must:
@@ -21,8 +17,17 @@
 
 // TODO: documentare il codice
 // TODO: rendere BasicStrategy -> ScanningStrategy
-// TODO PER PATRYK: ControlCenter.hpp NON DEVONO ESSERCI LE FUNZIONI IMPLEMENTATE, MA SOLO LE FIRME
 
+/* --------------- PUBLIC METHODS --------------- */
+/* ------ Constructors ------ */
+
+/**
+ * @brief Construct a new Control Center with the given id and number of drones. \n
+ * It also connects to the redis server and postgres database. \n
+ * Moreover, it recreates his group and stream in the redis server.
+ * @param id unsigned int that represents the id of the control center.
+ * @param num_drones  unsigned int that represents the number of drones that the control center must wait for.
+ */
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
     listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (listener_ctx_ == NULL || listener_ctx_->err) {
@@ -58,6 +63,16 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
 
 }
 
+/**
+ * @brief Construct a new Control Center with the given id, number of drones, strategy and area. \n
+ * It also connects to the redis server and postgres database. \n
+ * Moreover, it recreates his group and stream in the redis server. \n
+ * It also inserts itself and the area in the database.
+ * @param id unsigned int that represents the id of the control center.
+ * @param num_drones unsigned int that represents the number of drones that the control center must wait for.
+ * @param strategy BasicStrategy used to compute the paths for the drones.
+ * @param area Area that represents the area where the drones must scan.
+ */
 ControlCenter::ControlCenter(unsigned int id,
                              unsigned int num_drones,
                              BasicStrategy *strategy,
@@ -84,6 +99,10 @@ ControlCenter::ControlCenter(unsigned int id,
 }
 
 /* ------ Destructor ------ */
+/**
+ * @brief Destroy the Control Center object. \n
+ * It destroys the group and stream in the redis server and frees the redis context.
+ */
 ControlCenter::~ControlCenter() {
     // Destroy Group
     Redis::destroyGroup(listener_ctx_, "cc_" + to_string(id_), "CC_" + to_string(id_));
@@ -96,18 +115,31 @@ ControlCenter::~ControlCenter() {
 
 
 /* ------ Getters ------ */
+/**
+ * @brief Get the position of the Control Center in the area.
+ * @return Coordinate that represents the position of the Control Center.
+ */
 Coordinate ControlCenter::getCCPosition() {
     return Coordinate{area_.getWidth() / 2, area_.getHeight() / 2};
 }
 
 
 /* ------ Setters ------ */
+/**
+ * @brief Set the strategy of the Control Center.
+ * @param strategy BasicStrategy used to compute the paths for the drones
+ */
 void ControlCenter::setStrategy(BasicStrategy *strategy) {
     strategy_ = strategy;
 }
 
 
 /* ------ Actions ------ */
+/**
+ * @brief Start the Control Center. \n
+ * It initializes the drones, starts the threads to listen for the drones and send the paths to the drones. \n
+ * It also starts a thread to print the area status every 10 seconds.
+ */
 void ControlCenter::start() {
     cout << "ControlCenter::start: Starting Control Center" << endl;
     initDrones();
@@ -135,6 +167,10 @@ void ControlCenter::start() {
     cout << "ControlCenter::start: Stopped Control Center" << endl;
 }
 
+/**
+ * @brief Stop the Control Center. \n
+ * It sends a stop message to all the drones and a quit message to itself. \n
+ */
 void ControlCenter::stop() {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     cout << "ControlCenter::stop: Stopping Control Center" << endl;
@@ -171,6 +207,12 @@ void ControlCenter::stop() {
 /* ---------------- PRIVATE METHODS ---------------- */
 
 /* ------ Drones ------ */
+/**
+ * @brief Initialize the drones. \n
+ * It waits for the drones to send their position and state. \n
+ * It sends the position of the Control Center to the drones. \n
+ * It updates the database with the drones' information.
+ */
 void ControlCenter::initDrones() {
     const string stream = "cc_" + to_string(id_);
     const string group = "CC_" + to_string(id_);
@@ -238,6 +280,11 @@ void ControlCenter::initDrones() {
     assert(readyDrones_.size() == num_drones_);
 }
 
+/**
+ * @brief Send the paths to the drones. \n
+ * Takes the schedules/path from the strategy, connects to redis and opens a thread for each schedule.\n
+ * Than waits threads to finish.
+ */
 void ControlCenter::sendPaths() {
     // Open thread for each schedule
 
@@ -270,6 +317,13 @@ void ControlCenter::sendPaths() {
     }
 }
 
+/**
+ * @brief Handle the schedule of a drone. \n
+ * It sends the path to the drone and waits for the next send. \n
+ * It also updates the database with the drone's information.
+ * @param schedule DroneSchedule that contains the path, the path id and the next send time.
+ * @param ctx redisContext used to send the path to the drone.
+ */
 void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
     int pathId = get<0>(schedule);
     Path path = get<1>(schedule);
@@ -309,7 +363,7 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
 
         addDroneToWorking(droneData);
 
-        string query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
+        query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
                        to_string(droneData.id) + ", " +
                        to_string(id_) + ", " +
                        "NOW(), " +
@@ -339,6 +393,11 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
 
 }
 
+/**
+ * @brief Listen for the drones. \n
+ * Makes a request to the redis server to read the messages from his group. \n
+ * Than for each message it processes it and deletes it from the stream.
+ */
 void ControlCenter::listenDrones() {
     const string stream = "cc_" + to_string(id_);
     const string group = "CC_" + to_string(id_);
@@ -366,7 +425,7 @@ void ControlCenter::listenDrones() {
                 break;
             }
 
-            this->processMessage(message);
+            processMessage(message);
 
             // Delete message from the stream
             long n_delete = Redis::deleteMessage(listener_ctx_, stream, messageId);
@@ -379,6 +438,12 @@ void ControlCenter::listenDrones() {
     cout  << "ControlCenter::listenDrones: Stopped listening for drones" << endl;
 }
 
+/**
+ * @brief Process the message received from the drones. \n
+ * It updates the database with the drone's information and the area. \n
+ * It also updates the drone's status in the lists.
+ * @param message Redis::Message that contains the information of the drone.
+ */
 void ControlCenter::processMessage(Redis::Message message) {
 
     // Create a DroneData object from the message
@@ -409,18 +474,18 @@ void ControlCenter::processMessage(Redis::Message message) {
     // else changedState == true
 
     // insertDroneLog(droneData);
+    query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
+            to_string(droneData.id) + ", " +
+            to_string(id_) + ", " +
+            "NOW(), " +
+            "-1, ";
 
     switch (droneData.state) {
         case DroneState::READY:
             if (removeDroneFromCharging(droneData)) {
                 addDroneToReady(droneData);
             }
-            query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
-                    to_string(droneData.id) + ", " +
-                    to_string(id_) + ", " +
-                    "NOW(), " +
-                    "-1, " +
-                    "'READY');";
+            query += "'READY');";
             executeQuery(query);
 
             break;
@@ -431,12 +496,7 @@ void ControlCenter::processMessage(Redis::Message message) {
             if (removeDroneFromWorking(droneData)) {
                 addDroneToCharging(droneData);
             }
-            query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
-                    to_string(droneData.id) + ", " +
-                    to_string(id_) + ", " +
-                    "NOW(), " +
-                    "-1, " +
-                    "'CHARGING');";
+            query += "'CHARGING');";
             executeQuery(query);
             break;
         default:
@@ -447,7 +507,10 @@ void ControlCenter::processMessage(Redis::Message message) {
 }
 
 /* ------ Area ------ */
-
+/**
+ * @brief Print the area status. \n
+ * It sends the area status to the server every 10 seconds.
+ */
 void ControlCenter::printAreaStatus() {
     while (!interrupt_.load()){
 
@@ -516,7 +579,11 @@ void ControlCenter::printAreaStatus() {
 
 
 /* ------ DB ------ */
-
+/**
+ * @brief Execute the query in the database. \n
+ * It locks the query_mutex_ before executing the query.
+ * @param query string that contains the query to execute.
+ */
 void ControlCenter::executeQuery(const std::string &query) {
     std::lock_guard<std::mutex> lock(query_mutex_);
     conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
@@ -538,21 +605,42 @@ void ControlCenter::insertDroneLog(DroneData data) {
 
 
 /* ------ List Mutex ------ */
+/**
+ * @brief Add a drone to the working drones list. \n
+ * It locks the lists_mutex_ before adding the drone to the list.
+ * @param drone DroneData that represents the drone to add.
+ */
 void ControlCenter::addDroneToWorking(const DroneData &drone) {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     workingDrones_.push_back(drone);
 }
 
+/**
+ * @brief Add a drone to the charging drones list. \n
+ * It locks the lists_mutex_ before adding the drone to the list.
+ * @param drone DroneData that represents the drone to add.
+ */
 void ControlCenter::addDroneToCharging(const DroneData &drone) {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     chargingDrones_.push_back(drone);
 }
 
+/**
+ * @brief Add a drone to the ready drones list. \n
+ * It locks the lists_mutex_ before adding the drone to the list.
+ * @param drone DroneData that represents the drone to add.
+ */
 void ControlCenter::addDroneToReady(const DroneData &drone) {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     readyDrones_.push_back(drone);
 }
 
+/**
+ * @brief Remove a drone from the working drones list. \n
+ * It locks the lists_mutex_ before removing the drone from the list.
+ * @param droneToRemove DroneData that represents the drone to remove.
+ * @return true if the drone is removed, false otherwise.
+ */
 bool ControlCenter::removeDroneFromWorking(const DroneData &droneToRemove) {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     auto it =
@@ -564,6 +652,12 @@ bool ControlCenter::removeDroneFromWorking(const DroneData &droneToRemove) {
     return false;
 }
 
+/**
+ * @brief Remove a drone from the charging drones list. \n
+ * It locks the lists_mutex_ before removing the drone from the list.
+ * @param droneToRemove DroneData that represents the drone to remove.
+ * @return true if the drone is removed, false otherwise.
+ */
 bool ControlCenter::removeDroneFromCharging(const DroneData &droneToRemove) {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     auto it = std::find(chargingDrones_.begin(), chargingDrones_.end(),
@@ -575,6 +669,11 @@ bool ControlCenter::removeDroneFromCharging(const DroneData &droneToRemove) {
     return false;
 }
 
+/**
+ * @brief Remove a drone from the ready drones list. \n
+ * It locks the lists_mutex_ before removing the drone from the list.
+ * @return DroneData that represents the drone removed.
+ */
 DroneData ControlCenter::removeDroneFromReady() {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     if (readyDrones_.empty()) {

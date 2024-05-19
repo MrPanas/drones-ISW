@@ -56,23 +56,62 @@ public:
 
 private:
     // Connections
+    /**
+     * @brief Connection to the database
+     */
     Con2DB conn_;
+    /**
+     * @brief mutex for the database connection
+     */
     mutex query_mutex_;
+    /**
+     * @brief Connection to the redis server for listening to the drones
+     */
     redisContext *listener_ctx_{};
+    /**
+     * @brief Connection to the redis server for sending commands to the drones
+     */
     redisContext *sender_ctx_{};
 
     // CC Data
+    /**
+     * @brief ID of the control center
+     */
     const unsigned int id_;
+    /**
+     * @brief Strategy used by the control center to create the paths
+     */
     BasicStrategy *strategy_{};
+    /**
+     * @brief Area to be scanned
+     */
     Area area_ = Area(0, 0);
 
     // For Handling drones
+    /**
+     * @brief Number of drones controlled by the control center
+     */
     unsigned int num_drones_;
+    /**
+     * @brief mutex for accessing the drones lists
+     */
     std::mutex lists_mutex_;
+    /**
+     * @brief List of drones currently working
+     */
     std::deque<DroneData> workingDrones_;
+    /**
+     * @brief List of drones currently charging
+     */
     std::deque<DroneData> chargingDrones_;
+    /**
+     * @brief List of drones ready to work
+     */
     std::deque<DroneData> readyDrones_;
 
+    /**
+     * @brief Atomic variable used to interrupt the control center
+     */
     std::atomic<bool> interrupt_{false};
 
     /* --- PRIVATE METHODS --- */
