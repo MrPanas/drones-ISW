@@ -47,13 +47,20 @@ void http_session::do_read() {
  * @brief Process the HTTP request and route it to the appropriate handler
  */
 void http_session::process_request() {
+  std::string target = std::string(request_.target());
+
   if (request_.method() == http::verb::post && request_.target() == "/report") {
     handle_post_report();
-  } else if (request_.method() == http::verb::get &&
-             request_.target() == "/report") {
-    handle_get_report();
-  } else {
-    send_not_found();
+  } else if (request_.method() == http::verb::get) {
+    std::regex get_report_regex("^/report/(\\d+)$");
+    std::smatch match;
+    if (std::regex_match(target, match, get_report_regex)) {
+      std::cout << "Handling GET request for /report with id: " << match[1]
+                << std::endl;
+      handle_get_report(std::stoi(match[1]));
+    } else {
+      send_not_found();
+    }
   }
 }
 
@@ -90,15 +97,7 @@ void http_session::handle_post_report() {
  * @brief Handle GET request to return the latest report and delete the second
  * most recent image
  */
-void http_session::handle_get_report() {
-
-  std::string path = std::string(request_.target());
-  std::size_t pos = path.find_last_of('/');
-  if (pos == std::string::npos) {
-    send_not_found();
-  }
-
-  int cc_id = std::stoi(path.substr(pos + 1));
+void http_session::handle_get_report(int cc_id) {
 
   std::cout << "We retrive CC_ID: " << cc_id << std::endl;
 

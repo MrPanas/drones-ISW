@@ -14,6 +14,7 @@
 #include <nlohmann/json_fwd.hpp>
 #include <ostream>
 #include <postgresql/libpq-fe.h>
+#include <regex>
 #include <string>
 
 namespace beast = boost::beast; // from <boost/beast.hpp>
@@ -38,7 +39,7 @@ private:
   void do_read();
   void process_request();
   void handle_post_report();
-  void handle_get_report();
+  void handle_get_report(int cc_id);
   void send_not_found();
   void do_write();
 
