@@ -39,8 +39,6 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Premi Ctrl+C per generare un segnale di interruzione." << std::endl;
 
-
-
     // Default values
     int height = -1;
     int width = -1;
