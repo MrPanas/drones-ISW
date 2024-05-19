@@ -22,15 +22,13 @@
 // TODO: documentare il codice
 // TODO: rendere BasicStrategy -> ScanningStrategy
 // area [X]
-// area log
+// area log [Da cancellare la tabella]
 // cc log [Da cancellare la tabella]
 // cc [X]
-// drone []
+// drone [X]
 // drone log [X]
 // path [X]
 // report_image
-
-// ricordare di cancellare tutte le tabelle prima di testare
 
 ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
     listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
@@ -77,7 +75,8 @@ ControlCenter::ControlCenter(unsigned int id,
     // Insert the area in the database
     string query = "INSERT INTO area (width, height) VALUES (" +
                     to_string(area_.getWidth()) +
-                    ", " + to_string(area_.getHeight()) + ");";
+                    ", " + to_string(area_.getHeight()) + ")"
+                    " ON CONFLICT (width, height) DO UPDATE SET width = EXCLUDED.width, height = EXCLUDED.height;";
     conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
     cout << "ControlCenter::ControlCenter: insert in Area executed" << endl;
 
@@ -85,7 +84,8 @@ ControlCenter::ControlCenter(unsigned int id,
     query = "INSERT INTO control_center (cc_id, area_width, area_height) VALUES (" +
             to_string(id_) + ", " +
             to_string(area_.getWidth()) + ", " +
-            to_string(area_.getHeight()) + ");";
+            to_string(area_.getHeight()) + ")"
+            " ON CONFLICT (cc_id) DO UPDATE SET area_width = EXCLUDED.area_width, area_height = EXCLUDED.area_height;";
     conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
     cout << "ControlCenter::ControlCenter: insert in ControlCenter executed" << endl;
 }
@@ -123,14 +123,11 @@ void ControlCenter::processMessage(Redis::Message message) {
 
     string query;
     // aggiorna le informazioni del drone
-    query = "INSERT INTO drone (drone_id, battery, status, cc_id) VALUES (" +
-                   to_string(droneData.id) + ", " +
-                   to_string(droneData.battery) + ", '" +
-                   to_string(droneData.state) + "', " +
-                   to_string(id_) + ") ON CONFLICT (drone_id) " +
-                   "DO UPDATE SET battery = EXCLUDED.battery, " +
-                   "status = EXCLUDED.status;";
+    query = "UPDATE drone SET battery = " + to_string(droneData.battery) + ", " +
+             "status = '" + to_string(droneData.state) + "' " +
+             "WHERE drone_id = " + to_string(droneData.id) + ";";
     conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+    cout << "ControlCenter::listenDrones: update in Drone executed" << endl;
 
     if (!changedState) {
         return;
@@ -393,10 +390,11 @@ void ControlCenter::initDrones() {
         string query = "INSERT INTO drone (drone_id, battery, status, cc_id) VALUES (" +
                        to_string(droneData.id) + ", " +
                        to_string(droneData.battery) + ", '" +
-                       to_string(droneData.state) + ", " +
-                       to_string(id_) + "') ON CONFLICT (drone_id) " +
+                       to_string(droneData.state) + "', " + // Aggiunto il singolo apice mancante qui
+                       to_string(id_) + ") ON CONFLICT (drone_id) " +
                        "DO UPDATE SET battery = EXCLUDED.battery, " +
                        "status = EXCLUDED.status;";
+
 
         conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
         cout << "ControlCenter::initDrones: insert in Drone executed" << endl;
@@ -459,7 +457,11 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
 
     string pathStr = path.toString();
 
-    string query = "INSERT INTO path (path_id, path) VALUES (" + to_string(pathId) + ", '" + pathStr + "');";
+    string query = "INSERT INTO path (id, path) "
+                   "VALUES (" + to_string(pathId) + ", '" + pathStr + "') "
+                   "ON CONFLICT (id) "
+                   "DO UPDATE SET path = EXCLUDED.path;";
+
     conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
     cout << "ControlCenter::handleSchedule: insert in Path executed" << endl;
 
