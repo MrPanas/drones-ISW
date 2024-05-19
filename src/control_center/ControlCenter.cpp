@@ -570,7 +570,7 @@ void ControlCenter::sendAreaToServer() {
         cout << "Sent data to server" << endl;
 
 
-        cout << "Cover percentage of Area: " << area_.getPercentage() << "%" << endl;
+        cout << "Cover percentage of Area: " << area_percentage * 100 << "%" << endl;
         // wait 10 seconds
         this_thread::sleep_for(chrono::seconds(1));
     }
