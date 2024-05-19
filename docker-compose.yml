@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: Dockerfile.server
     ports:
-        - "3000:3000"
+        - "3002:3002"
     networks:
         - my-network
 

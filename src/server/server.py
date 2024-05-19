@@ -1,27 +1,21 @@
 from flask import Flask, request, jsonify
-# from flask_cors import CORS
+from flask_cors import CORS
 import csv
 import os
 
 app = Flask(__name__)
-# CORS(app)  # Abilita CORS per tutte le rotte
-# cors = CORS(app, resource={
-#     r"/*":{
-#         "origins":"*"
-#     }
-# })
+CORS(app)
 
-
-@app.route('/hello')
+@app.route('/')
 def hello_world():
-    # print on flask that i received a request
-
     return 'Hello, World!'
+
 
 # Definisci il percorso e il metodo per gestire le richieste POST
 @app.route('/report', methods=['POST'])
 def handle_post_request():
-    print("Ricevuta una richiesta POST")
+    print("Richiesta ricevuta")
+    """
     # Verifica se la richiesta è una POST
     if request.method == 'POST':
         # Ottieni i dati JSON dalla richiesta
@@ -48,20 +42,15 @@ def handle_post_request():
 
             return jsonify(response), 200
 
-
-
         else:
             # Se mancano una o entrambe le chiavi, ritorna un errore
             return jsonify({"error": "Chiavi 'area' e 'cc-id' mancanti"}), 400
     else:
         # Se il metodo della richiesta non è POST, ritorna un errore
         return jsonify({"error": "Metodo non consentito"}), 405
+    """
 
 if __name__ == '__main__':
-    # se non esiste la cartella 'areas' la crea
-    if not os.path.exists('areas'):
-        os.makedirs('areas')
     # Avvia il server Flask
     print("Server in esecuzione")
-
-    app.run(host='0.0.0.0', port=3000)
+    app.run(host='127.0.0.1', port=3002, debug=True)
