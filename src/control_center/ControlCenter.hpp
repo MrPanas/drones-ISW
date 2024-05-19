@@ -81,6 +81,10 @@ private:
   std::mutex lists_mutex_;
   std::atomic<bool> interrupt_{false};
 
+  mutex query_mutex_;
+
+  void executeQuery(const string &query);
+
   void addDroneToWorking(const DroneData &drone) {
     std::lock_guard<std::mutex> lock(lists_mutex_);
     workingDrones_.push_back(drone);
