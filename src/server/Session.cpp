@@ -89,6 +89,11 @@ void http_session::handle_post_report() {
                    R"({"message": "CSV file created successfully"})",
                    "application/json");
   do_write();
+
+  std::string second_image_path = get_image_url(cc_id, 1);
+  if (!second_image_path.empty()) {
+    delete_image_file(second_image_path);
+  }
 }
 
 /**
@@ -151,7 +156,7 @@ void http_session::prepare_response(http::status status,
                                     const std::string &body,
                                     const std::string &content_type) {
   response_.version(request_.version());
-  response_.keep_alive(request_.keep_alive());
+  // response_.keep_alive(request_.keep_alive());
   response_.result(status);
   response_.set(http::field::server, "Beast/Boost");
   response_.set(http::field::content_type, content_type);
