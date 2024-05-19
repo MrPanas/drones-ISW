@@ -84,6 +84,7 @@ void http_session::handle_post_report() {
     throw std::runtime_error("Failed to insert record into report_image table");
   }
   PQclear(res);
+  db_.finish();
 
   prepare_response(http::status::created,
                    R"({"message": "CSV file created successfully"})",
@@ -139,6 +140,7 @@ void http_session::handle_get_report(int cc_id) {
     if (!second_image_path.empty()) {
       delete_image_file(second_image_path);
     }
+    db_.finish();
   } else {
     send_not_found();
   }
@@ -156,7 +158,7 @@ void http_session::prepare_response(http::status status,
                                     const std::string &body,
                                     const std::string &content_type) {
   response_.version(request_.version());
-  // response_.keep_alive(request_.keep_alive());
+  response_.keep_alive(request_.keep_alive());
   response_.result(status);
   response_.set(http::field::server, "Beast/Boost");
   response_.set(http::field::content_type, content_type);
