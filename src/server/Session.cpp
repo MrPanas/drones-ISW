@@ -92,7 +92,7 @@ void http_session::handle_post_report() {
  */
 void http_session::handle_get_report() {
 
-  std::string path = request_.target().to_string();
+  std::string path = std::string(request_.target());
   std::size_t pos = path.find_last_of('/');
   if (pos == std::string::npos) {
     send_not_found();
