@@ -55,8 +55,6 @@ void http_session::process_request() {
     std::regex get_report_regex("^/report/(\\d+)$");
     std::smatch match;
     if (std::regex_match(target, match, get_report_regex)) {
-      std::cout << "Handling GET request for /report with id: " << match[1]
-                << std::endl;
       handle_get_report(std::stoi(match[1]));
     } else {
       send_not_found();
@@ -99,8 +97,6 @@ void http_session::handle_post_report() {
  */
 void http_session::handle_get_report(int cc_id) {
 
-  std::cout << "We retrive CC_ID: " << cc_id << std::endl;
-
   std::string latest_image_path = get_image_url(cc_id, 0);
 
   if (!latest_image_path.empty()) {
@@ -111,13 +107,26 @@ void http_session::handle_get_report(int cc_id) {
     }
 
     // Read the CSV file content
-    std::stringstream buffer;
-    buffer << csv_file.rdbuf();
-    std::string csv_content = buffer.str();
+    std::string line;
+    json json_result = json::array();
+
+    while (std::getline(csv_file, line)) {
+      std::stringstream line_stream(line);
+      std::string cell;
+      json json_row = json::array();
+
+      while (std::getline(line_stream, cell, ',')) {
+        json_row.push_back(cell);
+      }
+      json_result.push_back(json_row);
+    }
     csv_file.close();
 
+    // Convert JSON object to string
+    std::string json_content = json_result.dump();
+
     // Set up the HTTP response
-    prepare_response(http::status::ok, csv_content, "text/csv");
+    prepare_response(http::status::ok, json_content, "application/json");
     do_write();
 
     // Delete the second most recent image if it exists
