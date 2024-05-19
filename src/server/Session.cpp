@@ -143,6 +143,7 @@ void http_session::handle_get_report(int cc_id) {
     db_.finish();
   } else {
     send_not_found();
+    db_.finish();
   }
 }
 
@@ -158,7 +159,7 @@ void http_session::prepare_response(http::status status,
                                     const std::string &body,
                                     const std::string &content_type) {
   response_.version(request_.version());
-  // response_.keep_alive(request_.keep_alive());
+  response_.keep_alive(request_.keep_alive());
   response_.result(status);
   response_.set(http::field::server, "Beast/Boost");
   response_.set(http::field::content_type, content_type);
