@@ -35,7 +35,7 @@ public:
     string toString() const;
 
     void updatePoint(int x, int y);
-    void printPercentage();
+    float getPercentage();
 
 private:
     int width_;

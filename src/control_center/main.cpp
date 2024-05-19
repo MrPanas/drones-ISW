@@ -13,6 +13,10 @@
 
 using namespace std;
 
+void setInterface(ScanningStrategy* strat) {
+    strat->createSchedules(Area(300, 300));
+}
+
 int main(int argc, char *argv[]) {
 
     cout << "Hello, World!" << endl;
@@ -41,6 +45,8 @@ int main(int argc, char *argv[]) {
 
 
     Area area = Area(300, 300);
+
+
 
     BasicStrategy strategy = BasicStrategy();
 

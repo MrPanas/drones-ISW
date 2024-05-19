@@ -116,7 +116,7 @@ initDrones();
 
     // insertLog();
     // print percentage each 10 seconds
-    thread printAreaStatusThread(&ControlCenter::printAreaStatus, this);
+    thread printAreaStatusThread(&ControlCenter::sendAreaToServer, this);
 
     cout << "ControlCenter::start: Starting listenDrones thread" << endl;
     thread listen(&ControlCenter::listenDrones, this);
@@ -126,7 +126,7 @@ initDrones();
 
     // Wait for the threads to finish
     printAreaStatusThread.join();
-    cout << "ControlCenter::start: printAreaStatus thread finished" << endl;
+    cout << "ControlCenter::start: sendAreaToServer thread finished" << endl;
 
 
     send.join();
@@ -450,7 +450,7 @@ void ControlCenter::processMessage(Redis::Message message) {
 
 /* ------ Area ------ */
 
-void ControlCenter::printAreaStatus() {
+void ControlCenter::sendAreaToServer() {
 while (!interrupt_.load()){
 
         Grid grid = area_.getGrid();
@@ -510,7 +510,7 @@ while (!interrupt_.load()){
         cout << "Sent data to server" << endl;
 
 
-        area_.printPercentage();
+        area_.getPercentage();
         // wait 10 seconds
         this_thread::sleep_for(chrono::seconds(10));
     }

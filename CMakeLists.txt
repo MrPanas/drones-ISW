@@ -25,6 +25,9 @@ add_executable(cc src/control_center/main.cpp
         src/scanning_strategy/BasicStrategy.h
         src/config.h
         src/config.cpp
+        src/control_center/ThreadPool.h
+        src/control_center/ThreadPool.h
+        src/control_center/ThreadPool.cpp
 )
 
 
@@ -59,6 +62,8 @@ add_executable(drone src/drone/main.cpp
         src/scanning_strategy/Path.cpp
         src/config.h
         src/config.cpp
+        src/control_center/ThreadPool.h
+        src/control_center/ThreadPool.cpp
 )
 
 target_include_directories(drone PRIVATE "/usr/include/hiredis")
@@ -67,6 +72,7 @@ target_include_directories(drone PRIVATE "/usr/include/nlohmann")
 target_include_directories(drone PRIVATE "/usr/include/curl")
 
 target_link_libraries(drone hiredis pq curl)
+
 
 
 
@@ -92,6 +98,8 @@ add_executable(test main.cpp
         src/scanning_strategy/Path.cpp
         src/config.h
         src/config.cpp
+        src/control_center/ThreadPool.h
+        src/control_center/ThreadPool.cpp
 )
 # Includi la directory degli header di Hiredis
 target_include_directories(test PRIVATE "/usr/include/hiredis")

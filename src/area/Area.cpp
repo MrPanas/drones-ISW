@@ -78,10 +78,10 @@ void Area::updatePoint(int x, int y) {
     }
     // timestamp now
     auto now = chrono::system_clock::now();
-    grid_[x][y] = now;
+    grid_[y][x] = now;
 }
 
-void Area::printPercentage() {
+float Area::getPercentage() {
     int checked = 0;
     auto now = chrono::system_clock::now();
     for (int i = 0; i < width_; i++) {
@@ -92,6 +92,6 @@ void Area::printPercentage() {
             }
         }
     }
-    cout << "Area::printPercentage: " << checked << " / " << width_ * height_ << " = "
-         << (checked * 100) / (width_ * height_) << "%" << endl;
+
+    return checked / (width_ * height_);
 }

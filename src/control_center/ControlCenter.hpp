@@ -22,6 +22,7 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include "ThreadPool.cpp"
 
 enum class ControlCenterState {
   STARTING,
@@ -37,7 +38,7 @@ public:
     /* Constructors */
     ControlCenter(unsigned int id, unsigned int num_drones);
     ControlCenter(unsigned int id, unsigned int num_drones,
-                BasicStrategy *strategy,
+                ScanningStrategy *strategy,
                 Area area); // TODO: basicStrategy cambiare con ScanningStrategy
 
     /* Destructor */
@@ -47,7 +48,7 @@ public:
     Coordinate getCCPosition();
 
     /* Setters */
-    void setStrategy(BasicStrategy *strategy);
+    void setStrategy(ScanningStrategy *strategy);
 
     /* Actions */
     void start();
@@ -81,7 +82,7 @@ private:
     /**
      * @brief Strategy used by the control center to create the paths
      */
-    BasicStrategy *strategy_{};
+    ScanningStrategy *strategy_{};
     /**
      * @brief Area to be scanned
      */
@@ -123,14 +124,10 @@ private:
     void processMessage(Redis::Message message);
 
     /* Area */
-    void printAreaStatus();
+    void sendAreaToServer();
 
     /* DB */
     void executeQuery(const string &query);
-
-    /* Log */
-    void insertCCLog(unsigned int droneId, unsigned int pathId);
-    void insertDroneLog(DroneData droneData);
 
     /* List Mutex */
     void addDroneToWorking(const DroneData &drone);

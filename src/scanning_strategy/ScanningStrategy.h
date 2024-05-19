@@ -34,7 +34,7 @@ class Area;
  */
 class ScanningStrategy {
 public:
-    virtual ~ScanningStrategy() {}; // Distruttore virtuale per la classe astratta
+    // virtual ~ScanningStrategy() {}; // Distruttore virtuale per la classe astratta
     virtual vector<DroneSchedule> createSchedules(Area area) = 0;
 
     int manhattanDistance(Coordinate a, Coordinate b) {

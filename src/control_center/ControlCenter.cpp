@@ -16,7 +16,6 @@
  */
 
 // TODO: documentare il codice
-// TODO: rendere BasicStrategy -> ScanningStrategy
 
 /* --------------- PUBLIC METHODS --------------- */
 /* ------ Constructors ------ */
@@ -75,7 +74,7 @@ ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id)
  */
 ControlCenter::ControlCenter(unsigned int id,
                              unsigned int num_drones,
-                             BasicStrategy *strategy,
+                             ScanningStrategy *strategy,
                              Area area) : ControlCenter(id, num_drones){
     strategy_ = strategy;
     area_ = std::move(area);
@@ -129,7 +128,7 @@ Coordinate ControlCenter::getCCPosition() {
  * @brief Set the strategy of the Control Center.
  * @param strategy BasicStrategy used to compute the paths for the drones
  */
-void ControlCenter::setStrategy(BasicStrategy *strategy) {
+void ControlCenter::setStrategy(ScanningStrategy *strategy) {
     strategy_ = strategy;
 }
 
@@ -146,7 +145,7 @@ void ControlCenter::start() {
 
     // insertLog();
     // print percentage each 10 seconds
-    thread printAreaStatusThread(&ControlCenter::printAreaStatus, this);
+    thread printAreaStatusThread(&ControlCenter::sendAreaToServer, this);
 
     cout << "ControlCenter::start: Starting listenDrones thread" << endl;
     thread listen(&ControlCenter::listenDrones, this);
@@ -156,7 +155,7 @@ void ControlCenter::start() {
 
     // Wait for the threads to finish
     printAreaStatusThread.join();
-    cout << "ControlCenter::start: printAreaStatus thread finished" << endl;
+    cout << "ControlCenter::start: sendAreaToServer thread finished" << endl;
 
 
     send.join();
@@ -371,9 +370,6 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
                        "'WORKING');";
         executeQuery(query);
 
-        //insertCCLog(droneId, pathId); TODO: uncomment this line
-
-        // cout << "ControlCenter::handleSchedule: Sleeping for " << nextSend.count() << " milliseconds" << endl;
 
         // Wait for the next send
         for (int i = 0; i < nextSend.count()/1000; i++) {
@@ -511,7 +507,7 @@ void ControlCenter::processMessage(Redis::Message message) {
  * @brief Print the area status. \n
  * It sends the area status to the server every 10 seconds.
  */
-void ControlCenter::printAreaStatus() {
+void ControlCenter::sendAreaToServer() {
     while (!interrupt_.load()){
 
         Grid grid = area_.getGrid();
@@ -527,8 +523,11 @@ void ControlCenter::printAreaStatus() {
             areaJson.push_back(rowJson);
         }
 
+        float area_percentage = area_.getPercentage();
+
         jsonData["area"] = areaJson;
         jsonData["cc-id"] = id_;
+        jsonData["area-percentage"] = area_percentage;
 
         cout << "Sending data to server" << endl;
         // curl to server
@@ -571,11 +570,13 @@ void ControlCenter::printAreaStatus() {
         cout << "Sent data to server" << endl;
 
 
-        area_.printPercentage();
+        cout << "Cover percentage of Area: " << area_.getPercentage() << "%" << endl;
         // wait 10 seconds
-        this_thread::sleep_for(chrono::seconds(10));
+        this_thread::sleep_for(chrono::seconds(1));
     }
 }
+
+
 
 
 /* ------ DB ------ */
@@ -587,20 +588,6 @@ void ControlCenter::printAreaStatus() {
 void ControlCenter::executeQuery(const std::string &query) {
     std::lock_guard<std::mutex> lock(query_mutex_);
     conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
-}
-
-
-/* --- Log --- */
-
-void ControlCenter::insertCCLog(unsigned int droneId, unsigned int pathId) {
-//    string query = "INSERT INTO cc_log (drone_id, path_id) VALUES (" + to_string(droneId) + ", " + to_string(pathId) + ");";
-//    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
-}
-
-void ControlCenter::insertDroneLog(DroneData data) {
-    //conn_.ExecSQLcmd("INSERT INTO drone_log (id, message) VALUES (1, 'Drone " + to_string(data.id) + " started')");
-//    string query = "INSERT INTO drone_log (drone_id, path_id) VALUES (" + to_string(data.id) + ", 1);";
-//    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
 }
 
 

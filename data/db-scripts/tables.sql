@@ -13,16 +13,16 @@ DO $$
 END $$;
 
 CREATE TABLE IF NOT EXISTS area (
+    id SERIAL PRIMARY KEY,
     width int,
     height int,
-    PRIMARY KEY (width, height)
+    point_expiration_time int
 );
 
 CREATE TABLE IF NOT EXISTS control_center (
-    cc_id int PRIMARY KEY,
-    area_width int,
-    area_height int,
-    FOREIGN KEY (area_width, area_height) REFERENCES area (width, height)
+    id int PRIMARY KEY,
+    area_id int,
+    FOREIGN KEY (area_id) REFERENCES area (id)
 );
 
 CREATE TABLE IF NOT EXISTS drone (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS drone (
     battery float CHECK (battery >= 0 AND battery <= 1),
     status status,
     cc_id int,
-    FOREIGN KEY (cc_id) REFERENCES control_center (cc_id)
+    FOREIGN KEY (cc_id) REFERENCES control_center (id)
 );
 
 CREATE TABLE IF NOT EXISTS path (
@@ -38,28 +38,12 @@ CREATE TABLE IF NOT EXISTS path (
     path text
 );
 
-/*
-CREATE TABLE IF NOT EXISTS cc_log (
-    cc_log_id int PRIMARY KEY,
-    drone_id  int,
-    path_id   int,
-    istante   TIMESTAMP,
-    message   text NOT NULL,
-    FOREIGN KEY (drone_id) REFERENCES drone (drone_id),
-    FOREIGN KEY (path_id) REFERENCES path (id)
-);
-
 CREATE TABLE IF NOT EXISTS area_log (
-    area_log_id int PRIMARY KEY,
-    area_width int,
-    area_height int,
+    area_id int,
     time TIMESTAMP,
-    coord_x int,
-    coord_y int,
-    time_unchecked bigint,
-    FOREIGN KEY (area_width, area_height) REFERENCES area (width, height)
+    percentage float,
+    FOREIGN KEY (area_id) REFERENCES area (id)
 );
-*/
 
 CREATE TABLE IF NOT EXISTS drone_log (
     log_id SERIAL PRIMARY KEY,
@@ -70,7 +54,7 @@ CREATE TABLE IF NOT EXISTS drone_log (
     status status,
     FOREIGN KEY (path_id) REFERENCES path (id),
     FOREIGN KEY (drone_id) REFERENCES drone (drone_id),
-    FOREIGN KEY (cc_id) REFERENCES control_center (cc_id)
+    FOREIGN KEY (cc_id) REFERENCES control_center (id)
 );
 
 CREATE TABLE IF NOT EXISTS report_image (
