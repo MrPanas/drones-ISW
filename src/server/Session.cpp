@@ -84,7 +84,6 @@ void http_session::handle_post_report() {
     throw std::runtime_error("Failed to insert record into report_image table");
   }
   PQclear(res);
-  db_.finish();
 
   prepare_response(http::status::created,
                    R"({"message": "CSV file created successfully"})",
@@ -95,6 +94,7 @@ void http_session::handle_post_report() {
   if (!second_image_path.empty()) {
     delete_image_file(second_image_path);
   }
+  db_.finish();
 }
 
 /**
