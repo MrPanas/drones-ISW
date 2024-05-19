@@ -1,3 +1,9 @@
+networks:
+  my-network:
+    driver: bridge
+
+
+
 services:
 #  dev:
 #    container_name: dev
@@ -20,21 +26,35 @@ services:
   server:
     container_name: server
     build:
-      context: src/server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.server
     ports:
         - "3000:3000"
+    networks:
+        - my-network
+
+
+
+
+
+
 
   redis:
     container_name: redis
     image: redis:alpine
     ports:
       - "6379:6379"
+    networks:
+        - my-network
+
   postgres:
     container_name: postgres
     image: postgres:alpine
     ports:
       - "5432:5432"
+    networks:
+        - my-network
+
     volumes:
       - ./data/db-scripts:/docker-entrypoint-initdb.d
     environment:

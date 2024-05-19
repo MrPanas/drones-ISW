@@ -51,7 +51,7 @@ void http_session::handle_return_report() {
   auto request_json = json::parse(request_.body());
   auto cc_id = request_json.at("cc-id").get<int>();
 
-  Con2DB db("localhost", "5432", "postgres", "postgres", "postgres");
+  Con2DB db("postgres", "5432", "postgres", "postgres", "postgres");
   char sqlcmd[512];
   snprintf(sqlcmd, sizeof(sqlcmd),
            "SELECT image_url FROM report_image WHERE cc_id = %d ORDER BY "
@@ -101,7 +101,7 @@ void http_session::handle_request_report() {
   auto cc_id = request_json.at("cc-id").get<int>();
 
   int last_inserted_image_id = 0;
-  Con2DB db("localhost", "5432", "postgres", "postgres", "postgres");
+  Con2DB db("postgres", "5432", "postgres", "postgres", "postgres");
   char sqlcmd[512];
   snprintf(
       sqlcmd, sizeof(sqlcmd),

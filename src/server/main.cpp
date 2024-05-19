@@ -2,7 +2,7 @@
 
 int main() {
   try {
-    std::string host = "127.0.0.1";
+    std::string host = "0.0.0.0";
     std::string port = "3000";
     std::string password = "secure"; // Example, not used directly here.
 

@@ -1,0 +1,40 @@
+FROM alpine:latest
+
+# Installa le dipendenze
+RUN apk add --update build-base gcc g++ clang gdb cmake make ninja autoconf automake dos2unix tar rsync hiredis hiredis-dev libpq-dev nlohmann-json valgrind git redis curl-dev boost-dev\
+    && rm -rf /tmp/* /var/cache/apk/*
+
+# RUN apt-get update && apt-get install -y curl libcurl4-openssl-dev
+# Clona la libreria redis-plus-plus
+
+# DB
+ENV DB_HOST=localhost
+ENV DB_PORT=5432
+ENV DB_NAME=postgres
+ENV DB_USER=postgres
+ENV DB_PASS=postgres
+
+# Copy the con2db library
+RUN mkdir -p /con2db
+
+WORKDIR /con2db
+COPY src/con2db  .
+
+# Crea una directory per il progetto
+WORKDIR /app
+
+# Copia il file CMakeLists.txt e i sorgenti nel container
+COPY src/server .
+
+
+
+
+
+# Crea una build directory e compila il progetto
+RUN mkdir -p build && cd build && cmake .. && make
+
+# Espone la porta su cui il server sarà in ascolto (modifica se necessario)
+EXPOSE 3000
+
+# Comando per eseguire il server
+CMD ["./build/server"]
