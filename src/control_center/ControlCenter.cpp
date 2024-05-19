@@ -19,31 +19,36 @@
  *
  */
 
-// TODO: a ogni cambio di stato del drone fare l'update nel db
-// TODO: aggiungere cc_id in drone
-// TODO: il cc manda al server la mappa
-// TODO: aggiungere il libcurl al docker ?
+// TODO: documentare il codice
+// TODO: rendere BasicStrategy -> ScanningStrategy
+// area [X]
+// area log
+// cc log [Da cancellare la tabella]
+// cc [X]
+// drone []
+// drone log [X]
+// path [X]
+// report_image
 
+// ricordare di cancellare tutte le tabelle prima di testare
 
-
-
-ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones) {
+ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
     listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (listener_ctx_ == NULL || listener_ctx_->err) {
         if (listener_ctx_) {
-            std::cout << "Error: " << listener_ctx_->errstr << std::endl;
+            cout << "Error: " << listener_ctx_->errstr << endl;
             redisFree(listener_ctx_);
         } else {
-            std::cout << "Can't allocate redis context" << std::endl;
+            cout << "Can't allocate redis context" << endl;
         }
     }
     sender_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (sender_ctx_ == NULL || sender_ctx_->err) {
         if (sender_ctx_) {
-            std::cout << "Error: " << sender_ctx_->errstr << std::endl;
+            cout << "Error: " << sender_ctx_->errstr << endl;
             redisFree(sender_ctx_);
         } else {
-            std::cout << "Can't allocate redis context" << std::endl;
+            cout << "Can't allocate redis context" << endl;
         }
     }
 
@@ -69,8 +74,20 @@ ControlCenter::ControlCenter(unsigned int id,
     strategy_ = strategy;
     area_ = std::move(area);
 
+    // Insert the area in the database
+    string query = "INSERT INTO area (width, height) VALUES (" +
+                    to_string(area_.getWidth()) +
+                    ", " + to_string(area_.getHeight()) + ");";
+    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+    cout << "ControlCenter::ControlCenter: insert in Area executed" << endl;
 
-
+    // Insert the control center in the database
+    query = "INSERT INTO control_center (cc_id, area_width, area_height) VALUES (" +
+            to_string(id_) + ", " +
+            to_string(area_.getWidth()) + ", " +
+            to_string(area_.getHeight()) + ");";
+    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+    cout << "ControlCenter::ControlCenter: insert in ControlCenter executed" << endl;
 }
 
 void ControlCenter::setStrategy(BasicStrategy *strategy) {
@@ -97,13 +114,23 @@ void ControlCenter::processMessage(Redis::Message message) {
     droneData.y = stoi(message["y"]);
     droneData.battery = stof(message["battery"]);
     droneData.state = to_state(message["state"]);
-
     bool changedState = message["changedState"] == "true";
 
 
-
-    if (droneData.state == DroneState::WORKING)
+    if (droneData.state == DroneState::WORKING) {
         area_.updatePoint(droneData.x, droneData.y);
+    }
+
+    string query;
+    // aggiorna le informazioni del drone
+    query = "INSERT INTO drone (drone_id, battery, status, cc_id) VALUES (" +
+                   to_string(droneData.id) + ", " +
+                   to_string(droneData.battery) + ", '" +
+                   to_string(droneData.state) + "', " +
+                   to_string(id_) + ") ON CONFLICT (drone_id) " +
+                   "DO UPDATE SET battery = EXCLUDED.battery, " +
+                   "status = EXCLUDED.status;";
+    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
 
     if (!changedState) {
         return;
@@ -114,15 +141,32 @@ void ControlCenter::processMessage(Redis::Message message) {
 
     switch (droneData.state) {
         case DroneState::READY:
-            if (removeDroneFromCharging(droneData))
+            if (removeDroneFromCharging(droneData)) {
                 addDroneToReady(droneData);
+            }
+            query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
+                           to_string(droneData.id) + ", " +
+                           to_string(id_) + ", " +
+                           "NOW(), " +
+                           "-1, " +
+                           "'READY');";
+            conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+            cout << "ControlCenter::listenDrones: insert in DroneLog executed" << endl;
             break;
         case DroneState::WORKING:
             // when change to WORKING, it's handled by handleSchedule thread
             break;
         case DroneState::CHARGING:
-            if (removeDroneFromWorking(droneData))
+            if (removeDroneFromWorking(droneData)) {
                 addDroneToCharging(droneData);
+            }
+            query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
+                           to_string(droneData.id) + ", " +
+                           to_string(id_) + ", " +
+                           "NOW(), " +
+                           "-1, " +
+                           "'CHARGING');";
+            conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
             break;
         default:
             cerr << "ControlCenter::listenDrones: Error: Invalid state" << endl;
@@ -346,13 +390,16 @@ void ControlCenter::initDrones() {
         // Update the drone status in the database
 
 
-//        string query = "INSERT INTO drone (drone_id, battery, status) VALUES (" + to_string(droneData.id) + ", " + to_string(droneData.battery) + ", '" + to_string(droneData.state) + "') ON CONFLICT (drone_id) DO UPDATE SET battery = EXCLUDED.battery, status = EXCLUDED.status;"; // TODO: to_string(droneData.battery)
-//
-//        // Converti la stringa in char *
-//        char *queryPtr = const_cast<char *>(query.c_str());
-//
-//        // Esegui la query
-//        conn_.ExecSQLcmd(queryPtr);
+        string query = "INSERT INTO drone (drone_id, battery, status, cc_id) VALUES (" +
+                       to_string(droneData.id) + ", " +
+                       to_string(droneData.battery) + ", '" +
+                       to_string(droneData.state) + ", " +
+                       to_string(id_) + "') ON CONFLICT (drone_id) " +
+                       "DO UPDATE SET battery = EXCLUDED.battery, " +
+                       "status = EXCLUDED.status;";
+
+        conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+        cout << "ControlCenter::initDrones: insert in Drone executed" << endl;
 
         // cout << "ControlCenter::initDrones: Drone " << droneData.id << " is ready" << endl;
 
@@ -408,9 +455,13 @@ void ControlCenter::sendPaths() {
 void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
     int pathId = get<0>(schedule);
     Path path = get<1>(schedule);
-    chrono::milliseconds nextSend = get<2>(schedule); // TODO: add RATIO_TIME
+    chrono::milliseconds nextSend = get<2>(schedule);
 
     string pathStr = path.toString();
+
+    string query = "INSERT INTO path (path_id, path) VALUES (" + to_string(pathId) + ", '" + pathStr + "');";
+    conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+    cout << "ControlCenter::handleSchedule: insert in Path executed" << endl;
 
     Redis::Message message;
     message["command"] = "follow-path";
@@ -435,6 +486,15 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
         // cout << "[2]ControlCenter::sendPath: Sending path to drone " << droneData.id << endl;
 
         addDroneToWorking(droneData);
+
+         string query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
+                       to_string(droneData.id) + ", " +
+                       to_string(id_) + ", " +
+                       "NOW(), " +
+                       to_string(pathId) + ", " +
+                       "'WORKING');";
+        conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+        cout << "ControlCenter::handleSchedule: insert in DroneLog executed" << endl;
 
         //insertCCLog(droneId, pathId); TODO: uncomment this line
 

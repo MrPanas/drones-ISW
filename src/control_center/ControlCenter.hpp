@@ -72,6 +72,8 @@ private:
   redisContext *listener_ctx_{};
   redisContext *sender_ctx_{};
 
+  Con2DB conn_;
+
   unsigned int num_drones_;
   std::deque<DroneData> workingDrones_;
   std::deque<DroneData> chargingDrones_;

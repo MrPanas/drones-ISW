@@ -7,22 +7,22 @@ CREATE TABLE IF NOT EXISTS area (
 );
 
 CREATE TABLE IF NOT EXISTS control_center (
-    cc_id SERIAL PRIMARY KEY,
+    cc_id int PRIMARY KEY,
     area_width int,
     area_height int,
     FOREIGN KEY (area_width, area_height) REFERENCES area (width, height)
 );
 
 CREATE TABLE IF NOT EXISTS drone (
-     drone_id SERIAL PRIMARY KEY,
-     battery float CHECK (battery >= 0 AND battery <= 1),
+    drone_id int PRIMARY KEY,
+    battery float CHECK (battery >= 0 AND battery <= 1),
     status status,
     cc_id int,
     FOREIGN KEY (cc_id) REFERENCES control_center (cc_id)
 );
 
 CREATE TABLE IF NOT EXISTS path (
-    id SERIAL PRIMARY KEY,
+    id int PRIMARY KEY,
     path text
 );
 
@@ -59,8 +59,7 @@ CREATE TABLE IF NOT EXISTS drone_log (
     FOREIGN KEY (cc_id) REFERENCES control_center (cc_id)
 );
 
-CREATE TABLE IF NOT EXISTS report_image
-(
+CREATE TABLE IF NOT EXISTS report_image (
     image_id  SERIAL PRIMARY KEY,
     cc_id     int,
     image_url varchar(255) NOT NULL
