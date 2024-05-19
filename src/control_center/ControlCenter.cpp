@@ -16,6 +16,7 @@
  */
 
 // TODO: documentare il codice
+// TODO: insert in area_log
 
 /* --------------- PUBLIC METHODS --------------- */
 /* ------ Constructors ------ */
@@ -80,19 +81,29 @@ ControlCenter::ControlCenter(unsigned int id,
     area_ = std::move(area);
 
     // Insert the area in the database
-    string query = "INSERT INTO area (width, height) VALUES (" +
+    string query = "INSERT INTO area (width, height, point_expiration_time) VALUES (" +
                     to_string(area_.getWidth()) +
-                    ", " + to_string(area_.getHeight()) + ")"
-                    " ON CONFLICT (width, height) DO UPDATE SET width = EXCLUDED.width, height = EXCLUDED.height;";
-    executeQuery(query);
+                    ", " + to_string(area_.getHeight()) +
+                    ", " + to_string(Config::POINT_EXPIRATION_TIME) + ") RETURNING ID;";
+    char sqlcmd_[512];
+    snprintf(sqlcmd_, sizeof(sqlcmd_), "%s", query.c_str());
+    //conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
+    int area_id = -1;
+    PGresult *res = conn_.ExecSQLtuples(sqlcmd_);
+    if (PQntuples(res) <= 0) {
+        cerr << "ControlCenter::ControlCenter: Error: Area not exists" << endl;
+        exit(EXIT_FAILURE);
+    }
+    cout << "ControlCenter::ControlCenter: Area inserted in the database, area id: " << PQgetvalue(res, 0, PQfnumber(res, "id")) << endl;
+    area_id = stoi(PQgetvalue(res, 0, PQfnumber(res, "id")));
+
+    PQclear(res);
 
 
     // Insert the control center in the database
-    query = "INSERT INTO control_center (cc_id, area_width, area_height) VALUES (" +
+    query = "INSERT INTO control_center (id, area_id) VALUES (" +
             to_string(id_) + ", " +
-            to_string(area_.getWidth()) + ", " +
-            to_string(area_.getHeight()) + ")"
-            " ON CONFLICT (cc_id) DO UPDATE SET area_width = EXCLUDED.area_width, area_height = EXCLUDED.area_height;";
+            to_string(area_id) + ") ON CONFLICT (id) DO UPDATE SET area_id = EXCLUDED.area_id;";
     executeQuery(query);
 
 }
@@ -256,11 +267,11 @@ void ControlCenter::initDrones() {
         // Update the drone status in the database
 
 
-        string query = "INSERT INTO drone (drone_id, battery, status, cc_id) VALUES (" +
+        string query = "INSERT INTO drone (id, battery, status, cc_id) VALUES (" +
                        to_string(droneData.id) + ", " +
                        to_string(droneData.battery) + ", '" +
                        to_string(droneData.state) + "', " + // Aggiunto il singolo apice mancante qui
-                       to_string(id_) + ") ON CONFLICT (drone_id) " +
+                       to_string(id_) + ") ON CONFLICT (id) " +
                        "DO UPDATE SET battery = EXCLUDED.battery, " +
                        "status = EXCLUDED.status;";
         executeQuery(query);
@@ -460,7 +471,7 @@ void ControlCenter::processMessage(Redis::Message message) {
     // aggiorna le informazioni del drone
     query = "UPDATE drone SET battery = " + to_string(droneData.battery) + ", " +
             "status = '" + to_string(droneData.state) + "' " +
-            "WHERE drone_id = " + to_string(droneData.id) + ";";
+            "WHERE id = " + to_string(droneData.id) + ";";
     executeQuery(query);
 
 
