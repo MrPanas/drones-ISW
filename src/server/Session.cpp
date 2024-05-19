@@ -117,6 +117,7 @@ void http_session::handle_request_report() {
     }
   }
   PQclear(res);
+
   std::ostringstream csv_file_path;
   csv_file_path << "./area_snapshots/report_" << cc_id << "image_"
                 << last_inserted_image_id << ".csv";

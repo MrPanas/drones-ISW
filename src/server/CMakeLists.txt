@@ -3,8 +3,7 @@ project(server-drone8)
 
 set(CMAKE_CXX_STANDARD 17)
 
-
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/area_snapshots")
+# file(MAKE_DIRECTORY "./area_snapshots")
 
 add_executable(server main.cpp
         Server.cpp
@@ -27,3 +26,4 @@ target_include_directories(server PRIVATE "/usr/include/curl")
 target_include_directories(server PRIVATE ${Boost_INCLUDE_DIRS})
 
 target_link_libraries(server PRIVATE pq curl ${Boost_LIBRARIES})
+

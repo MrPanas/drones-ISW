@@ -124,11 +124,13 @@ int main(int argc, char* argv[]) {
                 return EXIT_FAILURE;
         }
     }
+    /*
     string server_host = "127.0.0.1";
     string server_port = "3000";
     string server_password = "secure";
     Server server(server_host, server_port, server_password);
     thread server_thread(&Server::start, &server);
+     */
 
     Config::AREA_WIDTH = ceil(Config::AREA_WIDTH / (Config::SCAN_RANGE * 2));
     Config::AREA_HEIGHT = ceil(Config::AREA_HEIGHT / (Config::SCAN_RANGE * 2)); // every square represents the area scanned by a drone

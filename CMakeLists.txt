@@ -92,10 +92,9 @@ target_include_directories(cc PRIVATE "/usr/include/hiredis")
 target_include_directories(cc PRIVATE "/usr/include/postgresql")
 target_include_directories(cc PRIVATE "/usr/include/nlohmann")
 target_include_directories(cc PRIVATE "/usr/include/curl")
-target_include_directories(cc PRIVATE ${Boost_INCLUDE_DIRS})
 
 
-target_link_libraries(cc hiredis pq curl ${Boost_LIBRARIES})
+target_link_libraries(cc hiredis pq curl)
 
 # DRONE
 add_executable(drone src/drone/main.cpp
@@ -123,32 +122,8 @@ target_include_directories(drone PRIVATE "/usr/include/hiredis")
 target_include_directories(drone PRIVATE "/usr/include/postgresql")
 target_include_directories(drone PRIVATE "/usr/include/nlohmann")
 target_include_directories(drone PRIVATE "/usr/include/curl")
-target_include_directories(drone PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries(drone hiredis pq curl ${Boost_LIBRARIES})
-
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/area_snapshots")
-
-add_executable(server src/server/main.cpp
-       src/server/Server.cpp
-       src/server/Server.hpp
-       src/server/Session.hpp
-       src/server/Session.cpp
-       src/con2db/pgsql.cpp
-       src/con2db/pgsql.h
-)
-# Includi la directory degli header di PostgreSQL
-target_include_directories(server PRIVATE "/usr/include/postgresql")
-# Includi la directory degli header di nlohmann/json
-target_include_directories(server PRIVATE "/usr/include/nlohmann")
-
-target_include_directories(server PRIVATE "/usr/local/include/sw")
-
-target_include_directories(server PRIVATE "/usr/include/curl")
-
-target_include_directories(server PRIVATE ${Boost_INCLUDE_DIRS})
-
-target_link_libraries(server PRIVATE pq curl ${Boost_LIBRARIES})
+target_link_libraries(drone hiredis pq curl)
 
 
 
@@ -174,10 +149,6 @@ add_executable(test main.cpp
         src/scanning_strategy/Path.cpp
         src/config.h
         src/config.cpp
-        src/server/Server.cpp
-        src/server/Server.hpp
-        src/server/Session.hpp
-        src/server/Session.cpp
 )
 # Includi la directory degli header di Hiredis
 target_include_directories(test PRIVATE "/usr/include/hiredis")
@@ -190,10 +161,8 @@ target_include_directories(test PRIVATE "/usr/local/include/sw")
 
 target_include_directories(test PRIVATE "/usr/include/curl")
 
-target_include_directories(test PRIVATE ${Boost_INCLUDE_DIRS})
-
 # Linka le librerie Hiredis e PostgreSQL
-target_link_libraries(test PRIVATE hiredis pq curl ${Boost_LIBRARIES})
+target_link_libraries(test PRIVATE hiredis pq curl)
 
 add_dependencies(cc drone)
 
