@@ -93,5 +93,5 @@ float Area::getPercentage() {
         }
     }
 
-    return checked / (width_ * height_);
+    return static_cast<float>(checked) / static_cast<float>((width_ * height_));
 }
