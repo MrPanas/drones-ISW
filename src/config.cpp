@@ -10,5 +10,5 @@ namespace Config {
     int DRONE_STEPS = 15000; // 15000
 
     int POINT_EXPIRATION_TIME = 300000;
-    int NUMBER_OF_DRONES = 9000;
+    int NUMBER_OF_DRONES = 4000;
 }

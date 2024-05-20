@@ -23,7 +23,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         cout << "current_pos: " << current_pos.x << ", " << current_pos.y << endl;
         cout << "end_pos: " << end_pos.x << ", " << end_pos.y << endl;
         current_pos = cc_pos;
-        int autonomy = Config::DRONE_STEPS; // 15000/20 = 750
+        int autonomy = Config::DRONE_STEPS;
         cout << "autonomy: " << autonomy << endl;
         Path path = Path();
 
@@ -33,9 +33,8 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
         current_pos = get<0>(checkNext);
         bool comeBack = get<1>(checkNext);
         if (comeBack) {
-            // TODO: cambiare e mettere che da errore se va qua
-            goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
-            break;
+            cerr << "Error: Not Enough Autonomy" << endl;
+            return schedules;
         }
         autonomy -= steps;
         cout << "initial autonomy: " << autonomy << endl;

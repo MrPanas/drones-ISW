@@ -88,14 +88,13 @@ ControlCenter::ControlCenter(unsigned int id,
     char sqlcmd_[512];
     snprintf(sqlcmd_, sizeof(sqlcmd_), "%s", query.c_str());
     //conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
-    int area_id = -1;
     PGresult *res = conn_.ExecSQLtuples(sqlcmd_);
     if (PQntuples(res) <= 0) {
         cerr << "ControlCenter::ControlCenter: Error: Area not exists" << endl;
         exit(EXIT_FAILURE);
     }
     cout << "ControlCenter::ControlCenter: Area inserted in the database, area id: " << PQgetvalue(res, 0, PQfnumber(res, "id")) << endl;
-    area_id = stoi(PQgetvalue(res, 0, PQfnumber(res, "id")));
+    int area_id = stoi(PQgetvalue(res, 0, PQfnumber(res, "id")));
 
     PQclear(res);
 
@@ -299,6 +298,29 @@ void ControlCenter::sendPaths() {
     // Open thread for each schedule
 
     vector<DroneSchedule> schedules = strategy_->createSchedules(area_);
+
+    // MONITOR
+    if (schedules.empty()) {
+        cerr << "ControlCenter::sendPathsToDrones: Error: No schedules created" << endl;
+        string query = "INSERT INTO monitor_failure (cc_id, failure, time) VALUES (" +
+                       to_string(id_) + ", " +
+                       "'DRONE_AUTONOMY', " +
+                       "NOW());";
+        executeQuery(query);
+    }
+
+    // minimum drones needed to scan the area
+    // MONITOR
+    unsigned int min_drones = schedules.size() * (10800000 / Config::POINT_EXPIRATION_TIME); // schedules * (3h/5min)
+    cout << "ControlCenter::sendPathsToDrones: minimum drones needed: " << min_drones << endl;
+    if (min_drones > num_drones_) {
+        cerr << "ControlCenter::sendPathsToDrones: Error: Not enough drones to scan the area" << endl;
+        string query = "INSERT INTO monitor_failure (cc_id, failure, time) VALUES (" +
+                       to_string(id_) + ", " +
+                       "'NUM_DRONES', " +
+                       "NOW());";
+        executeQuery(query);
+    }
 
 
     cout << "ControlCenter::sendPathsToDrones: ready drones: " << readyDrones_.size() << endl;
@@ -515,11 +537,12 @@ void ControlCenter::processMessage(Redis::Message message) {
 
 /* ------ Area ------ */
 /**
- * @brief Print the area status. \n
- * It sends the area status to the server every 10 seconds.
+ * @brief Sends area to server. \n
+ * It sends the area status to the server every second and print the status of the area.
  */
 void ControlCenter::sendAreaToServer() {
     while (!interrupt_.load()){
+        bool area_covered = false;
 
         Grid grid = area_.getGrid();
 
@@ -536,21 +559,29 @@ void ControlCenter::sendAreaToServer() {
 
         float area_percentage = area_.getPercentage();
 
+        if (area_percentage >= 1) {
+            area_covered = true;
+        }
+
+        // MONITOR
+        if (area_covered && area_percentage < 1) {
+            cerr << "ControlCenter::sendAreaToServer: Error: Area covered but percentage < 1" << endl;
+            string query = "INSERT INTO monitor_failure (cc_id, failure, time) VALUES (" +
+                           to_string(id_) + ", " +
+                           "'AREA_COVERAGE', " +
+                           "NOW());";
+            executeQuery(query);
+        }
+
         jsonData["area"] = areaJson;
         jsonData["cc-id"] = id_;
-        jsonData["area-percentage"] = area_percentage;
+        jsonData["area_percentage"] = area_percentage;
 
         cout << "Sending data to server" << endl;
         // curl to server
         string url = "http://localhost:3000/report";
         string data = jsonData.dump();
-        size_t jsonLengthInBytes = data.length();
 
-        // Converti la lunghezza in byte in MB
-        double jsonLengthInMB = static_cast<double>(jsonLengthInBytes) / (1024 * 1024);
-
-        // Stampare la dimensione in MB
-        cout << "JSON data size: " << jsonLengthInMB << " MB" << endl;
         curl_global_init(CURL_GLOBAL_ALL);
         CURL *curl = curl_easy_init();
         if (curl) {

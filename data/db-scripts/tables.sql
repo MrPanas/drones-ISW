@@ -1,30 +1,27 @@
 DO $$
-   BEGIN
-    -- Verifica se il tipo ENUM esiste già
-    IF NOT EXISTS (
-        SELECT 1
-        FROM pg_type
-        WHERE typname = 'status'
-          AND typtype = 'e'
-    ) THEN
-        -- Crea il tipo ENUM solo se non esiste già
-        CREATE TYPE status AS ENUM ('READY', 'CHARGING', 'WORKING');
-    END IF;
-END $$;
-
-DO $$
     BEGIN
-        -- Verifica se il tipo ENUM esiste già
+        -- Verifica se il tipo ENUM 'status' esiste già
         IF NOT EXISTS (
             SELECT 1
             FROM pg_type
             WHERE typname = 'status'
               AND typtype = 'e'
         ) THEN
-            -- Crea il tipo ENUM solo se non esiste già
-            CREATE TYPE requirement AS ENUM ('NUM_DRONES', 'CC_OVERLOAD', 'DRONE_COME_BACK', 'AREA_COVERAGE');
+            -- Crea il tipo ENUM 'status' solo se non esiste già
+            CREATE TYPE status AS ENUM ('READY', 'CHARGING', 'WORKING');
         END IF;
-    END $$;
+
+        -- Verifica se il tipo ENUM 'requirement' esiste già
+        IF NOT EXISTS (
+            SELECT 1
+            FROM pg_type
+            WHERE typname = 'requirement'
+              AND typtype = 'e'
+        ) THEN
+            -- Crea il tipo ENUM 'requirement' solo se non esiste già
+            CREATE TYPE requirement AS ENUM ('NUM_DRONES', 'CC_OVERLOAD', 'DRONE_AUTONOMY', 'AREA_COVERAGE');
+    END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS area (
     id SERIAL PRIMARY KEY,
@@ -80,6 +77,7 @@ CREATE TABLE IF NOT EXISTS report_image (
 CREATE TABLE IF NOT EXISTS monitor_failure (
     failure_id SERIAL PRIMARY KEY,
     cc_id     int,
+    failure   requirement,
     time      TIMESTAMP NOT NULL,
     FOREIGN KEY (cc_id) REFERENCES control_center (id)
 );

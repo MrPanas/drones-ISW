@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
     Config::DRONE_STEPS = static_cast<int>((Config::DRONE_AUTONOMY * Config::DRONE_SPEED * 1000 / 60) / 20); // represents the autonomy in steps
 
     cout << "main: Height: " << Config::AREA_HEIGHT << " Width: " << Config::AREA_WIDTH << endl;
-    cout << "main: DRone steps: " << Config::DRONE_STEPS << endl;
+    cout << "main: Drone steps: " << Config::DRONE_STEPS << endl;
 
     // Initialize an Area object
     Area area = Area(Config::AREA_WIDTH, Config::AREA_HEIGHT);
