@@ -3,9 +3,16 @@
 #include <thread>
 #include "Drone.h"
 
-
+/**
+ * @brief Global flag to stop the drone
+ */
 std::atomic<bool> Drone::stopFlag_{false};
 
+/* --------- Constructors --------- */
+/**
+ * @brief Drone constructor. It initialize a connection to the Redis server and recreates a stream for the drone
+ * @param id ID of the drone
+ */
 Drone::Drone(unsigned int id) : id_(id){
     current_data_ = {static_cast<int>(id_), -1, -1, 1, DroneState::READY};
     // cout << "Drone " << id_ << " created" << endl;
@@ -25,10 +32,20 @@ Drone::Drone(unsigned int id) : id_(id){
 
 }
 
+/**
+ * @brief Drone constructor. It initialize a connection to the Redis server and recreates a stream for the drone
+ * Moreover, it sets the Control Center Id that controls the drone
+ * @param id ID of the drone
+ * @param cc_id ID of the Control Center that controls the drone
+ */
 Drone::Drone(unsigned int id, unsigned int cc_id) : Drone(id) {
     cc_id_ = cc_id;
 }
 
+/* --------- Destructor --------- */
+/**
+ * @brief Drone destructor. It destroys the stream and the group of the drone and closes the connection to the Redis server
+ */
 Drone::~Drone() {
     Redis::destroyGroup(ctx_, "stream_drone_" + to_string(id_), "Drone_" + to_string(id_));
     redisFree(ctx_);
@@ -36,10 +53,25 @@ Drone::~Drone() {
 //   cout << "Drone::~Drone: Drone " << id_ << " " << endl;
 }
 
+/* --------- Getters --------- */
+/**
+ * @brief Get the ID of the drone
+ * @return ID of the drone
+ */
 unsigned int Drone::getId() const {
     return id_;
 }
 
+/**
+ * @brief Get the ID of the Control Center that controls the drone
+ * @return ID of the Control Center
+ */
+unsigned int Drone::getCCId() const {
+    return cc_id_;
+}
+
+
+/* --------- Setters --------- */
 /**
  * Set the Control Center ID
  * @param cc_id Control Center ID
@@ -48,10 +80,11 @@ void Drone::setCCId(int cc_id) {
     cc_id_ = cc_id;
 }
 
-unsigned int Drone::getCCId() const {
-    return cc_id_;
-}
 
+/* ------- Public methods ------- */
+/**
+ * Start the drone. First, it sends the current data to the Control Center, then it starts listening to the Control Centerr
+ */
 void Drone::start() {
     sendDataToCC(false);
 
@@ -59,6 +92,45 @@ void Drone::start() {
     listen.detach();
 }
 
+/**
+ * @brief Charge drone to 100% autonomy in a random time between 2 and 3 hours
+ */
+void Drone::chargeDrone() {
+    random_device rd; // Initialize a random number generator based on hardware
+    mt19937 gen(rd()); // Create a random number generation engine with the seed from the random device
+
+    // Create a uniform distribution between 2 and 3 hours (converted to milliseconds)
+    std::uniform_int_distribution<> dis(7200000, 10800000); // 2 * 60 * 60 * 1000, 3 * 60 * 60 * 1000
+
+    int charge_time = dis(gen); // Generate a random number between 2 and 3 hours
+
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds, autonomy: " << autonomy_ << endl;
+    }
+
+    // 1 : charge_time = (1 - current_data_.battery) : x
+    // x = charge_time * (1 - current_data_.battery)
+    charge_time = (int)((float)charge_time * (1 - current_data_.battery));
+
+    if (autonomy_ > 0) {
+        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds" << endl;
+    }
+
+
+    int sleep_time = static_cast<int>(charge_time * TIME_ACCELERATION);
+    this_thread::sleep_for(chrono::milliseconds(sleep_time));
+
+    current_data_.battery = 1;
+    current_data_.state = DroneState::READY;
+    autonomy_ = Config::DRONE_STEPS;
+
+    sendDataToCC(true);
+}
+
+/* ------- Private methods ------- */
+/**
+ * @brief Listen to the Control Center. It reads the messages from the Control Center and executes the commands
+ */
 void Drone::listenCC() {
     string group = "Drone_" + to_string(id_);
     string consumer = "drone_" + to_string(id_);
@@ -108,8 +180,9 @@ void Drone::listenCC() {
 }
 
 /**
- * Follow the path, every step takes 0.12 seconds and the drone moves 1 meter,
- * then it sends the new position to the Control Center
+ * @brief Follow the path received from the Control Center.
+ * A step is executed every 2.4 seconds that corresponds to 20 meters at 8.33 m/s
+ * The drone sends the current data to the Control Center every step
  * @param path Path to follow
  */
 void Drone::followPath(const string &path) {
@@ -180,6 +253,10 @@ void Drone::followPath(const string &path) {
     // cout << "drone " << id_ << "current position: " << current_data_.x << " " << current_data_.y << endl;
 }
 
+/**
+ * @brief Send the current data to the Control Center
+ * @param changedState True if the state of the drone has changed
+ */
 void Drone::sendDataToCC(bool changedState) {
     string stream = "cc_" + to_string(cc_id_);
 
@@ -193,36 +270,4 @@ void Drone::sendDataToCC(bool changedState) {
 
     Redis::sendMessage(ctx_, stream, message);
 
-}
-
-void Drone::chargeDrone() {
-    random_device rd; // Initialize a random number generator based on hardware
-    mt19937 gen(rd()); // Create a random number generation engine with the seed from the random device
-
-    // Create a uniform distribution between 2 and 3 hours (converted to milliseconds)
-    std::uniform_int_distribution<> dis(7200000, 10800000); // 2 * 60 * 60 * 1000, 3 * 60 * 60 * 1000
-
-    int charge_time = dis(gen); // Generate a random number between 2 and 3 hours
-
-    if (autonomy_ > 0) {
-        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds, autonomy: " << autonomy_ << endl;
-    }
-
-    // 1 : charge_time = (1 - current_data_.battery) : x
-    // x = charge_time * (1 - current_data_.battery)
-    charge_time = (int)((float)charge_time * (1 - current_data_.battery));
-
-    if (autonomy_ > 0) {
-        cout << "Drone " << id_ << " is charging for " << charge_time << " milliseconds" << endl;
-    }
-
-
-    int sleep_time = static_cast<int>(charge_time * TIME_ACCELERATION);
-    this_thread::sleep_for(chrono::milliseconds(sleep_time));
-
-    current_data_.battery = 1;
-    current_data_.state = DroneState::READY;
-    autonomy_ = Config::DRONE_STEPS;
-
-    sendDataToCC(true);
 }
