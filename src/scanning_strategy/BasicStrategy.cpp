@@ -2,10 +2,19 @@
 
 using namespace std;
 
+/**
+ * @brief Construct a new Strategy for the movement of the drones in the area
+ */
 BasicStrategy::BasicStrategy() : ScanningStrategy() {
     cout << "BasicStrategy created" << endl;
 }
 
+/**
+ * @brief Create the schedules for the drones to scan the area
+ *
+ * @param area The area to scan
+ * @return vector<DroneSchedule> The schedules for the drones
+ */
 vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
     Coordinate cc_pos = {area.getWidth() / 2, area.getHeight() / 2};
     Coordinate current_pos = cc_pos;
@@ -20,8 +29,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
 
     while (current_pos.y < area.getHeight()) {
         cout << "---------------------path_id: " << path_id << "---------------------" << endl;
-        cout << "current_pos: " << current_pos.x << ", " << current_pos.y << endl;
-        cout << "end_pos: " << end_pos.x << ", " << end_pos.y << endl;
+
         current_pos = cc_pos;
         int autonomy = Config::DRONE_STEPS;
         cout << "autonomy: " << autonomy << endl;
@@ -37,13 +45,13 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
             return schedules;
         }
         autonomy -= steps;
-        cout << "initial autonomy: " << autonomy << endl;
         // ___________________________
 
+        // Go to end position
         while (true) {
-            Coordinate next_pos = current_pos;
+            Coordinate next_pos;
             if (current_direction == Direction::EAST) {
-                // va a destra
+                // Go right while you can
                 steps = area.getWidth() - current_pos.x - 1;
                 next_pos = {current_pos.x + steps, current_pos.y};
                 checkNext = goToPoint(autonomy, current_pos, next_pos, cc_pos, path, false);
@@ -60,6 +68,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
             }
 
             else if (current_direction == Direction::WEST) {
+                // Go left while you can
                 steps = current_pos.x;
                 next_pos = {current_pos.x - steps, current_pos.y};
 
@@ -77,6 +86,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
             }
 
             else if (current_direction == Direction::SOUTH) {
+                // Go down one step
                 steps = 1;
                 next_pos = {current_pos.x, current_pos.y + steps};
 
@@ -92,6 +102,7 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
                 current_direction = goEast ? Direction::EAST : Direction::WEST;
             }
 
+            // check if the drone has reached the end of the area
             if (current_direction == Direction::SOUTH) {
                 if (current_pos.y == area.getHeight() - 1) {
                     goToPoint(autonomy, current_pos, cc_pos, cc_pos, path, true);
@@ -101,7 +112,6 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
             }
         }
         cout << "path_id: " << path_id << ", path: " << path.toString() << endl;
-        // cast to int 290000 * TIME_ACCELERATION
         int time = static_cast<int>((Config::POINT_EXPIRATION_TIME - 10000)* TIME_ACCELERATION);
         schedules.emplace_back(path_id, path, chrono::milliseconds(time));
         path_id++;
@@ -110,11 +120,20 @@ vector<DroneSchedule> BasicStrategy::createSchedules(Area area) {
 }
 
 
+/**
+ * @brief Go to a specific point in the area
+ * @param autonomy autonomy of the drone at the moment
+ * @param current_pos current position of the drone
+ * @param next_pos next position to reach
+ * @param cc_pos position of the control center
+ * @param path path to update
+ * @param comeBack if the drone has to come back to the control center
+ * @return
+ */
 tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate current_pos, Coordinate next_pos, Coordinate cc_pos, Path& path, bool comeBack) {
-    // TODO prova ad andare a next_position se non riesce va dove può e torna al CC e aggiorna anche il path
     int steps = 0;
     while (current_pos.x < next_pos.x) {
-         // go right
+         // go right until you reach the next position or you run out of autonomy
          if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
              path.addDirection(Direction::EAST, steps);
              return {current_pos, true};
@@ -127,7 +146,7 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
 
     steps = 0;
     while (current_pos.x > next_pos.x) {
-        // go left
+        // go left until you reach the next position or you run out of autonomy
         if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
             path.addDirection(Direction::WEST, steps);
             return {current_pos, true};
@@ -140,7 +159,7 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
 
     steps = 0;
     while (current_pos.y < next_pos.y) {
-        // go down
+        // go down until you reach the next position or you run out of autonomy
         if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
             path.addDirection(Direction::SOUTH, steps);
             return {current_pos, true};
@@ -153,7 +172,7 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
 
     steps = 0;
     while (current_pos.y > next_pos.y) {
-        // go up
+        // go up until you reach the next position or you run out of autonomy
         if (manhattanDistance(current_pos, cc_pos) >= autonomy && !comeBack) {
             path.addDirection(Direction::NORTH, steps);
             return {current_pos, true};
@@ -167,16 +186,12 @@ tuple<Coordinate, bool> BasicStrategy::goToPoint(int autonomy, Coordinate curren
     return {current_pos, false};
 }
 
+/**
+ * @brief Destroy the Basic Strategy:: Basic Strategy object
+ */
 BasicStrategy::~BasicStrategy() {
     cout << "BasicStrategy destroyed" << endl;
 }
 
-
-
-/*
-int BasicStrategy::manhattanDistance(Coordinate a, Coordinate b) {
-    return abs(a.x - b.x) + abs(a.y - b.y);
-}
-*/ //TODO: se funziona tutto cancellare
 
 

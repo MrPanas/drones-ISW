@@ -213,6 +213,11 @@ void Drone::followPath(const string &path) {
                 return ;
             }
 
+            if (autonomy_ <= 0) {
+                cout << "Drone " << id_ << " out of battery" << endl;
+                sendDataToCC(false);
+                return;
+            }
 
             switch (dir) {
                 case 'N':
@@ -235,6 +240,8 @@ void Drone::followPath(const string &path) {
 
             autonomy_--;
 
+
+
             sendDataToCC(false);
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
             int sleep_time = static_cast<int>(2400 * TIME_ACCELERATION);
@@ -248,7 +255,7 @@ void Drone::followPath(const string &path) {
 
     current_data_.state = DroneState::CHARGING;
     sendDataToCC(true);
-    chargeDrone(); // TODO: va bene così ho deve essere aperto in un nuovo thread
+    chargeDrone();
 
     // cout << "drone " << id_ << "current position: " << current_data_.x << " " << current_data_.y << endl;
 }

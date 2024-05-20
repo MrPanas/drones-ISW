@@ -12,7 +12,6 @@ using namespace std;
 // ############ AREA ############
 
 
-
 Area::Area(int width, int height) : width_(width), height_(height) {
     // print that the area is being created
     cout << "Creating Area with width: " << width_ << " and height: " << height_ << endl;

@@ -19,7 +19,7 @@ DO $$
               AND typtype = 'e'
         ) THEN
             -- Crea il tipo ENUM 'requirement' solo se non esiste già
-            CREATE TYPE requirement AS ENUM ('NUM_DRONES', 'CC_OVERLOAD', 'DRONE_AUTONOMY', 'AREA_COVERAGE');
+            CREATE TYPE requirement AS ENUM ('NUM_DRONES', 'CC_OVERLOAD', 'DRONE_AUTONOMY', 'AREA_COVERAGE', 'DRONE_OUT_OF_BATTERY');
     END IF;
 END $$;
 
@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS monitor_failure (
     failure_id SERIAL PRIMARY KEY,
     cc_id     int,
     failure   requirement,
+    message   text,
     time      TIMESTAMP NOT NULL,
     FOREIGN KEY (cc_id) REFERENCES control_center (id)
 );

@@ -302,9 +302,10 @@ void ControlCenter::sendPaths() {
     // MONITOR
     if (schedules.empty()) {
         cerr << "ControlCenter::sendPathsToDrones: Error: No schedules created" << endl;
-        string query = "INSERT INTO monitor_failure (cc_id, failure, time) VALUES (" +
-                       to_string(id_) + ", " +
+        string query = "INSERT INTO monitor_failure (cc_id, failure, message, time) VALUES (" +
+                        to_string(id_) + ", " +
                        "'DRONE_AUTONOMY', " +
+                       "'Drone is initialized with too low autonomy', " +
                        "NOW());";
         executeQuery(query);
     }
@@ -315,10 +316,12 @@ void ControlCenter::sendPaths() {
     cout << "ControlCenter::sendPathsToDrones: minimum drones needed: " << min_drones << endl;
     if (min_drones > num_drones_) {
         cerr << "ControlCenter::sendPathsToDrones: Error: Not enough drones to scan the area" << endl;
-        string query = "INSERT INTO monitor_failure (cc_id, failure, time) VALUES (" +
-                       to_string(id_) + ", " +
-                       "'NUM_DRONES', " +
-                       "NOW());";
+        string query = "INSERT INTO monitor_failure (cc_id, failure, message, time) VALUES (" +
+                          to_string(id_) + ", " +
+                          "'NUM_DRONES', " +
+                          "'Not enough drones to scan the area, minimum drones needed: " + to_string(min_drones) + ", available drones: " + to_string(num_drones_) + "', " +
+                          "NOW());";
+
         executeQuery(query);
     }
 
@@ -484,12 +487,25 @@ void ControlCenter::processMessage(Redis::Message message) {
     droneData.state = to_state(message["state"]);
     bool changedState = message["changedState"] == "true";
 
+    string query;
+
+    // MONITOR - DRONE_OUT_OF_BATTERY
+    if (droneData.battery <= 0 && droneData.state != DroneState::CHARGING) {
+        cerr << "ControlCenter::listenDrones: Error: Drone " << droneData.id << " has no battery" << endl;
+        query = "INSERT INTO monitor_failure (cc_id, failure, message, time) VALUES (" +
+                to_string(id_) + ", " +
+                "'DRONE_OUT_OF_BATTERY', " +
+                "'Drone ran out of battery at point (" + to_string(droneData.x) + ", " + to_string(droneData.y) + ")', " +
+                "NOW());";
+        executeQuery(query);
+        return;
+    }
+
 
     if (droneData.state == DroneState::WORKING) {
         area_.updatePoint(droneData.x, droneData.y);
     }
 
-    string query;
     // aggiorna le informazioni del drone
     query = "UPDATE drone SET battery = " + to_string(droneData.battery) + ", " +
             "status = '" + to_string(droneData.state) + "' " +
@@ -566,10 +582,11 @@ void ControlCenter::sendAreaToServer() {
         // MONITOR
         if (area_covered && area_percentage < 1) {
             cerr << "ControlCenter::sendAreaToServer: Error: Area covered but percentage < 1" << endl;
-            string query = "INSERT INTO monitor_failure (cc_id, failure, time) VALUES (" +
-                           to_string(id_) + ", " +
-                           "'AREA_COVERAGE', " +
-                           "NOW());";
+            string query = "INSERT INTO monitor_failure (cc_id, failure, message, time) VALUES (" +
+                            to_string(id_) + ", " +
+                            "'AREA_COVERAGE', " +
+                            "'Area covered but percentage now < 1', " +
+                            "NOW());";
             executeQuery(query);
         }
 
