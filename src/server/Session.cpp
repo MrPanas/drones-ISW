@@ -76,26 +76,19 @@ void http_session::handle_post_report() {
 
   std::string csv_file_path = create_csv_file(cc_id, grid_last_visited);
 
-  int area_id = get_area_id(cc_id);
-
-  if (area_id >= 0) {
-    insert_area_log(area_id, area_coverage);
-  }
-
   snprintf(sqlcmd_, sizeof(sqlcmd_),
-           "INSERT INTO report_image (cc_id, image_url) VALUES (%d, '%s')",
-           cc_id, csv_file_path.c_str());
+           "INSERT INTO report (cc_id, image_url, time, coverage) "
+           "VALUES (%d, '%s', now(), %.6f)",
+           cc_id, csv_file_path.c_str(), area_coverage);
 
   PGresult *res = db_.ExecSQLcmd(sqlcmd_);
   if (PQresultStatus(res) != PGRES_COMMAND_OK) {
     PQclear(res);
-    throw std::runtime_error("Failed to insert record into report_image table");
+    throw std::runtime_error("Failed to insert record into report table");
   }
   PQclear(res);
 
-  prepare_response(http::status::created,
-                   R"({"message": "CSV file created successfully"})",
-                   "application/json");
+  prepare_response(http::status::created, "", "application/json");
   do_write();
 
   std::string second_image_path = get_image_url(cc_id, 1);
@@ -183,7 +176,7 @@ void http_session::prepare_response(http::status status,
  */
 std::string http_session::get_image_url(int cc_id, int offset) {
   snprintf(sqlcmd_, sizeof(sqlcmd_),
-           "SELECT image_url FROM report_image WHERE cc_id = %d ORDER BY "
+           "SELECT image_url FROM report WHERE cc_id = %d ORDER BY "
            "image_id DESC LIMIT 1 OFFSET %d",
            cc_id, offset);
 
@@ -231,10 +224,9 @@ void http_session::write_csv_file(const std::string &file_path,
 std::string http_session::create_csv_file(
     int cc_id, const std::vector<std::vector<long>> &grid_last_visited) {
   int last_inserted_image_id = 0;
-  snprintf(
-      sqlcmd_, sizeof(sqlcmd_),
-      "SELECT max(image_id) AS image_id FROM report_image WHERE cc_id = %d",
-      cc_id);
+  snprintf(sqlcmd_, sizeof(sqlcmd_),
+           "SELECT max(image_id) AS image_id FROM report WHERE cc_id = %d",
+           cc_id);
 
   PGresult *res = db_.ExecSQLtuples(sqlcmd_);
   if (PQntuples(res) > 0) {
@@ -262,52 +254,6 @@ void http_session::delete_image_file(const std::string &file_path) {
   if (std::filesystem::exists(file_path)) {
     std::filesystem::remove(file_path);
   }
-}
-
-/**
- * @brief Retrieve area_id for a given cc
- *
- * @param  cc_id
- * @return area_id or -1 if not found
- */
-int http_session::get_area_id(int cc_id) {
-  snprintf(sqlcmd_, sizeof(sqlcmd_),
-           "SELECT area.id FROM control_center INNER JOIN area ON area.id = "
-           "control_center.area_id WHERE control_center.id = %d",
-           cc_id);
-
-  PGresult *res = db_.ExecSQLtuples(sqlcmd_);
-
-  int area_id = -1;
-
-  if (PQntuples(res) > 0) {
-    area_id = strtol(PQgetvalue(res, 0, PQfnumber(res, "id")), NULL, 10);
-  }
-  PQclear(res);
-
-  return area_id;
-}
-
-/**
- * @brief Retrieve area_id for a given cc
- *
- * @param  area_id
- * @param  coverage
- * @throws std::runtime_error if insertion fails
- */
-void http_session::insert_area_log(int area_id, float coverage) {
-
-  snprintf(sqlcmd_, sizeof(sqlcmd_),
-           "INSERT INTO area_log (area_id, percentage, time) VALUES (%d, %.6f, "
-           "now())",
-           area_id, coverage);
-
-  PGresult *res = db_.ExecSQLcmd(sqlcmd_);
-  if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-    PQclear(res);
-    throw std::runtime_error("Failed to insert log into area_log table");
-  }
-  PQclear(res);
 }
 
 /**

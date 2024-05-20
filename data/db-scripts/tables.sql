@@ -49,13 +49,6 @@ CREATE TABLE IF NOT EXISTS path (
     path text
 );
 
-CREATE TABLE IF NOT EXISTS area_log (
-    area_id int,
-    time TIMESTAMP,
-    percentage float,
-    FOREIGN KEY (area_id) REFERENCES area (id)
-);
-
 CREATE TABLE IF NOT EXISTS drone_log (
     log_id SERIAL PRIMARY KEY,
     drone_id int,
@@ -68,10 +61,13 @@ CREATE TABLE IF NOT EXISTS drone_log (
     FOREIGN KEY (cc_id) REFERENCES control_center (id)
 );
 
-CREATE TABLE IF NOT EXISTS report_image (
+CREATE TABLE IF NOT EXISTS report(
     image_id  SERIAL PRIMARY KEY,
     cc_id     int,
-    image_url varchar(255) NOT NULL
+    image_url varchar(255) NOT NULL,
+    time      TIMESTAMP,
+    coverage  FLOAT,
+    FOREIGN KEY (cc_id) REFERENCES control_center (id)
 );
 
 CREATE TABLE IF NOT EXISTS monitor_failure (
