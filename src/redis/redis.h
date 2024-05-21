@@ -33,6 +33,18 @@ namespace Redis {
         long lag{};
     };
 
+    struct StreamInfo {
+        string name;
+        long length{};
+        long radixTreeKeys{};
+        long radixTreeNodes{};
+        long groups{};
+        string firstEntry;
+        string lastEntry;
+    };
+
+
+
     string createGroup(redisContext *context, const string &stream, const string &group, bool mkstream);
 
     long destroyGroup(redisContext *context, const string &stream, const string &group);
@@ -52,6 +64,9 @@ namespace Redis {
     long ackMessage(redisContext *context, const string &stream, const string &group, const string &messageId);
 
     GroupInfo getInfoGroup(redisContext *context, const string &stream, const string &groupName);
+
+    long getStreamLen(redisContext *context, const string &stream);
+
 
     long deleteMessage(redisContext *context, const string &stream, const string &messageId);
 

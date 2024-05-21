@@ -434,6 +434,22 @@ void ControlCenter::listenDrones() {
     cout << "ControlCenter::listenDrones: Listening for drones" << endl;
 
     while (!interrupt_.load()) {
+        long length = Redis::getStreamLen(listener_ctx_, stream);
+
+        // MONITOR
+        if (length > 4000) {
+            string query = "INSERT INTO monitor_failure (cc_id, failure, message, time) VALUES (" +
+                           to_string(id_) + ", " +
+                           "'CC_OVERLOAD', " +
+                           "'cc Stream length is too long: " + to_string(length) + "', " +
+                           "NOW());";
+            executeQuery(query);
+        }
+
+        if (length > 20000) {
+            exit(EXIT_FAILURE);
+        }
+
         vector<Redis::Response> responses = Redis::readGroupMessages(listener_ctx_, group, consumer, stream, 0, 0);
 
         for (const auto &response : responses) {

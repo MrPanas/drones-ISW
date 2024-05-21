@@ -392,3 +392,33 @@ Redis::GroupInfo Redis::getInfoGroup(redisContext *context, const string &stream
     freeReplyObject(reply);
     return groupInfo;
 }
+
+/**
+ * Get the stream info
+ * @param context redis context
+ * @param stream stream name
+ * @return stream info
+ */
+long Redis::getStreamLen(redisContext *context, const string &stream) {
+    // Get the info
+    auto *reply = (redisReply *) redisCommand(context, "XINFO STREAM %s", stream.c_str());
+    if (reply == nullptr) {
+        cerr << "printInfoStream: Error: " << context->errstr << endl;
+        return {};
+    }
+    if (reply->type == REDIS_REPLY_ERROR) {
+        cerr << "printInfoStream: Error: " << reply->str << endl;
+        freeReplyObject(reply);
+        return {};
+    }
+
+    if (reply->type == REDIS_REPLY_ARRAY) {
+        for (size_t i = 0; i < reply->elements; i += 2) {
+            std::string key = reply->element[i]->str;
+            redisReply *value = reply->element[i + 1];
+            if (key == "length") {
+                return value->integer;
+            }
+        }
+    }
+}
