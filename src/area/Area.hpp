@@ -25,7 +25,8 @@ using Grid = vector<vector<Timestamp>>;
  */
 class Area {
 public:
-    Area(int width, int height);
+    Area(int id, int width, int height);
+    int getId() const;
     int getWidth() const;
     int getHeight() const;
     Grid getGrid() const;
@@ -41,6 +42,7 @@ private:
     int width_;
     int height_;
     Grid grid_;
+    int id_;
 
 
 

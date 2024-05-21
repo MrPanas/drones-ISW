@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
     cout << "main: Drone steps: " << Config::DRONE_STEPS << endl;
 
     // Initialize an Area object
-    Area area = Area(Config::AREA_WIDTH, Config::AREA_HEIGHT);
+    Area area = Area(1, Config::AREA_WIDTH, Config::AREA_HEIGHT);
 
     // Initialize a BasicStrategy object
     BasicStrategy strategy = BasicStrategy();

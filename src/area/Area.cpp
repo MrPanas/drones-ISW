@@ -12,7 +12,7 @@ using namespace std;
 // ############ AREA ############
 
 
-Area::Area(int width, int height) : width_(width), height_(height) {
+Area::Area(int id, int width, int height) : id_(id), width_(width), height_(height) {
     // print that the area is being created
     cout << "Creating Area with width: " << width_ << " and height: " << height_ << endl;
 
@@ -30,6 +30,10 @@ Area::Area(int width, int height) : width_(width), height_(height) {
         cout << "Area::Area: grid_[0].size(): " << grid_[0].size() << endl;
     }
 
+}
+
+int Area::getId() const {
+    return id_;
 }
 
 int Area::getWidth() const {

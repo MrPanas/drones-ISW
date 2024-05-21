@@ -24,7 +24,7 @@ DO $$
 END $$;
 
 CREATE TABLE IF NOT EXISTS area (
-    id SERIAL PRIMARY KEY,
+    id int PRIMARY KEY,
     width int,
     height int,
     point_expiration_time int

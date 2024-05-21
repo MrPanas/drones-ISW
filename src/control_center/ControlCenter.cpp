@@ -16,7 +16,6 @@
  */
 
 // TODO: documentare il codice
-// TODO: insert in area_log
 
 /* --------------- PUBLIC METHODS --------------- */
 /* ------ Constructors ------ */
@@ -81,28 +80,18 @@ ControlCenter::ControlCenter(unsigned int id,
     area_ = std::move(area);
 
     // Insert the area in the database
-    string query = "INSERT INTO area (width, height, point_expiration_time) VALUES (" +
-                    to_string(area_.getWidth()) +
-                    ", " + to_string(area_.getHeight()) +
-                    ", " + to_string(Config::POINT_EXPIRATION_TIME) + ") RETURNING ID;";
-    char sqlcmd_[512];
-    snprintf(sqlcmd_, sizeof(sqlcmd_), "%s", query.c_str());
-    //conn_.ExecSQLcmd(const_cast<char *>(query.c_str()));
-    PGresult *res = conn_.ExecSQLtuples(sqlcmd_);
-    if (PQntuples(res) <= 0) {
-        cerr << "ControlCenter::ControlCenter: Error: Area not exists" << endl;
-        exit(EXIT_FAILURE);
-    }
-    cout << "ControlCenter::ControlCenter: Area inserted in the database, area id: " << PQgetvalue(res, 0, PQfnumber(res, "id")) << endl;
-    int area_id = stoi(PQgetvalue(res, 0, PQfnumber(res, "id")));
-
-    PQclear(res);
-
+    string query = "INSERT INTO area (id, width, height, point_expiration_time) VALUES (" +
+                    to_string(area_.getId()) + ", " +
+                    to_string(area_.getWidth()) + ", " +
+                     to_string(area_.getHeight()) + ", " +
+                     to_string(Config::POINT_EXPIRATION_TIME) + ") " +
+                     "ON CONFLICT (id) DO UPDATE SET width = EXCLUDED.width, height = EXCLUDED.height, point_expiration_time = EXCLUDED.point_expiration_time;";
+    executeQuery(query);
 
     // Insert the control center in the database
     query = "INSERT INTO control_center (id, area_id) VALUES (" +
             to_string(id_) + ", " +
-            to_string(area_id) + ") ON CONFLICT (id) DO UPDATE SET area_id = EXCLUDED.area_id;";
+            to_string(area_.getId()) + ") ON CONFLICT (id) DO UPDATE SET area_id = EXCLUDED.area_id;";
     executeQuery(query);
 
 }

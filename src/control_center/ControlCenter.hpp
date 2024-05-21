@@ -86,7 +86,7 @@ private:
     /**
      * @brief Area to be scanned
      */
-    Area area_ = Area(0, 0);
+    Area area_ = Area(-1, 0, 0);
 
     // For Handling drones
     /**
