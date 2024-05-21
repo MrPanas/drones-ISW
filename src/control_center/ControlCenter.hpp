@@ -121,7 +121,7 @@ private:
     void sendPaths();
     void handleSchedule(DroneSchedule schedule, redisContext *ctx);
     void listenDrones();
-    void processMessage(Redis::Message message);
+    void processMessage(string messageId, Redis::Message message);
 
     /* Area */
     void sendAreaToServer();

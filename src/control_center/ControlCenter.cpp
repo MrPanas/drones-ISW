@@ -446,7 +446,7 @@ void ControlCenter::listenDrones() {
                 break;
             }
 
-            processMessage(message);
+            processMessage(messageId, message);
 
             // Delete message from the stream
             long n_delete = Redis::deleteMessage(listener_ctx_, stream, messageId);
@@ -465,7 +465,7 @@ void ControlCenter::listenDrones() {
  * It also updates the drone's status in the lists.
  * @param message Redis::Message that contains the information of the drone.
  */
-void ControlCenter::processMessage(Redis::Message message) {
+void ControlCenter::processMessage(string messageId, Redis::Message message) {
 
     // Create a DroneData object from the message
     DroneData droneData = DroneData();
@@ -492,7 +492,11 @@ void ControlCenter::processMessage(Redis::Message message) {
 
 
     if (droneData.state == DroneState::WORKING) {
-        area_.updatePoint(droneData.x, droneData.y);
+        // convert messageId in timestamp format: "1619430000000-0" -> get first part
+        string timestamp = messageId.substr(0, messageId.find('-'));
+        area_.updatePoint(droneData.x, droneData.y, stoll(timestamp));
+
+
     }
 
     // aggiorna le informazioni del drone
@@ -557,7 +561,7 @@ void ControlCenter::sendAreaToServer() {
         for (const auto &row : grid) {
             json rowJson;
             for (const auto &timestamp : row) {
-                rowJson.push_back(chrono::duration_cast<chrono::milliseconds>(timestamp.time_since_epoch()).count());
+                rowJson.push_back(timestamp);
             }
             areaJson.push_back(rowJson);
         }

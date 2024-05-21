@@ -19,8 +19,12 @@ Area::Area(int id, int width, int height) : id_(id), width_(width), height_(heig
     // create the grid with the given width and height
 
     // timestamp now - expiration time
-    auto expired = chrono::system_clock::now() - chrono::milliseconds(static_cast<long>(ceil(Config::POINT_EXPIRATION_TIME * TIME_ACCELERATION)));
-    grid_ = Grid(width, vector<Timestamp>(height, expired));
+    long expired =
+            chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count()
+            -
+            static_cast<long>(ceil(Config::POINT_EXPIRATION_TIME * TIME_ACCELERATION));
+
+    grid_ = Grid(width, vector<long>(height, expired));
 
     // get height of grid_
     cout << "Area::Area: grid_.size(): " << grid_.size() << endl;
@@ -59,10 +63,11 @@ Grid Area::getGrid() const {
 string Area::toString() const {
     string result;
     // timestamp now
-    auto now = chrono::system_clock::now();
+    auto nowT = chrono::system_clock::now();
+    long now = chrono::duration_cast<chrono::milliseconds>(nowT.time_since_epoch()).count();
     for (int i = 0; i < width_; i++) {
         for (int j = 0; j < height_; j++) {
-            if (now - grid_[i][j] > chrono::milliseconds(static_cast<long>(ceil(Config::POINT_EXPIRATION_TIME * TIME_ACCELERATION)))) {
+            if (now - grid_[i][j] > static_cast<long>(ceil(Config::POINT_EXPIRATION_TIME * TIME_ACCELERATION))) {
                 result += "X";
             } else {
                 result += "O";
@@ -75,22 +80,24 @@ string Area::toString() const {
     return result;
 }
 
-void Area::updatePoint(int x, int y) {
+void Area::updatePoint(int x, int y, long timestamp) {
     if (x < 0 || x >= width_ || y < 0 || y >= height_) {
         return;
     }
     // timestamp now
-    auto now = chrono::system_clock::now();
-    grid_[y][x] = now;
+//    auto now = chrono::system_clock::now();
+    grid_[y][x] = (grid_[y][x] > timestamp) ? grid_[y][x] : timestamp;
 }
 
 float Area::getPercentage() {
     int checked = 0;
-    auto now = chrono::system_clock::now();
+    auto nowT = chrono::system_clock::now();
+    // convert to long
+    long now = chrono::duration_cast<chrono::milliseconds>(nowT.time_since_epoch()).count();
     for (int i = 0; i < width_; i++) {
         for (int j = 0; j < height_; j++) {
 
-            if (now - grid_[i][j] < chrono::milliseconds(static_cast<long>(ceil(Config::POINT_EXPIRATION_TIME * TIME_ACCELERATION)))) {
+            if (now - grid_[i][j] < static_cast<long>(ceil(Config::POINT_EXPIRATION_TIME * TIME_ACCELERATION))) {
                 checked++;
             }
         }

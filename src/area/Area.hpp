@@ -19,7 +19,7 @@ struct DroneData;
 
 using Timestamp = chrono::system_clock::time_point;
 
-using Grid = vector<vector<Timestamp>>;
+using Grid = vector<vector<long>>;
 /**
  * Class that represents the area
  */
@@ -35,7 +35,7 @@ public:
 
     string toString() const;
 
-    void updatePoint(int x, int y);
+    void updatePoint(int x, int y, long timestamp);
     float getPercentage();
 
 private:
