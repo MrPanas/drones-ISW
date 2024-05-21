@@ -94,6 +94,10 @@ ControlCenter::ControlCenter(unsigned int id,
             to_string(area_.getId()) + ") ON CONFLICT (id) DO UPDATE SET area_id = EXCLUDED.area_id;";
     executeQuery(query);
 
+    query = "INSERT INTO session (cc_id, start_time) VALUES (" +
+            to_string(id_) + ", NOW());";
+    executeQuery(query);
+
 }
 
 /* ------ Destructor ------ */
@@ -107,6 +111,9 @@ ControlCenter::~ControlCenter() {
 
     // Free the redis context
     redisFree(listener_ctx_);
+
+    string query = "UPDATE session SET end_time = NOW() WHERE cc_id = " + to_string(id_) + ";";
+    executeQuery(query);
 
     cout << "ControlCenter::~ControlCenter: Successfully disconnected from redis server" << endl;
 }

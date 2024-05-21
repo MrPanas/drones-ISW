@@ -79,4 +79,13 @@ CREATE TABLE IF NOT EXISTS monitor_failure (
     FOREIGN KEY (cc_id) REFERENCES control_center (id)
 );
 
+CREATE TABLE IF NOT EXISTS session (
+   id SERIAL PRIMARY KEY,
+   cc_id      int,
+   start_time TIMESTAMP NOT NULL,
+   end_time   TIMESTAMP,
+   FOREIGN KEY (cc_id) REFERENCES control_center (id)
+);
+
+
 
