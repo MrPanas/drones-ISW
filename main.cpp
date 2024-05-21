@@ -28,14 +28,29 @@ void signalHandler(int signum) {
     stop = true;
 }
 
+void stopControlCenter(unsigned int minutes) {
+    // Sleep for the given number of minutes
+    if (minutes <= 0) {
+        return;
+    }
+
+    std::this_thread::sleep_for(std::chrono::minutes(minutes));
+    cout << "main: Time is up!" << endl;
+    stop.store(true);
+}
+
 /**
  * This main takes the following arguments:
  * --height/-h: Height of the area
  * --width: Width of the area
  */
 int main(int argc, char* argv[]) {
-
+    // Stop the program when Ctrl+C is pressed
     signal(SIGINT, signalHandler);
+    // Or stop the program afte x minutes
+    unsigned int minutes = 2;
+
+
 
     std::cout << "Premi Ctrl+C per generare un segnale di interruzione." << std::endl;
 
@@ -55,6 +70,7 @@ int main(int argc, char* argv[]) {
             {"autonomy", required_argument, nullptr, 'a'},
             {"point_exp_time", required_argument, nullptr, 'e'},
             {"num_drones", required_argument, nullptr, 'n'},
+            {"time", required_argument, nullptr, 't'},
             {nullptr, 0, nullptr, 0}
     };
 
@@ -116,19 +132,21 @@ int main(int argc, char* argv[]) {
                 }
                 Config::NUMBER_OF_DRONES = num_drones;
                 break;
+            case 't':
+                minutes = stoi(optarg);
+                if (minutes <= 0) {
+                    printHelp(argv[0]);
+                    return EXIT_FAILURE;
+                }
+                break;
 
             default:
                 printHelp(argv[0]);
                 return EXIT_FAILURE;
         }
     }
-    /*
-    string server_host = "127.0.0.1";
-    string server_port = "3000";
-    string server_password = "secure";
-    Server server(server_host, server_port, server_password);
-    thread server_thread(&Server::start, &server);
-     */
+    Config::TIME_TO_SCAN = (minutes>0) ? minutes : Config::TIME_TO_SCAN;
+
 
     Config::AREA_WIDTH = ceil(Config::AREA_WIDTH / (Config::SCAN_RANGE * 2));
     Config::AREA_HEIGHT = ceil(Config::AREA_HEIGHT / (Config::SCAN_RANGE * 2)); // every square represents the area scanned by a drone
@@ -169,6 +187,10 @@ int main(int argc, char* argv[]) {
     // Start control center
     cout << "main:Starting control center" << endl;
     thread cc_thread(&ControlCenter::start, &controlCenter);
+
+    // Start timer to stop the simulation
+    thread stop_thread(stopControlCenter, minutes);
+    stop_thread.detach();
 
     while (!stop) {}
     cout << "main: Stopping threads: WAIT" << endl;

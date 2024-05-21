@@ -16,6 +16,8 @@ namespace Config {
 
     extern int POINT_EXPIRATION_TIME; // in milliseconds
     extern int NUMBER_OF_DRONES;
+
+    extern unsigned int TIME_TO_SCAN; // in minutes
 }
 
 #endif //DRONE8_CONFIG_H
