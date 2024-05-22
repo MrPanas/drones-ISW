@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     // Stop the program when Ctrl+C is pressed
     signal(SIGINT, signalHandler);
     // Or stop the program afte x minutes
-    unsigned int minutes = 45;
+    unsigned int minutes = 0;
 
 
 
@@ -103,6 +103,7 @@ int main(int argc, char* argv[]) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
+                Config::SCAN_RANGE = scan_range;
                 break;
 
             case 'a':
@@ -111,6 +112,7 @@ int main(int argc, char* argv[]) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
+                Config::DRONE_AUTONOMY = drone_autonomy;
                 break;
 
             case 'e':
@@ -119,6 +121,7 @@ int main(int argc, char* argv[]) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
+                Config::POINT_EXPIRATION_TIME = point_exp_time;
                 break;
 
             case 'n':

@@ -100,7 +100,7 @@ void Drone::chargeDrone() {
     mt19937 gen(rd()); // Create a random number generation engine with the seed from the random device
 
     // Create a uniform distribution between 2 and 3 hours (converted to milliseconds)
-    std::uniform_int_distribution<> dis(7200000, 10800000); // 2 * 60 * 60 * 1000, 3 * 60 * 60 * 1000
+    std::uniform_int_distribution<> dis(Config::MINIMUM_CHARGING_TIME, Config::MAXIMUM_CHARGING_TIME); // 2 * 60 * 60 * 1000, 3 * 60 * 60 * 1000
 
     int charge_time = dis(gen); // Generate a random number between 2 and 3 hours
 
