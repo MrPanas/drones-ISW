@@ -286,7 +286,7 @@ void Drone::sendDataToCC(bool changedState) {
     message["y"] = to_string(current_data_.y);
     message["battery"] = to_string(current_data_.battery);
     message["state"] = to_string(current_data_.state);
-    message["changedState"] = to_string(changedState);
+    message["changedState"] = changedState ? "true" : "false";
 
     Redis::sendMessage(ctx_, stream, message);
 

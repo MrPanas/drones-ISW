@@ -47,6 +47,12 @@ inline string to_string(DroneState state) {
             return "CHARGING";
         case DroneState::READY:
             return "READY";
+        case DroneState::ERROR:
+            return "ERROR";
+
+        case DroneState::STOPPING:
+            return "STOPPING";
+
     }
     return "UNKNOWN";
 }

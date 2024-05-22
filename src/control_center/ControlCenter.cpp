@@ -383,6 +383,7 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
             cerr << "ControlCenter::handleSchedule: Error: No drone available" << endl;
             break;
 //          TODO: Handle better this case
+            // TODO: Get a drone from charging?
         }
 
         stream = "stream_drone_" + to_string(droneData.id);
@@ -393,14 +394,15 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
         // cout << "[2]ControlCenter::sendPath: Sending path to drone " << droneData.id << endl;
 
         addDroneToWorking(droneData);
+        // print size of working drones
 
-        query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
-                       to_string(droneData.id) + ", " +
-                       to_string(id_) + ", " +
-                       "NOW(), " +
-                       to_string(pathId) + ", " +
-                       "'WORKING');";
-        executeQuery(query);
+//        query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
+//                       to_string(droneData.id) + ", " +
+//                       to_string(id_) + ", " +
+//                       "NOW(), " +
+//                       to_string(pathId) + ", " +
+//                       "'WORKING');";
+//        executeQuery(query);
 
 
         // Wait for the next send
@@ -535,19 +537,19 @@ void ControlCenter::processMessage(const string& messageId, Redis::Message messa
     // else changedState == true
 
     // insertDroneLog(droneData);
-    query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
-            to_string(droneData.id) + ", " +
-            to_string(id_) + ", " +
-            "NOW(), " +
-            "-1, ";
+//    query = "INSERT INTO drone_log (drone_id, cc_id, time, path_id, status) VALUES (" +
+//            to_string(droneData.id) + ", " +
+//            to_string(id_) + ", " +
+//            "NOW(), " +
+//            "-1, ";
 
     switch (droneData.state) {
         case DroneState::READY:
             if (removeDroneFromCharging(droneData)) {
                 addDroneToReady(droneData);
             }
-            query += "'READY');";
-            executeQuery(query);
+//            query += "'READY');";
+//            executeQuery(query);
 
             break;
         case DroneState::WORKING:
@@ -557,8 +559,8 @@ void ControlCenter::processMessage(const string& messageId, Redis::Message messa
             if (removeDroneFromWorking(droneData)) {
                 addDroneToCharging(droneData);
             }
-            query += "'CHARGING');";
-            executeQuery(query);
+//            query += "'CHARGING');";
+//            executeQuery(query);
             break;
         default:
             cerr << "ControlCenter::listenDrones: Error: Invalid state" << endl;
