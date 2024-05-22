@@ -49,7 +49,7 @@ namespace Redis {
 
     long destroyGroup(redisContext *context, const string &stream, const string &group);
 
-    long deleteStream(redisContext *context, const string &stream);
+
 
     string sendMessage(redisContext *context, const string &stream, Message &message);
 

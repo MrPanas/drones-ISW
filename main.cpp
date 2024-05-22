@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     // Stop the program when Ctrl+C is pressed
     signal(SIGINT, signalHandler);
     // Or stop the program afte x minutes
-    unsigned int minutes = 2;
+    unsigned int minutes = 45;
 
 
 
@@ -103,7 +103,6 @@ int main(int argc, char* argv[]) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
-                Config::SCAN_RANGE = scan_range;
                 break;
 
             case 'a':
@@ -112,7 +111,6 @@ int main(int argc, char* argv[]) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
-                Config::DRONE_AUTONOMY = drone_autonomy;
                 break;
 
             case 'e':
@@ -121,7 +119,6 @@ int main(int argc, char* argv[]) {
                     printHelp(argv[0]);
                     return EXIT_FAILURE;
                 }
-                Config::POINT_EXPIRATION_TIME = point_exp_time;
                 break;
 
             case 'n':
@@ -146,6 +143,13 @@ int main(int argc, char* argv[]) {
         }
     }
     Config::TIME_TO_SCAN = (minutes>0) ? minutes : Config::TIME_TO_SCAN;
+    Config::POINT_EXPIRATION_TIME = (point_exp_time>0) ? point_exp_time : Config::POINT_EXPIRATION_TIME;
+    Config::NUMBER_OF_DRONES = (num_drones>0) ? num_drones : Config::NUMBER_OF_DRONES;
+    Config::SCAN_RANGE = (scan_range>0) ? scan_range : Config::SCAN_RANGE;
+    Config::DRONE_AUTONOMY = (drone_autonomy>0) ? drone_autonomy : Config::DRONE_AUTONOMY;
+    Config::AREA_WIDTH = (width>0) ? width : Config::AREA_WIDTH;
+    Config::AREA_HEIGHT = (height>0) ? height : Config::AREA_HEIGHT;
+
 
 
     Config::AREA_WIDTH = ceil(Config::AREA_WIDTH / (Config::SCAN_RANGE * 2));
@@ -209,7 +213,7 @@ int main(int argc, char* argv[]) {
     }
     cout << "main: All drones stopped" << endl;
 
-    cout << "All threads finished" << endl;
+    cout << "main: All threads finished" << endl;
 
     return EXIT_SUCCESS;
 }

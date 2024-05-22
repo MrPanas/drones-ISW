@@ -89,7 +89,7 @@ void Drone::start() {
     sendDataToCC(false);
 
     thread listen(&Drone::listenCC, this);
-    listen.detach();
+    listen.join();
 }
 
 /**
@@ -118,9 +118,22 @@ void Drone::chargeDrone() {
 
 
     int sleep_time = static_cast<int>(charge_time * TIME_ACCELERATION);
+
+    // check if stop
+    for (int i = 0; i < charge_time/1000; i++) {
+        if (stopFlag_.load()) {
+            cout << "Drone " << id_ << " stopped charging" << endl;
+            return;
+        }
+        this_thread::sleep_for(chrono::milliseconds(1));
+    }
+
+    // get the remaining milliseconds
+    sleep_time = sleep_time % 1000;
     this_thread::sleep_for(chrono::milliseconds(sleep_time));
 
-    current_data_.battery = 1;
+
+    current_data_.battery = 1.0;
     current_data_.state = DroneState::READY;
     autonomy_ = Config::DRONE_STEPS;
 

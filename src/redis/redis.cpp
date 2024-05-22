@@ -404,21 +404,17 @@ long Redis::getStreamLen(redisContext *context, const string &stream) {
     auto *reply = (redisReply *) redisCommand(context, "XINFO STREAM %s", stream.c_str());
     if (reply == nullptr) {
         cerr << "printInfoStream: Error: " << context->errstr << endl;
-        return {};
+        freeReplyObject(reply);
+        return -1;
     }
     if (reply->type == REDIS_REPLY_ERROR) {
         cerr << "printInfoStream: Error: " << reply->str << endl;
         freeReplyObject(reply);
-        return {};
+        return -1;
     }
 
-    if (reply->type == REDIS_REPLY_ARRAY) {
-        for (size_t i = 0; i < reply->elements; i += 2) {
-            std::string key = reply->element[i]->str;
-            redisReply *value = reply->element[i + 1];
-            if (key == "length") {
-                return value->integer;
-            }
-        }
-    }
+    long value = reply->element[1]->integer;
+    freeReplyObject(reply);
+    return value;
+
 }

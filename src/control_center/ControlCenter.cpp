@@ -149,7 +149,7 @@ void ControlCenter::start() {
     cout << "ControlCenter::start: Starting Control Center" << endl;
     initDrones();
 
-    // insertLog();
+
     // print percentage each 10 seconds
     thread printAreaStatusThread(&ControlCenter::sendAreaToServer, this);
 
@@ -163,9 +163,9 @@ void ControlCenter::start() {
     printAreaStatusThread.join();
     cout << "ControlCenter::start: sendAreaToServer thread finished" << endl;
 
-
     send.join();
     cout << "ControlCenter::start: sendPaths thread finished" << endl;
+
     listen.join();
     cout << "ControlCenter::start: listenDrones thread finished" << endl;
 
@@ -447,7 +447,7 @@ void ControlCenter::listenDrones() {
         }
 
         if (length > 20000) {
-            exit(EXIT_FAILURE);
+            cerr << "ControlCenter::listenDrones: CC OVERLOAD:Stream length is too long: " << length << endl;
         }
 
         vector<Redis::Response> responses = Redis::readGroupMessages(listener_ctx_, group, consumer, stream, 0, 0);
@@ -488,7 +488,7 @@ void ControlCenter::listenDrones() {
  * It also updates the drone's status in the lists.
  * @param message Redis::Message that contains the information of the drone.
  */
-void ControlCenter::processMessage(string messageId, Redis::Message message) {
+void ControlCenter::processMessage(const string& messageId, Redis::Message message) {
 
     // Create a DroneData object from the message
     DroneData droneData = DroneData();
