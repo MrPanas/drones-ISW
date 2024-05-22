@@ -3,7 +3,7 @@
 //
 
 #include "Area.hpp"
-#include "../drone/Drone.h"
+
 
 
 using namespace std;
