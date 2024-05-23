@@ -119,7 +119,7 @@ if __name__ == "__main__":
     coverages = get_coverages_with_timestamp(cc_id)
     if coverages:
         plt.subplot(2, 1, 1)  # Primo subplot
-        plot_coverage_vs_time(coverages, 180)  # Mostra il grafico con il limite a 180 minuti
+        plot_coverage_vs_time(coverages, 230)  # Mostra il grafico con il limite a 180 minuti
         plt.subplot(2, 1, 2)  # Secondo subplot
         plot_coverage_vs_time(coverages, 30)  # Mostra il grafico con il limite a 30 minuti
         plt.tight_layout()  # Aggiusta il layout dei subplot per evitare sovrapposizioni

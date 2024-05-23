@@ -125,7 +125,7 @@ void Drone::chargeDrone() {
             cout << "Drone " << id_ << " stopped charging" << endl;
             return;
         }
-        this_thread::sleep_for(chrono::milliseconds(1));
+        this_thread::sleep_for(chrono::seconds(1));
     }
 
     // get the remaining milliseconds

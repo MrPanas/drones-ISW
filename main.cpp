@@ -32,6 +32,7 @@ void stopControlCenter(unsigned int minutes) {
     if (minutes <= 0) {
         return;
     }
+    cout << "main: Sleeping for " << minutes << " minutes" << endl;
 
     std::this_thread::sleep_for(std::chrono::minutes(minutes));
     cout << "main: Time is up!" << endl;
@@ -47,7 +48,7 @@ int main(int argc, char* argv[]) {
     // Stop the program when Ctrl+C is pressed
     signal(SIGINT, signalHandler);
     // Or stop the program afte x minutes
-    unsigned int minutes = -1;
+    int minutes = -1;
 
 
 
