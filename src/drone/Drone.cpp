@@ -89,7 +89,7 @@ void Drone::start() {
     sendDataToCC(false);
 
     thread listen(&Drone::listenCC, this);
-    listen.join();
+    listen.detach();
 }
 
 /**
@@ -120,9 +120,9 @@ void Drone::chargeDrone() {
     int sleep_time = static_cast<int>(charge_time * TIME_ACCELERATION);
 
     // check if stop
-    for (int i = 0; i < charge_time/1000; i++) {
+    for (int i = 0; i < sleep_time/1000; i++) {
         if (stopFlag_.load()) {
-            cout << "Drone " << id_ << " stopped charging" << endl;
+//            cout << "Drone " << id_ << " stopped charging" << endl;
             return;
         }
         this_thread::sleep_for(chrono::seconds(1));
@@ -172,9 +172,6 @@ void Drone::listenCC() {
         }
 
         else if (message["command"] == "follow-path") {
-            // cout << "Drone " << id_ << " received a path" << endl;
-            //thread follow(&Drone::followPath, this, message["path"]);
-            //follow.join();
             future<void> future = async(launch::async, &Drone::followPath, this, message["path"]);
 
 
@@ -270,7 +267,6 @@ void Drone::followPath(const string &path) {
     sendDataToCC(true);
     chargeDrone();
 
-    // cout << "drone " << id_ << "current position: " << current_data_.x << " " << current_data_.y << endl;
 }
 
 /**

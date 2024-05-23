@@ -242,7 +242,7 @@ void ControlCenter::initDrones() {
         droneData.battery = stof(message["battery"]);
         droneData.state = to_state(message["state"]);
 
-//        readyDrones_.push_back(droneData);
+
         addDroneToReady(droneData);
 
 
