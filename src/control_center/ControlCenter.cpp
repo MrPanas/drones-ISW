@@ -112,7 +112,9 @@ ControlCenter::~ControlCenter() {
     // Free the redis context
     redisFree(listener_ctx_);
 
-    string query = "UPDATE session SET end_time = NOW() WHERE cc_id = " + to_string(id_) + ";";
+    string query = "UPDATE session "
+                   "SET end_time = NOW() "
+                   "WHERE id = (SELECT MAX(id) FROM session WHERE cc_id = " + to_string(id_) + ");";
     executeQuery(query);
 
     cout << "ControlCenter::~ControlCenter: Successfully disconnected from redis server" << endl;

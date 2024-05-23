@@ -1,7 +1,3 @@
-//
-// Created by Patryk Mulica    on 02/05/24.
-//
-
 #ifndef DRONE8_REDIS_H
 #define DRONE8_REDIS_H
 
