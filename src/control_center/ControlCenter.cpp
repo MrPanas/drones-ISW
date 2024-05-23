@@ -380,13 +380,16 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
 
     // Send path to a ready drone every nextSend milliseconds
     while (!interrupt_.load()) {
-        DroneData droneData = removeDroneFromReady();
-        if (droneData.id == -1) {
-            cerr << "ControlCenter::handleSchedule: Error: No drone available" << endl;
-            break;
-//          TODO: Handle better this case
-            // TODO: Get a drone from charging?
+
+        // check if there are ready drones
+        if (readyDrones_.empty()) {
+            // TODO: MONITOR - NO_DRONES
+            // wait a second
+            this_thread::sleep_for(chrono::seconds(1));
+            continue;
         }
+
+        DroneData droneData = removeDroneFromReady();
 
         stream = "stream_drone_" + to_string(droneData.id);
 
