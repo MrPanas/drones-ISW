@@ -381,15 +381,14 @@ void ControlCenter::handleSchedule(DroneSchedule schedule, redisContext *ctx) {
     // Send path to a ready drone every nextSend milliseconds
     while (!interrupt_.load()) {
 
-        // check if there are ready drones
-        if (readyDrones_.empty()) {
+        DroneData droneData = removeDroneFromReady();
+        if (droneData.id == -1) {
+            // cerr << "ControlCenter::handleSchedule: No ready drones" << endl;
             // TODO: MONITOR - NO_DRONES
             // wait a second
             this_thread::sleep_for(chrono::seconds(1));
             continue;
         }
-
-        DroneData droneData = removeDroneFromReady();
 
         stream = "stream_drone_" + to_string(droneData.id);
 
