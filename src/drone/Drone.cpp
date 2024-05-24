@@ -29,7 +29,6 @@ Drone::Drone(unsigned int id) : id_(id){
     Redis::deleteStream(ctx_, "stream_drone_" + to_string(id_));
 
     Redis::createGroup(ctx_, "stream_drone_" + to_string(id_), "Drone_" + to_string(id_) , true);
-
 }
 
 /**
@@ -253,8 +252,9 @@ void Drone::followPath(const string &path) {
 
 
             sendDataToCC(false);
+            int time_for_step = static_cast<int>((Config::SCAN_RANGE * 2 * 1000) / (Config::DRONE_SPEED/3.6));
             // Il drone fa 1 metro in 0,12 secondi quindi a ogni istruzione fare il movimento e poi un time.sleep(0.12 seconds)
-            int sleep_time = static_cast<int>(2400 * TIME_ACCELERATION);
+            int sleep_time = static_cast<int>(time_for_step * TIME_ACCELERATION);
             this_thread::sleep_for(chrono::milliseconds(sleep_time)); // TODO: mettere 2400
         }
     }
@@ -266,7 +266,6 @@ void Drone::followPath(const string &path) {
     current_data_.state = DroneState::CHARGING;
     sendDataToCC(true);
     chargeDrone();
-
 }
 
 /**
