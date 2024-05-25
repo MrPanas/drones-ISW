@@ -13,11 +13,6 @@ using namespace std;
 
 
 Area::Area(int id, int width, int height) : id_(id), width_(width), height_(height) {
-    // print that the area is being created
-    cout << "Creating Area with width: " << width_ << " and height: " << height_ << endl;
-
-    // create the grid with the given width and height
-
     // timestamp now - expiration time
     long expired =
             chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count()

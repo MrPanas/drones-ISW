@@ -27,7 +27,7 @@
  * @param id unsigned int that represents the id of the control center.
  * @param num_drones  unsigned int that represents the number of drones that the control center must wait for.
  */
-ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("localhost", "5432", "postgres", "postgres", "postgres") {
+ControlCenter::ControlCenter(unsigned int id, unsigned int num_drones) : id_(id), num_drones_(num_drones), conn_("postgres", "5432", "postgres", "postgres", "postgres") {
     listener_ctx_ = redisConnect(REDIS_HOST, REDIS_PORT);
     if (listener_ctx_ == NULL || listener_ctx_->err) {
         if (listener_ctx_) {
@@ -615,7 +615,7 @@ void ControlCenter::sendAreaToServer() {
 
         cout << "Sending data to server" << endl;
         // curl to server
-        string url = "http://localhost:3000/report";
+        string url = "http://server:3000/report";
         string data = jsonData.dump();
 
         curl_global_init(CURL_GLOBAL_ALL);

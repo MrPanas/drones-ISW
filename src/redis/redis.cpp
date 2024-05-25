@@ -62,13 +62,13 @@ long Redis::destroyGroup(redisContext *context, const string &stream, const stri
     auto *reply = (redisReply *) redisCommand(context, "XGROUP DESTROY %s %s",
                                               stream.c_str(), group.c_str());
     if (reply == nullptr) {
-        cerr << "deleteGroup: Error: " << context->errstr << endl;
+        // cerr << "deleteGroup: Error: " << context->errstr << endl;
         return -1;
     }
 
     if (reply->type == REDIS_REPLY_ERROR) {
-        cerr << "deleteGroup: Error: " << reply->str << endl;
-
+        //cerr << "deleteGroup: ReplyError: " << reply->str << endl;
+        return -1;
         //        return "";
     }
     long result = reply->integer;

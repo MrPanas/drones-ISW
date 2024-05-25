@@ -9,7 +9,7 @@
 // #define REDIS_HOST getenv("REDIS_HOST")
 // #define REDIS_PORT getenv("REDIS_PORT")
 
-#define REDIS_HOST "localhost"
+#define REDIS_HOST "redis"
 #define REDIS_PORT 6379
 
 using namespace std;

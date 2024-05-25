@@ -8,7 +8,7 @@ import random
 
 DEBUG = False
 
-TIME_ACCELERATION = 0.5
+TIME_ACCELERATION = 1
 
 # Inizializza pygame
 pygame.init()
@@ -24,7 +24,7 @@ legend_height = 80
 window = pygame.display.set_mode((window_size, window_size + legend_height))
 
 # Titolo della finestra
-pygame.display.set_caption('Visualizzazione della Matrice 300x300 con Zoom e Scroll')
+pygame.display.set_caption('Visualizzazione della Matrice 300x300')
 
 # Funzione per ottenere la matrice dal server
 def fetch_matrix():
@@ -50,11 +50,6 @@ def fetch_matrix():
 
     return np.array(matrix)
 
-def fetch_drones():
-    url = 'http://127.0.0.1:3000/get_drones'
-    response = requests.get(url) # TODO: dovrebbe restituire un array di coordinate
-    response.raise_for_status()  # Verifica eventuali errori nella risposta
-    return response.json()
 
 
 
@@ -69,13 +64,7 @@ if DEBUG:
 else:
     # Ottieni la matrice e le coordinate dei droni dal server
     matrix = fetch_matrix()
-    # drones_coordinates = fetch_drones()
 
-# Normalizza la matrice per avere valori compresi tra 0 e 1
-# normalized_matrix = matrix / np.max(matrix)
-
-# for coord in drones_coordinates:
-#     normalized_matrix[coord[0], coord[1]] = 6  # Imposta il colore nero
 
 def get_color(value):
     if value <= 1 * TIME_ACCELERATION:
