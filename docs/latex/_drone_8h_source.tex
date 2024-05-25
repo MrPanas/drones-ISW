@@ -1,0 +1,127 @@
+\doxysection{Drone.\+h}
+\hypertarget{_drone_8h_source}{}\label{_drone_8h_source}\index{src/drone/Drone.h@{src/drone/Drone.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Patryk\ Mulica\ \ \ \ on\ 30/04/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ DRONE8\_DRONE\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ DRONE8\_DRONE\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <future>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <hiredis.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}../scanning\_strategy/ScanningStrategy.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}../area/Area.hpp"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../redis/redis.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../config.h"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ Forward\ declaration}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_path}{Path}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{enum\ class}\ DroneState\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ ERROR,}
+\DoxyCodeLine{00031\ \ \ \ \ WORKING,}
+\DoxyCodeLine{00032\ \ \ \ \ CHARGING,}
+\DoxyCodeLine{00033\ \ \ \ \ READY,}
+\DoxyCodeLine{00034\ \ \ \ \ STOPPING,}
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{string}\ to\_string(DroneState\ state)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{switch}\ (state)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ DroneState::WORKING:}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}WORKING"{}};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ DroneState::CHARGING:}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}CHARGING"{}};}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ DroneState::READY:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}READY"{}};}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ DroneState::ERROR:}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}ERROR"{}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ DroneState::STOPPING:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}STOPPING"{}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}UNKNOWN"{}};}
+\DoxyCodeLine{00058\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{inline}\ DroneState\ to\_state(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ state)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordflow}{if}\ (state\ ==\ \textcolor{stringliteral}{"{}WORKING"{}})\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ DroneState::WORKING;}
+\DoxyCodeLine{00068\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (state\ ==\ \textcolor{stringliteral}{"{}CHARGING"{}})\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ DroneState::CHARGING;}
+\DoxyCodeLine{00070\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (state\ ==\ \textcolor{stringliteral}{"{}READY"{}})\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ DroneState::READY;}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{return}\ DroneState::READY;}
+\DoxyCodeLine{00074\ \}}
+\DoxyCodeLine{00086\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_drone_data}{DroneData}}\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ -\/1;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ -\/1;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ -\/1;}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{float}\ battery\ =\ -\/1.0f;}
+\DoxyCodeLine{00091\ \ \ \ \ DroneState\ state\ =\ DroneState::ERROR;}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_drone_data}{DroneData}}\&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{id}\ ==\ other.id;}
+\DoxyCodeLine{00095\ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_drone}{Drone}}\ \{}
+\DoxyCodeLine{00103\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{/*\ Constructors\ */}}
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{class_drone_aa9df7e5afc7cd8faefa8a5a579f44533}{Drone}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{class_drone_aa9df7e5afc7cd8faefa8a5a579f44533}{Drone}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ cc\_id);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{/*\ Destructor\ */}}
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{class_drone_a667075abb1eb5c54be6418884a387d14}{\string~Drone}}();}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{/*\ Getters\ */}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_drone_ab5ca15fe35cd3f67f178dc2ad73e426f}{getId}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_drone_a1b7707d12cccc2392a9951150bbfc68a}{getCCId}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{/*\ Setters\ */}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_drone_a7d4c9293a7fcc7fe5599e6ef65a6eaa0}{setCCId}}(\textcolor{keywordtype}{int}\ cc\_id);}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{/*\ Methods\ */}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_drone_a1a34de39d4f9a80f4272fea73337ca0f}{start}}();}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{void}\ stop();}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_drone_a707dea12d04df193fb0fa1868bbc8b6a}{chargeDrone}}();}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{/*\ Data\ */}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ id\_;\ \textcolor{comment}{//\ ID\ del\ drone}}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ cc\_id\_\{\};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00141\ \ \ \ \ \mbox{\hyperlink{struct_drone_data}{DroneData}}\ current\_data\_\{\};}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{int}\ autonomy\_\ =\ Config::DRONE\_STEPS;}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{comment}{/*\ Redis\ */}}
+\DoxyCodeLine{00149\ \ \ \ \ redisContext\ *ctx\_;}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{static}\ std::atomic<bool>\ stopFlag\_;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{/*\ Methods\ */}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{void}\ listenCC();}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordtype}{void}\ followPath(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ path);}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{void}\ sendDataToCC(\textcolor{keywordtype}{bool}\ changedState);}
+\DoxyCodeLine{00161\ \};}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//DRONE8\_DRONE\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,83 @@
+\doxysection{redis.\+h}
+\hypertarget{redis_8h_source}{}\label{redis_8h_source}\index{src/redis/redis.h@{src/redis/redis.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ DRONE8\_REDIS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ DRONE8\_REDIS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <hiredis.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \#define\ REDIS\_HOST\ getenv("{}REDIS\_HOST"{})}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \#define\ REDIS\_PORT\ getenv("{}REDIS\_PORT"{})}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ REDIS\_HOST\ "{}redis"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ REDIS\_PORT\ 6379}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00016\ \textcolor{keyword}{using\ }json\ =\ nlohmann::json;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }Redis\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{using\ }Response\ =\ \ tuple<string,map<string,string>>;}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{using\ }Message\ =\ map<string,string>;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_redis_1_1_group_info}{GroupInfo}}\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ name;}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ consumers\{\};}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ pending\{\};}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ lastDeliveredId;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ entriesRead\{\};}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ lag\{\};}
+\DoxyCodeLine{00030\ \ \ \ \ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_redis_1_1_stream_info}{StreamInfo}}\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ name;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ length\{\};}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ radixTreeKeys\{\};}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ radixTreeNodes\{\};}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ groups\{\};}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ firstEntry;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ lastEntry;}
+\DoxyCodeLine{00040\ \ \ \ \ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{string}\ createGroup(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&group,\ \textcolor{keywordtype}{bool}\ mkstream);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{long}\ destroyGroup(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&group);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{string}\ sendMessage(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ Message\ \&message);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{string}\ sendJsonMessage(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ json\ \&jsonObject);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{long}\ deleteStream(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ Response\ readMessageGroup(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&group,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&consumer,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ block);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{long}\ ackMessage(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&group,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&messageId);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{struct_redis_1_1_group_info}{GroupInfo}}\ getInfoGroup(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&groupName);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{long}\ getStreamLen(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{long}\ deleteMessage(redisContext\ *context,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&messageId);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ vector<Response>\ readGroupMessages(redisContext\ *context,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&group,}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&consumer,}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ block,}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00075\ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//DRONE8\_REDIS\_H}}
+
+\end{DoxyCode}

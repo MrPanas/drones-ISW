@@ -1,0 +1,85 @@
+\doxysection{Basic\+Strategy Class Reference}
+\hypertarget{class_basic_strategy}{}\label{class_basic_strategy}\index{BasicStrategy@{BasicStrategy}}
+Inheritance diagram for Basic\+Strategy\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_basic_strategy}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_basic_strategy_a8f997499ba7b45ce62fe7bd098db8bb0}\label{class_basic_strategy_a8f997499ba7b45ce62fe7bd098db8bb0} 
+{\bfseries Basic\+Strategy} ()
+\begin{DoxyCompactList}\small\item\em Construct a new Strategy for the movement of the drones in the area. \end{DoxyCompactList}\item 
+\Hypertarget{class_basic_strategy_a7620f3c9aa75364d21624d52ec472ca9}\label{class_basic_strategy_a7620f3c9aa75364d21624d52ec472ca9} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Basic\+Strategy} ()
+\begin{DoxyCompactList}\small\item\em Destroy the Basic Strategy\+:\+: Basic Strategy object. \end{DoxyCompactList}\item 
+vector$<$ Drone\+Schedule $>$ \mbox{\hyperlink{class_basic_strategy_a590e0dfe40c24293b16707ce2cef271c}{create\+Schedules}} (\mbox{\hyperlink{class_area}{Area}} area) override
+\begin{DoxyCompactList}\small\item\em Create the schedules for the drones to scan the area. \end{DoxyCompactList}\item 
+tuple$<$ \mbox{\hyperlink{struct_coordinate}{Coordinate}}, bool $>$ \mbox{\hyperlink{class_basic_strategy_a1fb76b6b43506dd2a55fc7f611264117}{go\+To\+Point}} (int autonomy, \mbox{\hyperlink{struct_coordinate}{Coordinate}} current\+\_\+position, \mbox{\hyperlink{struct_coordinate}{Coordinate}} next\+\_\+position, \mbox{\hyperlink{struct_coordinate}{Coordinate}} cc\+\_\+pos, \mbox{\hyperlink{class_path}{Path}} \&path, bool come\+Back)
+\begin{DoxyCompactList}\small\item\em Go to a specific point in the area. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_scanning_strategy}{Scanning\+Strategy}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries manhattan\+Distance} (\mbox{\hyperlink{struct_coordinate}{Coordinate}} a, \mbox{\hyperlink{struct_coordinate}{Coordinate}} b)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_basic_strategy_a590e0dfe40c24293b16707ce2cef271c}\index{BasicStrategy@{BasicStrategy}!createSchedules@{createSchedules}}
+\index{createSchedules@{createSchedules}!BasicStrategy@{BasicStrategy}}
+\doxysubsubsection{\texorpdfstring{createSchedules()}{createSchedules()}}
+{\footnotesize\ttfamily \label{class_basic_strategy_a590e0dfe40c24293b16707ce2cef271c} 
+vector$<$ Drone\+Schedule $>$ Basic\+Strategy\+::create\+Schedules (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_area}{Area}}}]{area}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Create the schedules for the drones to scan the area. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em area} & The area to scan \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector$<$\+Drone\+Schedule$>$ The schedules for the drones 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_scanning_strategy}{Scanning\+Strategy}}.
+
+\Hypertarget{class_basic_strategy_a1fb76b6b43506dd2a55fc7f611264117}\index{BasicStrategy@{BasicStrategy}!goToPoint@{goToPoint}}
+\index{goToPoint@{goToPoint}!BasicStrategy@{BasicStrategy}}
+\doxysubsubsection{\texorpdfstring{goToPoint()}{goToPoint()}}
+{\footnotesize\ttfamily \label{class_basic_strategy_a1fb76b6b43506dd2a55fc7f611264117} 
+tuple$<$ \mbox{\hyperlink{struct_coordinate}{Coordinate}}, bool $>$ Basic\+Strategy\+::go\+To\+Point (\begin{DoxyParamCaption}\item[{int}]{autonomy}{, }\item[{\mbox{\hyperlink{struct_coordinate}{Coordinate}}}]{current\+\_\+pos}{, }\item[{\mbox{\hyperlink{struct_coordinate}{Coordinate}}}]{next\+\_\+pos}{, }\item[{\mbox{\hyperlink{struct_coordinate}{Coordinate}}}]{cc\+\_\+pos}{, }\item[{\mbox{\hyperlink{class_path}{Path}} \&}]{path}{, }\item[{bool}]{come\+Back}{}\end{DoxyParamCaption})}
+
+
+
+Go to a specific point in the area. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em autonomy} & autonomy of the drone at the moment \\
+\hline
+{\em current\+\_\+pos} & current position of the drone \\
+\hline
+{\em next\+\_\+pos} & next position to reach \\
+\hline
+{\em cc\+\_\+pos} & position of the control center \\
+\hline
+{\em path} & path to update \\
+\hline
+{\em come\+Back} & if the drone has to come back to the control center \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/scanning\+\_\+strategy/Basic\+Strategy.\+h\item 
+src/scanning\+\_\+strategy/Basic\+Strategy.\+cpp\end{DoxyCompactItemize}

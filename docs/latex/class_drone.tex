@@ -1,0 +1,125 @@
+\doxysection{Drone Class Reference}
+\hypertarget{class_drone}{}\label{class_drone}\index{Drone@{Drone}}
+
+
+\doxylink{class_drone}{Drone} class.  
+
+
+
+
+{\ttfamily \#include $<$Drone.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_drone_aa9df7e5afc7cd8faefa8a5a579f44533}{Drone}} (unsigned int id)
+\begin{DoxyCompactList}\small\item\em \doxylink{class_drone}{Drone} constructor. It initialize a connection to the Redis server and recreates a stream for the drone. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_drone_af2423e9562969e2013c372658cf42bdc}{Drone}} (unsigned int id, unsigned int cc\+\_\+id)
+\begin{DoxyCompactList}\small\item\em \doxylink{class_drone}{Drone} constructor. It initialize a connection to the Redis server and recreates a stream for the drone Moreover, it sets the Control Center Id that controls the drone. \end{DoxyCompactList}\item 
+\Hypertarget{class_drone_a667075abb1eb5c54be6418884a387d14}\label{class_drone_a667075abb1eb5c54be6418884a387d14} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Drone} ()
+\begin{DoxyCompactList}\small\item\em \doxylink{class_drone}{Drone} destructor. It destroys the stream and the group of the drone and closes the connection to the Redis server. \end{DoxyCompactList}\item 
+unsigned int \mbox{\hyperlink{class_drone_ab5ca15fe35cd3f67f178dc2ad73e426f}{get\+Id}} () const
+\begin{DoxyCompactList}\small\item\em Get the ID of the drone. \end{DoxyCompactList}\item 
+unsigned int \mbox{\hyperlink{class_drone_a1b7707d12cccc2392a9951150bbfc68a}{get\+CCId}} () const
+\begin{DoxyCompactList}\small\item\em Get the ID of the Control Center that controls the drone. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_drone_a7d4c9293a7fcc7fe5599e6ef65a6eaa0}{set\+CCId}} (int cc\+\_\+id)
+\item 
+void \mbox{\hyperlink{class_drone_a1a34de39d4f9a80f4272fea73337ca0f}{start}} ()
+\item 
+\Hypertarget{class_drone_abbb3667113cd142d7299866cf58265c8}\label{class_drone_abbb3667113cd142d7299866cf58265c8} 
+void {\bfseries stop} ()
+\item 
+\Hypertarget{class_drone_a707dea12d04df193fb0fa1868bbc8b6a}\label{class_drone_a707dea12d04df193fb0fa1868bbc8b6a} 
+void {\bfseries charge\+Drone} ()
+\begin{DoxyCompactList}\small\item\em Charge drone to 100\% autonomy in a random time between 2 and 3 hours. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_drone}{Drone} class. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_drone_aa9df7e5afc7cd8faefa8a5a579f44533}\index{Drone@{Drone}!Drone@{Drone}}
+\index{Drone@{Drone}!Drone@{Drone}}
+\doxysubsubsection{\texorpdfstring{Drone()}{Drone()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_drone_aa9df7e5afc7cd8faefa8a5a579f44533} 
+Drone\+::\+Drone (\begin{DoxyParamCaption}\item[{unsigned int}]{id}{}\end{DoxyParamCaption})}
+
+
+
+\doxylink{class_drone}{Drone} constructor. It initialize a connection to the Redis server and recreates a stream for the drone. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & ID of the drone \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_drone_af2423e9562969e2013c372658cf42bdc}\index{Drone@{Drone}!Drone@{Drone}}
+\index{Drone@{Drone}!Drone@{Drone}}
+\doxysubsubsection{\texorpdfstring{Drone()}{Drone()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_drone_af2423e9562969e2013c372658cf42bdc} 
+Drone\+::\+Drone (\begin{DoxyParamCaption}\item[{unsigned int}]{id}{, }\item[{unsigned int}]{cc\+\_\+id}{}\end{DoxyParamCaption})}
+
+
+
+\doxylink{class_drone}{Drone} constructor. It initialize a connection to the Redis server and recreates a stream for the drone Moreover, it sets the Control Center Id that controls the drone. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & ID of the drone \\
+\hline
+{\em cc\+\_\+id} & ID of the Control Center that controls the drone \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_drone_a1b7707d12cccc2392a9951150bbfc68a}\index{Drone@{Drone}!getCCId@{getCCId}}
+\index{getCCId@{getCCId}!Drone@{Drone}}
+\doxysubsubsection{\texorpdfstring{getCCId()}{getCCId()}}
+{\footnotesize\ttfamily \label{class_drone_a1b7707d12cccc2392a9951150bbfc68a} 
+unsigned int Drone\+::get\+CCId (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Get the ID of the Control Center that controls the drone. 
+
+\begin{DoxyReturn}{Returns}
+ID of the Control Center 
+\end{DoxyReturn}
+\Hypertarget{class_drone_ab5ca15fe35cd3f67f178dc2ad73e426f}\index{Drone@{Drone}!getId@{getId}}
+\index{getId@{getId}!Drone@{Drone}}
+\doxysubsubsection{\texorpdfstring{getId()}{getId()}}
+{\footnotesize\ttfamily \label{class_drone_ab5ca15fe35cd3f67f178dc2ad73e426f} 
+unsigned int Drone\+::get\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Get the ID of the drone. 
+
+\begin{DoxyReturn}{Returns}
+ID of the drone 
+\end{DoxyReturn}
+\Hypertarget{class_drone_a7d4c9293a7fcc7fe5599e6ef65a6eaa0}\index{Drone@{Drone}!setCCId@{setCCId}}
+\index{setCCId@{setCCId}!Drone@{Drone}}
+\doxysubsubsection{\texorpdfstring{setCCId()}{setCCId()}}
+{\footnotesize\ttfamily \label{class_drone_a7d4c9293a7fcc7fe5599e6ef65a6eaa0} 
+void Drone\+::set\+CCId (\begin{DoxyParamCaption}\item[{int}]{cc\+\_\+id}{}\end{DoxyParamCaption})}
+
+Set the Control Center ID 
+\begin{DoxyParams}{Parameters}
+{\em cc\+\_\+id} & Control Center ID \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_drone_a1a34de39d4f9a80f4272fea73337ca0f}\index{Drone@{Drone}!start@{start}}
+\index{start@{start}!Drone@{Drone}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily \label{class_drone_a1a34de39d4f9a80f4272fea73337ca0f} 
+void Drone\+::start (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Start the drone. First, it sends the current data to the Control Center, then it starts listening to the Control Centerr 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/drone/Drone.\+h\item 
+src/drone/Drone.\+cpp\end{DoxyCompactItemize}

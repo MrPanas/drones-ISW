@@ -1,0 +1,68 @@
+\doxysection{Stream\+Redis.\+h}
+\hypertarget{_stream_redis_8h_source}{}\label{_stream_redis_8h_source}\index{src/redis/StreamRedis.h@{src/redis/StreamRedis.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Patryk\ Mulica\ \ \ \ on\ 01/05/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ DRONE8\_STREAMREDIS\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ DRONE8\_STREAMREDIS\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <hiredis.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{using\ }json\ =\ nlohmann::json;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ REDIS\_SERVER\ "{}localhost"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ REDIS\_PORT\ 6379}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_stream_redis}{StreamRedis}}\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ redisContext\ *context\_;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ Constructor}}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{class_stream_redis}{StreamRedis}}();}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ Print\ a\ stream\ from\ redis}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ printStream(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ Send\ a\ message\ to\ a\ stream}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ sendMessage(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ vector<string>\ \&message);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ Destructor}}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{class_stream_redis}{\string~StreamRedis}}()\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Free\ the\ redis\ context}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ redisFree(context\_);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Successfully\ disconnected\ from\ redis\ server}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ cout\ <<\ \textcolor{stringliteral}{"{}StreamRedis::\string~StreamRedis:\ Successfully\ disconnected\ from\ redis\ server"{}}\ <<\ endl;}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ send\ Json\ message\ to\ a\ stream}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ sendJsonMessage(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ json\ \&jsonObject);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ retrieve\ a\ message\ from\ a\ stream\ and\ convert\ it\ to\ json}}
+\DoxyCodeLine{00049\ \ \ \ \ json\ convertMessageToJson(redisReply\ *message);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ uploadLastMessage(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ json\ \&jsonObject);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ createGroup(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&group);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{int}\ consumeGroup(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&stream,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&group,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&consumer,\ json\ \&jsonObject);}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//DRONE8\_STREAMREDIS\_H}}
+
+\end{DoxyCode}

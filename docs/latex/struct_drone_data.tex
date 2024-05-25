@@ -1,0 +1,58 @@
+\doxysection{Drone\+Data Struct Reference}
+\hypertarget{struct_drone_data}{}\label{struct_drone_data}\index{DroneData@{DroneData}}
+
+
+Struct that represents the data of the drone.  
+
+
+
+
+{\ttfamily \#include $<$Drone.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_drone_data_a569bbe215e7ea575f313106aef098e0b}\label{struct_drone_data_a569bbe215e7ea575f313106aef098e0b} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{struct_drone_data}{Drone\+Data}} \&other) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_drone_data_aa0ae1d0c9c09d6276cb84c64a8929868}\label{struct_drone_data_aa0ae1d0c9c09d6276cb84c64a8929868} 
+int {\bfseries id} = -\/1
+\item 
+\Hypertarget{struct_drone_data_a1aca60d85be46d427323e56e7d06492a}\label{struct_drone_data_a1aca60d85be46d427323e56e7d06492a} 
+int {\bfseries x} = -\/1
+\item 
+\Hypertarget{struct_drone_data_aff0f0d9003d0b87d2326f1e38fb88b99}\label{struct_drone_data_aff0f0d9003d0b87d2326f1e38fb88b99} 
+int {\bfseries y} = -\/1
+\item 
+\Hypertarget{struct_drone_data_ad616767c64430f9bc78f42f08b1d873f}\label{struct_drone_data_ad616767c64430f9bc78f42f08b1d873f} 
+float {\bfseries battery} = -\/1.\+0f
+\item 
+\Hypertarget{struct_drone_data_a05f8e9cf55e32bc47b2738077ec708e2}\label{struct_drone_data_a05f8e9cf55e32bc47b2738077ec708e2} 
+Drone\+State {\bfseries state} = Drone\+State\+::\+ERROR
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Struct that represents the data of the drone. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & int ID of the drone, if id is -\/1, the data is invalid \\
+\hline
+{\em x} & int X coordinate of the drone, if x is -\/1, the data is invalid \\
+\hline
+{\em y} & int Y coordinate of the drone, if y is -\/1, the data is invalid \\
+\hline
+{\em battery} & float Battery of the drone, if battery is -\/1.\+0f, the data is invalid \\
+\hline
+{\em state} & Drone\+State State of the drone,\\
+\hline
+\end{DoxyParams}
+@id If id is -\/1, the data is invalid 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/drone/Drone.\+h\end{DoxyCompactItemize}

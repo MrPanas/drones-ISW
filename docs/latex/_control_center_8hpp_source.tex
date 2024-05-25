@@ -1,0 +1,109 @@
+\doxysection{Control\+Center.\+hpp}
+\hypertarget{_control_center_8hpp_source}{}\label{_control_center_8hpp_source}\index{src/control\_center/ControlCenter.hpp@{src/control\_center/ControlCenter.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Patryk\ Mulica\ \ \ \ on\ 30/04/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ DRONE8\_CONTROLCENTER\_HPP}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ DRONE8\_CONTROLCENTER\_HPP}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../area/Area.hpp"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../con2db/pgsql.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../config.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../drone/Drone.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}../scanning\_strategy/BasicStrategy.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}../scanning\_strategy/ScanningStrategy.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <csignal>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <curl/curl.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <deque>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <hiredis/hiredis.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}ThreadPool.cpp"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{enum\ class}\ ControlCenterState\ \{}
+\DoxyCodeLine{00028\ \ \ STARTING,}
+\DoxyCodeLine{00029\ \ \ SENDING\_PATHS,}
+\DoxyCodeLine{00030\ \ \ WAITING,}
+\DoxyCodeLine{00031\ \ \ QUITTING}
+\DoxyCodeLine{00032\ \};\ \textcolor{comment}{//\ TODO\ vedere\ se\ serve\ a\ qualcosa}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_control_center}{ControlCenter}}\ \{}
+\DoxyCodeLine{00037\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{/*\ Constructors\ */}}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{class_control_center_ae7c1ba452ae8709656418e7eca0a1421}{ControlCenter}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_drones);}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{class_control_center_ae7c1ba452ae8709656418e7eca0a1421}{ControlCenter}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_drones,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_scanning_strategy}{ScanningStrategy}}\ *strategy,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_area}{Area}}\ area);\ \textcolor{comment}{//\ TODO:\ basicStrategy\ cambiare\ con\ ScanningStrategy}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{/*\ Destructor\ */}}
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{class_control_center_a9ac145ced26cf2002a9d12c4c20bdc75}{\string~ControlCenter}}();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{/*\ Getters\ */}}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{struct_coordinate}{Coordinate}}\ \mbox{\hyperlink{class_control_center_ac7e3b80f2516e936b42b35637119e90d}{getCCPosition}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{/*\ Setters\ */}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_control_center_a07f66729625a43b698e6e6e7dabb393a}{setStrategy}}(\mbox{\hyperlink{class_scanning_strategy}{ScanningStrategy}}\ *strategy);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{/*\ Actions\ */}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_control_center_a24816f98a7efcbd85998e2958d045cb5}{start}}();}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_control_center_aad489c429900f130dc07616e4085163f}{stop}}();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//\ Connections}}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{class_con2_d_b}{Con2DB}}\ conn\_;}
+\DoxyCodeLine{00067\ \ \ \ \ mutex\ query\_mutex\_;}
+\DoxyCodeLine{00071\ \ \ \ \ redisContext\ *listener\_ctx\_\{\};}
+\DoxyCodeLine{00075\ \ \ \ \ redisContext\ *sender\_ctx\_\{\};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ CC\ Data}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ id\_;}
+\DoxyCodeLine{00085\ \ \ \ \ \mbox{\hyperlink{class_scanning_strategy}{ScanningStrategy}}\ *strategy\_\{\};}
+\DoxyCodeLine{00089\ \ \ \ \ \mbox{\hyperlink{class_area}{Area}}\ area\_\ =\ \mbox{\hyperlink{class_area}{Area}}(-\/1,\ 0,\ 0);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ For\ Handling\ drones}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_drones\_;}
+\DoxyCodeLine{00099\ \ \ \ \ std::mutex\ lists\_mutex\_;}
+\DoxyCodeLine{00103\ \ \ \ \ std::deque<DroneData>\ workingDrones\_;}
+\DoxyCodeLine{00107\ \ \ \ \ std::deque<DroneData>\ chargingDrones\_;}
+\DoxyCodeLine{00111\ \ \ \ \ std::deque<DroneData>\ readyDrones\_;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00116\ \ \ \ \ std::atomic<bool>\ interrupt\_\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{/*\ -\/-\/-\/\ PRIVATE\ METHODS\ -\/-\/-\/\ */}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{/*\ Drones\ */}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{void}\ initDrones();}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{void}\ sendPaths();}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ handleSchedule(DroneSchedule\ schedule,\ redisContext\ *ctx);}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{void}\ listenDrones();}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{void}\ processMessage(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ messageId,\ Redis::Message\ message);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{comment}{/*\ Area\ */}}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{void}\ sendAreaToServer();}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{/*\ DB\ */}}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{void}\ executeQuery(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&query);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{/*\ List\ Mutex\ */}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{void}\ addDroneToWorking(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_drone_data}{DroneData}}\ \&drone);}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{void}\ addDroneToCharging(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_drone_data}{DroneData}}\ \&drone);}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{void}\ addDroneToReady(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_drone_data}{DroneData}}\ \&drone);}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{bool}\ removeDroneFromWorking(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_drone_data}{DroneData}}\ \&droneToRemove);}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{bool}\ removeDroneFromCharging(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_drone_data}{DroneData}}\ \&droneToRemove);}
+\DoxyCodeLine{00138\ \ \ \ \ \mbox{\hyperlink{struct_drone_data}{DroneData}}\ removeDroneFromReady();}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DRONE8\_CONTROLCENTER\_HPP}}
+
+\end{DoxyCode}

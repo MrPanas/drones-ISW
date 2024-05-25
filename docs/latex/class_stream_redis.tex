@@ -1,0 +1,38 @@
+\doxysection{Stream\+Redis Class Reference}
+\hypertarget{class_stream_redis}{}\label{class_stream_redis}\index{StreamRedis@{StreamRedis}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_stream_redis_ae1674e0114d3a031fbc9e0d282499b77}\label{class_stream_redis_ae1674e0114d3a031fbc9e0d282499b77} 
+void {\bfseries print\+Stream} (const string \&stream)
+\item 
+\Hypertarget{class_stream_redis_a9bdb64f70051ff2028317adeee5ed6e9}\label{class_stream_redis_a9bdb64f70051ff2028317adeee5ed6e9} 
+void {\bfseries send\+Message} (const string \&stream, const vector$<$ string $>$ \&message)
+\item 
+\Hypertarget{class_stream_redis_a8a644db5d9330688c721260d63bc76f5}\label{class_stream_redis_a8a644db5d9330688c721260d63bc76f5} 
+void {\bfseries send\+Json\+Message} (const string \&stream, const json \&json\+Object)
+\item 
+\Hypertarget{class_stream_redis_a46e7aee2b8a5ca592b1756057c573f3f}\label{class_stream_redis_a46e7aee2b8a5ca592b1756057c573f3f} 
+json {\bfseries convert\+Message\+To\+Json} (redis\+Reply \texorpdfstring{$\ast$}{*}message)
+\item 
+\Hypertarget{class_stream_redis_ad40ad8ebc23d4a956bf041d335a0fd47}\label{class_stream_redis_ad40ad8ebc23d4a956bf041d335a0fd47} 
+void {\bfseries upload\+Last\+Message} (const string \&stream, json \&json\+Object)
+\item 
+\Hypertarget{class_stream_redis_a3aebdb77a7a1f56bf746c3f929018419}\label{class_stream_redis_a3aebdb77a7a1f56bf746c3f929018419} 
+void {\bfseries create\+Group} (const string \&stream, const string \&group)
+\item 
+\Hypertarget{class_stream_redis_a60c2d2fcc53b9492fb5ae81b1a69206c}\label{class_stream_redis_a60c2d2fcc53b9492fb5ae81b1a69206c} 
+int {\bfseries consume\+Group} (const string \&stream, const string \&group, const string \&consumer, json \&json\+Object)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_stream_redis_a558b0012bd82fb5ef781754f22ee4817}\label{class_stream_redis_a558b0012bd82fb5ef781754f22ee4817} 
+redis\+Context \texorpdfstring{$\ast$}{*} {\bfseries context\+\_\+}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/redis/Stream\+Redis.\+h\item 
+src/redis/Stream\+Redis.\+cpp\end{DoxyCompactItemize}

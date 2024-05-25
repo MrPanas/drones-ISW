@@ -1,0 +1,44 @@
+\doxysection{pgsql.\+h}
+\hypertarget{pgsql_8h_source}{}\label{pgsql_8h_source}\index{src/con2db/pgsql.h@{src/con2db/pgsql.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Patryk\ Mulica\ \ \ \ on\ 04/05/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ DRONE8\_PGSQL\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ DRONE8\_PGSQL\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ pgsql\_h}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ pgsql\_h}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <postgresql/libpq-\/fe.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_con2_d_b}{Con2DB}}\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00018\ \ \ PGconn\ *conn;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \textcolor{comment}{/*\ connect\ to\ DB\ */}}
+\DoxyCodeLine{00022\ \ \ \mbox{\hyperlink{class_con2_d_b}{Con2DB}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *hostname,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *port,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *username,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *password,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *dbname);\ \textcolor{comment}{//\ \ PGconn*\ \ connect2db();}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \textcolor{comment}{/*\ use\ this\ for\ commands\ returning\ no\ data,\ e.g.\ INSERT,\ UPDATE\ */}}
+\DoxyCodeLine{00027\ \ \ PGresult\ *ExecSQLcmd(\textcolor{keywordtype}{char}\ *sqlcmd);}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \textcolor{comment}{/*\ use\ this\ for\ commands\ returning\ data,\ e.g.\ SELECT\ */}}
+\DoxyCodeLine{00030\ \ \ PGresult\ *ExecSQLtuples(\textcolor{keywordtype}{char}\ *sqlcmd);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \textcolor{comment}{/*\ disconnect\ from\ DB\ */}}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{void}\ finish();}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DRONE8\_PGSQL\_H}}
+
+\end{DoxyCode}

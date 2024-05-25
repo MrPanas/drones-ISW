@@ -1,0 +1,115 @@
+\doxysection{Control\+Center Class Reference}
+\hypertarget{class_control_center}{}\label{class_control_center}\index{ControlCenter@{ControlCenter}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_control_center_ae7c1ba452ae8709656418e7eca0a1421}{Control\+Center}} (unsigned int id, unsigned int num\+\_\+drones)
+\begin{DoxyCompactList}\small\item\em Construct a new Control Center with the given id and number of drones. ~\newline
+It also connects to the redis server and postgres database. ~\newline
+Moreover, it recreates his group and stream in the redis server. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_control_center_a8b4025218f5e33cb423e092df38e82df}{Control\+Center}} (unsigned int id, unsigned int num\+\_\+drones, \mbox{\hyperlink{class_scanning_strategy}{Scanning\+Strategy}} \texorpdfstring{$\ast$}{*}strategy, \mbox{\hyperlink{class_area}{Area}} area)
+\begin{DoxyCompactList}\small\item\em Construct a new Control Center with the given id, number of drones, strategy and area. ~\newline
+It also connects to the redis server and postgres database. ~\newline
+Moreover, it recreates his group and stream in the redis server. ~\newline
+It also inserts itself and the area in the database. \end{DoxyCompactList}\item 
+\Hypertarget{class_control_center_a9ac145ced26cf2002a9d12c4c20bdc75}\label{class_control_center_a9ac145ced26cf2002a9d12c4c20bdc75} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Control\+Center} ()
+\begin{DoxyCompactList}\small\item\em Destroy the Control Center object. ~\newline
+It destroys the group and stream in the redis server and frees the redis context. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_coordinate}{Coordinate}} \mbox{\hyperlink{class_control_center_ac7e3b80f2516e936b42b35637119e90d}{get\+CCPosition}} ()
+\begin{DoxyCompactList}\small\item\em Get the position of the Control Center in the area. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_control_center_a07f66729625a43b698e6e6e7dabb393a}{set\+Strategy}} (\mbox{\hyperlink{class_scanning_strategy}{Scanning\+Strategy}} \texorpdfstring{$\ast$}{*}strategy)
+\begin{DoxyCompactList}\small\item\em Set the strategy of the Control Center. \end{DoxyCompactList}\item 
+\Hypertarget{class_control_center_a24816f98a7efcbd85998e2958d045cb5}\label{class_control_center_a24816f98a7efcbd85998e2958d045cb5} 
+void {\bfseries start} ()
+\begin{DoxyCompactList}\small\item\em Start the Control Center. ~\newline
+It initializes the drones, starts the threads to listen for the drones and send the paths to the drones. ~\newline
+It also starts a thread to print the area status every 10 seconds. \end{DoxyCompactList}\item 
+\Hypertarget{class_control_center_aad489c429900f130dc07616e4085163f}\label{class_control_center_aad489c429900f130dc07616e4085163f} 
+void {\bfseries stop} ()
+\begin{DoxyCompactList}\small\item\em Stop the Control Center. ~\newline
+It sends a stop message to all the drones and a quit message to itself. ~\newline
+. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_control_center_ae7c1ba452ae8709656418e7eca0a1421}\index{ControlCenter@{ControlCenter}!ControlCenter@{ControlCenter}}
+\index{ControlCenter@{ControlCenter}!ControlCenter@{ControlCenter}}
+\doxysubsubsection{\texorpdfstring{ControlCenter()}{ControlCenter()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_control_center_ae7c1ba452ae8709656418e7eca0a1421} 
+Control\+Center\+::\+Control\+Center (\begin{DoxyParamCaption}\item[{unsigned int}]{id}{, }\item[{unsigned int}]{num\+\_\+drones}{}\end{DoxyParamCaption})}
+
+
+
+Construct a new Control Center with the given id and number of drones. ~\newline
+It also connects to the redis server and postgres database. ~\newline
+Moreover, it recreates his group and stream in the redis server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & unsigned int that represents the id of the control center. \\
+\hline
+{\em num\+\_\+drones} & unsigned int that represents the number of drones that the control center must wait for. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_control_center_a8b4025218f5e33cb423e092df38e82df}\index{ControlCenter@{ControlCenter}!ControlCenter@{ControlCenter}}
+\index{ControlCenter@{ControlCenter}!ControlCenter@{ControlCenter}}
+\doxysubsubsection{\texorpdfstring{ControlCenter()}{ControlCenter()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_control_center_a8b4025218f5e33cb423e092df38e82df} 
+Control\+Center\+::\+Control\+Center (\begin{DoxyParamCaption}\item[{unsigned int}]{id}{, }\item[{unsigned int}]{num\+\_\+drones}{, }\item[{\mbox{\hyperlink{class_scanning_strategy}{Scanning\+Strategy}} \texorpdfstring{$\ast$}{*}}]{strategy}{, }\item[{\mbox{\hyperlink{class_area}{Area}}}]{area}{}\end{DoxyParamCaption})}
+
+
+
+Construct a new Control Center with the given id, number of drones, strategy and area. ~\newline
+It also connects to the redis server and postgres database. ~\newline
+Moreover, it recreates his group and stream in the redis server. ~\newline
+It also inserts itself and the area in the database. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & unsigned int that represents the id of the control center. \\
+\hline
+{\em num\+\_\+drones} & unsigned int that represents the number of drones that the control center must wait for. \\
+\hline
+{\em strategy} & \doxylink{class_basic_strategy}{Basic\+Strategy} used to compute the paths for the drones. \\
+\hline
+{\em area} & \doxylink{class_area}{Area} that represents the area where the drones must scan. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_control_center_ac7e3b80f2516e936b42b35637119e90d}\index{ControlCenter@{ControlCenter}!getCCPosition@{getCCPosition}}
+\index{getCCPosition@{getCCPosition}!ControlCenter@{ControlCenter}}
+\doxysubsubsection{\texorpdfstring{getCCPosition()}{getCCPosition()}}
+{\footnotesize\ttfamily \label{class_control_center_ac7e3b80f2516e936b42b35637119e90d} 
+\mbox{\hyperlink{struct_coordinate}{Coordinate}} Control\+Center\+::get\+CCPosition (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get the position of the Control Center in the area. 
+
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_coordinate}{Coordinate} that represents the position of the Control Center. 
+\end{DoxyReturn}
+\Hypertarget{class_control_center_a07f66729625a43b698e6e6e7dabb393a}\index{ControlCenter@{ControlCenter}!setStrategy@{setStrategy}}
+\index{setStrategy@{setStrategy}!ControlCenter@{ControlCenter}}
+\doxysubsubsection{\texorpdfstring{setStrategy()}{setStrategy()}}
+{\footnotesize\ttfamily \label{class_control_center_a07f66729625a43b698e6e6e7dabb393a} 
+void Control\+Center\+::set\+Strategy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_scanning_strategy}{Scanning\+Strategy}} \texorpdfstring{$\ast$}{*}}]{strategy}{}\end{DoxyParamCaption})}
+
+
+
+Set the strategy of the Control Center. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em strategy} & \doxylink{class_basic_strategy}{Basic\+Strategy} used to compute the paths for the drones \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/control\+\_\+center/Control\+Center.\+hpp\item 
+src/control\+\_\+center/Control\+Center.\+cpp\end{DoxyCompactItemize}

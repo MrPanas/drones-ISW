@@ -1,0 +1,45 @@
+\doxysection{Server.\+hpp}
+\hypertarget{_server_8hpp_source}{}\label{_server_8hpp_source}\index{src/server/Server.hpp@{src/server/Server.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ DRONE8\_SERVER\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ DRONE8\_SERVER\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <boost/asio/ip/tcp.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <boost/beast/core.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <boost/beast/http.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <boost/beast/http/message.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <boost/beast/version.hpp>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <boost/config.hpp>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <postgresql/libpq-\/fe.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }beast\ =\ boost::beast;\ \ \ \textcolor{comment}{//\ from\ <boost/beast.hpp>}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }http\ =\ beast::http;\ \ \ \ \ \textcolor{comment}{//\ from\ <boost/beast/http.hpp>}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }net\ =\ boost::asio;\ \ \ \ \ \ \textcolor{comment}{//\ from\ <boost/asio.hpp>}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{using\ }tcp\ =\ boost::asio::ip::tcp;\ \textcolor{comment}{//\ from\ <boost/asio/ip/tcp.hpp>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Body,\ \textcolor{keyword}{class}\ Allocator,\ \textcolor{keyword}{class}\ Send>}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ handle\_request(http::request<Body,\ http::basic\_fields<Allocator>>\ \&\&req,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Send\ \&\&send);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ do\_listen(net::io\_context\ \&ioc,\ tcp::endpoint\ endpoint);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_server}{Server}}\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \textcolor{comment}{//\ Il\ costruttore\ crea\ crea\ il\ server,\ crea\ un\ sockert\ sul\ host\_}}
+\DoxyCodeLine{00028\ \ \ \mbox{\hyperlink{class_server}{Server}}(std::string\ host,\ std::string\ port,\ std::string\ password);}
+\DoxyCodeLine{00029\ \ \ \textcolor{keywordtype}{void}\ start();}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00032\ \ \ PGconn\ *conn\{\};}
+\DoxyCodeLine{00033\ \ \ std::string\ host\_;}
+\DoxyCodeLine{00034\ \ \ std::string\ port\_;}
+\DoxyCodeLine{00035\ \ \ std::string\ password\_;}
+\DoxyCodeLine{00036\ \ \ \textcolor{keywordtype}{int}\ socket\{\};}
+\DoxyCodeLine{00037\ \};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DRONE8\_SERVER\_HPP}}
+
+\end{DoxyCode}

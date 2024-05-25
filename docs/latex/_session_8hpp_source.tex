@@ -1,0 +1,63 @@
+\doxysection{Session.\+hpp}
+\hypertarget{_session_8hpp_source}{}\label{_session_8hpp_source}\index{src/server/Session.hpp@{src/server/Session.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HTTP\_SESSION\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HTTP\_SESSION\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../con2db/pgsql.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <boost/asio.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <boost/beast.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <boost/beast/http/message.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <boost/beast/http/verb.hpp>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <nlohmann/json\_fwd.hpp>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <ostream>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <postgresql/libpq-\/fe.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <regex>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{namespace\ }beast\ =\ boost::beast;\ \textcolor{comment}{//\ from\ <boost/beast.hpp>}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }http\ =\ beast::http;\ \ \ \textcolor{comment}{//\ from\ <boost/beast/http.hpp>}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }net\ =\ boost::asio;\ \ \ \ \textcolor{comment}{//\ from\ <boost/asio.hpp>}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{using\ }json\ =\ nlohmann::json;\ \ \ \ \textcolor{comment}{//\ Use\ nlohmann::json\ directly}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{using\ }tcp\ =\ net::ip::tcp;\ \ \ \ \ \ \ \textcolor{comment}{//\ from\ <boost/asio/ip/tcp.hpp>}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classhttp__session}{http\_session}}\ :\ \textcolor{keyword}{public}\ std::enable\_shared\_from\_this<http\_session>\ \{}
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classhttp__session_acb72e56a2fe728b6bb357f69543cb76c}{http\_session}}(tcp::socket\ socket);}
+\DoxyCodeLine{00029\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classhttp__session_a20caca60d63c67b610bced145004cf9e}{run}}();}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00032\ \ \ tcp::socket\ socket\_;}
+\DoxyCodeLine{00033\ \ \ beast::flat\_buffer\ buffer\_;\ \textcolor{comment}{//\ Buffer\ for\ reading,\ must\ be\ persisted}}
+\DoxyCodeLine{00034\ \ \ http::request<http::string\_body>\ request\_;}
+\DoxyCodeLine{00035\ \ \ http::response<http::string\_body>\ response\_;}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{class_con2_d_b}{Con2DB}}\ db\_;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Database\ connection}}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{char}\ sqlcmd\_[512];\ \textcolor{comment}{//\ SQL\ command\ buffer}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{void}\ do\_read();}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{void}\ process\_request();}
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{void}\ handle\_post\_report();}
+\DoxyCodeLine{00042\ \ \ \textcolor{keywordtype}{void}\ handle\_get\_report(\textcolor{keywordtype}{int}\ cc\_id);}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordtype}{void}\ send\_not\_found();}
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{void}\ do\_write();}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{void}\ prepare\_response(http::status\ status,\ \textcolor{keyword}{const}\ std::string\ \&body,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&content\_type);}
+\DoxyCodeLine{00048\ \ \ std::string\ get\_image\_url(\textcolor{keywordtype}{int}\ cc\_id,\ \textcolor{keywordtype}{int}\ offset);}
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{void}\ write\_csv\_file(\textcolor{keyword}{const}\ std::string\ \&file\_path,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<long>>\ \&data);}
+\DoxyCodeLine{00051\ \ \ std::string}
+\DoxyCodeLine{00052\ \ \ create\_csv\_file(\textcolor{keywordtype}{int}\ cc\_id,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<long>>\ \&grid\_last\_visited);}
+\DoxyCodeLine{00054\ \ \ \textcolor{keywordtype}{void}\ delete\_image\_file(\textcolor{keyword}{const}\ std::string\ \&file\_path);}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HTTP\_SESSION\_HPP}}
+
+\end{DoxyCode}

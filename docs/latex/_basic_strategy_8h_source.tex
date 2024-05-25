@@ -1,0 +1,25 @@
+\doxysection{Basic\+Strategy.\+h}
+\hypertarget{_basic_strategy_8h_source}{}\label{_basic_strategy_8h_source}\index{src/scanning\_strategy/BasicStrategy.h@{src/scanning\_strategy/BasicStrategy.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ DRONE8\_BASICSTRATEGY\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ DRONE8\_BASICSTRATEGY\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ScanningStrategy.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../config.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_basic_strategy}{BasicStrategy}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_scanning_strategy}{ScanningStrategy}}\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{class_basic_strategy_a8f997499ba7b45ce62fe7bd098db8bb0}{BasicStrategy}}();}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{class_basic_strategy_a7620f3c9aa75364d21624d52ec472ca9}{\string~BasicStrategy}}();}
+\DoxyCodeLine{00013\ \ \ \ \ vector<DroneSchedule>\ \mbox{\hyperlink{class_basic_strategy_a590e0dfe40c24293b16707ce2cef271c}{createSchedules}}(\mbox{\hyperlink{class_area}{Area}}\ area)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00014\ \ \ \ \ tuple<Coordinate,\ bool>\ \mbox{\hyperlink{class_basic_strategy_a1fb76b6b43506dd2a55fc7f611264117}{goToPoint}}(\textcolor{keywordtype}{int}\ autonomy,\ \mbox{\hyperlink{struct_coordinate}{Coordinate}}\ current\_position,\ \mbox{\hyperlink{struct_coordinate}{Coordinate}}\ next\_position,\ \mbox{\hyperlink{struct_coordinate}{Coordinate}}\ cc\_pos,\ \mbox{\hyperlink{class_path}{Path}}\&\ path,\ \textcolor{keywordtype}{bool}\ comeBack);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//int\ manhattanDistance(Coordinate\ a,\ Coordinate\ b);}}
+\DoxyCodeLine{00017\ \};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//DRONE8\_BASICSTRATEGY\_H}}
+
+\end{DoxyCode}
