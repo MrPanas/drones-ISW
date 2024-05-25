@@ -18,21 +18,4 @@ ENV DB_PASS=postgres
 ENV REDIS_HOST=localhost
 ENV REDIS_PORT=6379
 
-
 WORKDIR /
-#FROM debian:bookworm
-
-## Aggiorna il repository e installa le dipendenze
-#RUN apt-get update && \
-#    apt-get install -y \
-#        redis-server \
-#        postgresql \
-#        postgresql-contrib \
-#        cmake \
-#        build-essential \
-#        libhiredis-dev \
-#        libpq-dev \
-#        git \
-#        && \
-#    apt-get clean && \
-#    rm -rf /var/lib/apt/lists/*

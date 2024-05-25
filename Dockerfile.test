@@ -1,0 +1,18 @@
+FROM alpine:latest
+
+# Installa le dipendenze
+RUN apk add --update gcc g++ clang gdb cmake make ninja autoconf automake dos2unix tar rsync hiredis hiredis-dev libpq-dev nlohmann-json valgrind git redis curl-dev boost-dev\
+    && rm -rf /tmp/* /var/cache/apk/*
+
+# Crea una directory per il progetto
+WORKDIR /app
+
+RUN mkdir -p /src
+
+COPY . .
+
+# Crea una build directory e compila il progetto
+RUN mkdir -p build && cd build && cmake .. && make
+
+# Comando per eseguire il server
+CMD ["./build/test"]

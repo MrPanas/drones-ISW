@@ -26,10 +26,6 @@ WORKDIR /app
 # Copia il file CMakeLists.txt e i sorgenti nel container
 COPY src/server .
 
-
-
-
-
 # Crea una build directory e compila il progetto
 RUN mkdir -p build && cd build && cmake .. && make
 

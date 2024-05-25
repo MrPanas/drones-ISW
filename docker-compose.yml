@@ -2,27 +2,7 @@ networks:
   my-network:
     driver: bridge
 
-
-
 services:
-#  dev:
-#    container_name: dev
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    command: tail -f /dev/null # Keep the container running
-#  app:
-#    container_name: app
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8000:8000"
-#    volumes:
-#      - .:/app
-#    depends_on:
-#      - redis
-#      - postgres
   server:
     container_name: server
     build:
@@ -32,13 +12,6 @@ services:
         - "3000:3000"
     networks:
         - my-network
-
-
-
-
-
-
-
   redis:
     container_name: redis
     image: redis:alpine
@@ -46,7 +19,6 @@ services:
       - "6379:6379"
     networks:
         - my-network
-
   postgres:
     container_name: postgres
     image: postgres:alpine
@@ -54,7 +26,6 @@ services:
       - "5432:5432"
     networks:
         - my-network
-
     volumes:
       - ./data/db-scripts:/docker-entrypoint-initdb.d
     environment:
